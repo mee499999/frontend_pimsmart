@@ -1,47 +1,43 @@
-// components/Table.tsx
-import React from 'react';
+import * as React from 'react';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import Paper from '@mui/material/Paper';
 
-interface TableProps<T> {
-  headers: string[];
-  data: T[];
+interface DataTableProps {
+  rows: any[];
 }
 
-const Table = <T extends { [key: string]: any }>({ headers, data }: TableProps<T>) => {
-  return (
-    <table className="user-table">
-      <thead>
-        <tr>
-          {headers.map((header, index) => (
-            <th key={index}>{header}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {data.map((row, rowIndex) => (
-          <tr key={rowIndex}>
-            {Object.values(row).map((cell, cellIndex) => (
-              <td key={cellIndex}>{cell}</td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
+// Define columns
+const columns: GridColDef[] = [
+  { field: 'id', headerName: 'ID', width: 70 },
+  { field: 'firstName', headerName: 'First name', width: 130 },
+  { field: 'lastName', headerName: 'Last name', width: 130 },
+  { field: 'age', headerName: 'Age', type: 'number', width: 90 },
+  {
+    field: 'fullName',
+    headerName: 'Full name',
+    description: 'This column has a value getter and is not sortable.',
+    sortable: false,
+    width: 160,
+    valueGetter: (params) => `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+  },
+];
 
-      <style jsx>{`
-        .user-table {
-          width: 100%;
-          border-collapse: collapse;
-        }
-        .user-table th, .user-table td {
-          padding: 8px;
-          text-align: left;
-          border: 1px solid #ddd;
-        }
-        .user-table thead {
-          background-color: #f4f4f4;
-        }
-      `}</style>
-    </table>
+// Define pagination model
+const paginationModel = { page: 0, pageSize: 5 };
+
+const DataTable: React.FC<DataTableProps> = ({ rows }) => {
+  return (
+    <Paper sx={{ height: 400, width: '100%' }}>
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        initialState={{ pagination: { paginationModel } }}
+        pageSizeOptions={[5, 10]}
+        checkboxSelection
+        sx={{ border: 0 }}
+      />
+    </Paper>
   );
 };
 
-export default Table;
+export default DataTable;

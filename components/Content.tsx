@@ -1,20 +1,17 @@
-// Content.tsx
-"use client";
-import React from "react";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+// components/Content.tsx
+import React from 'react';
 
 interface ContentProps {
-  title: string;
-  children?: React.ReactNode;
+  title: string; // title เป็น prop ที่จำเป็น
+  children: React.ReactNode;
 }
 
 const Content: React.FC<ContentProps> = ({ title, children }) => {
   return (
-    <Box sx={{ p: 2 }}>
-      <Typography variant="h5">{title}</Typography>
-      <Box mt={2}>{children}</Box>
-    </Box>
+    <div>
+      <h1>{title}</h1>
+      <div>{children}</div>
+    </div>
   );
 };
 
