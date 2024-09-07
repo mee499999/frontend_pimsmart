@@ -20,10 +20,12 @@ const Layout: React.FC<LayoutProps> = ({ children, sidebarItems, contentTitle })
       <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
         <Navbar />
         <Grid container sx={{ flexGrow: 1 }}>
-          <Grid item xs={2}>
-            <Sidebar items={sidebarItems || []} />
-          </Grid>
-          <Grid item xs={10}>
+          {sidebarItems && sidebarItems.length > 0 && (
+            <Grid item xs={2}>
+              <Sidebar items={sidebarItems} />
+            </Grid>
+          )}
+          <Grid item xs={sidebarItems && sidebarItems.length > 0 ? 10 : 12}>
             <Content title={contentTitle}>{children}</Content>
           </Grid>
         </Grid>
