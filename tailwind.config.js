@@ -1,12 +1,28 @@
 /** @type {import('tailwindcss').Config} */
+const theme = require('./theme'); // Import values from theme.ts
+
 module.exports = {
-  content: [],
+  content: [
+    "./pages/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
+  ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: theme.colors.primary,
+        secondary: theme.colors.secondary,
+        text: theme.colors.text,
+        background: theme.colors.background,
+        border: theme.colors.border,
+      },
+      fontFamily: {
+        body: theme.fonts.body,
+        heading: theme.fonts.heading,
+      },
+    },
   },
   plugins: [
-    'tailwindcss',
-    'autoprefixer',
+    require('tailwindcss'),
+    require('autoprefixer'),
   ],
-}
-
+};

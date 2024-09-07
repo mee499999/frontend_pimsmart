@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import Link from "next/link";
 import Image from "next/image";
 import logoImage from "/public/pim.jpg";
@@ -12,10 +12,10 @@ import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
-import { useMediaQuery, useTheme } from "@mui/material";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const NavbarContainer = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.primary.main,
+  backgroundColor: '#0070f3', // Use primary color from the theme
   padding: theme.spacing(2),
   display: 'flex',
   justifyContent: 'space-between',
@@ -25,13 +25,13 @@ const NavbarContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
-const Logo = styled(Image)(({ theme }) => ({
+const Logo = styled(Image)({
   height: 40,
-}));
+});
 
 const Navbar: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const theme = useTheme();
+  const theme = useTheme(); 
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const toggleDrawer = (open: boolean) => () => {
@@ -63,7 +63,6 @@ const Navbar: React.FC = () => {
                 <ListItem button component="a" href="/volunteer">
                   <ListItemText primary="จิตอาสา" />
                 </ListItem>
-                {/* Add more menu items here */}
               </List>
             </Box>
           </Drawer>
@@ -80,7 +79,6 @@ const Navbar: React.FC = () => {
               จิตอาสา
             </Typography>
           </Link>
-          {/* Add more links here if needed */}
         </Box>
       )}
     </NavbarContainer>

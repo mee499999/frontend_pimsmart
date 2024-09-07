@@ -1,17 +1,21 @@
-// components/Content.tsx
-import React from 'react';
+import { styled } from "@mui/material/styles";
 
-interface ContentProps {
-  title: string; // title เป็น prop ที่จำเป็น
-  children: React.ReactNode;
-}
+const StyledContent = styled('div')(({ theme }) => ({
+  fontFamily: theme.typography.fontFamily,
+  fontWeight: theme.typography.fontWeightRegular,
+}));
 
-const Content: React.FC<ContentProps> = ({ title, children }) => {
+const StyledTitle = styled('h1')(({ theme }) => ({
+  fontFamily: theme.typography.fontFamily,
+  fontWeight: theme.typography.fontWeightBold,
+}));
+
+const Content: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => {
   return (
-    <div>
-      <h1>{title}</h1>
+    <StyledContent>
+      <StyledTitle>{title}</StyledTitle>
       <div>{children}</div>
-    </div>
+    </StyledContent>
   );
 };
 

@@ -3,29 +3,14 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
 
 interface DataTableProps {
-  rows: any[];
+  rows: any[]; // เปลี่ยนให้เป็นประเภทที่ชัดเจนถ้าทราบโครงสร้างของข้อมูล
+  columns: GridColDef[];
 }
 
-// Define columns
-const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 70 },
-  { field: 'firstName', headerName: 'First name', width: 130 },
-  { field: 'lastName', headerName: 'Last name', width: 130 },
-  { field: 'age', headerName: 'Age', type: 'number', width: 90 },
-  {
-    field: 'fullName',
-    headerName: 'Full name',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 160,
-    valueGetter: (params) => `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-  },
-];
+const DataTable: React.FC<DataTableProps> = ({ rows, columns }) => {
+  // กำหนดค่าการแบ่งหน้า
+  const paginationModel = { page: 0, pageSize: 5 };
 
-// Define pagination model
-const paginationModel = { page: 0, pageSize: 5 };
-
-const DataTable: React.FC<DataTableProps> = ({ rows }) => {
   return (
     <Paper sx={{ height: 400, width: '100%' }}>
       <DataGrid

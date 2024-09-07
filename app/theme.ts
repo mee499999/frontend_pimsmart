@@ -1,20 +1,46 @@
-// theme.ts
+import { createTheme } from '@mui/material/styles';
 
-// theme.ts
-export const theme = {
-    colors: {
-      primary: '#0070f3',  // สีหลัก
-      secondary: '#f5f5f5', // สีรอง
-      text: '#333',        // สีข้อความ
-      background: '#fff',  // สีพื้นหลังหลัก
-      border: '#ddd',      // สีกรอบ
-      // เพิ่มสีเพิ่มเติมตามต้องการ
+export const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#0070f3', // สีหลัก
     },
-    fonts: {
-      body: 'Arial, sans-serif',   // ฟอนต์ของข้อความหลัก
-      heading: 'Georgia, serif',    // ฟอนต์ของหัวข้อ
+    secondary: {
+      main: '#f5f5f5', // สีรอง
     },
-    // เพิ่มค่าที่ต้องการเช่น ขนาด, ระยะห่าง ฯลฯ
-  };
-  
-  
+    text: {
+      primary: '#333', // สีข้อความ
+    },
+    background: {
+      default: '#fff', // สีพื้นหลังหลัก
+    },
+  },
+  typography: {
+    fontFamily: 'Kanit, Arial, sans-serif',
+    h1: {
+      fontFamily: 'Kanit, Arial, sans-serif',
+      fontWeight: 700, // Example for heading 1
+    },
+    body1: {
+      fontFamily: 'Kanit, Arial, sans-serif',
+      fontWeight: 400, // Example for body text
+    },
+    // Add other typography variants if needed
+  },
+  components: {
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          fontFamily: 'Kanit, Arial, sans-serif',
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        notchedOutline: {
+          borderColor: '#ddd', // สีกรอบ
+        },
+      },
+    },
+  },
+});

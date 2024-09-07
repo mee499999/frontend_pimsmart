@@ -1,16 +1,10 @@
 // __tests__/api.test.ts
-
+import { User } from "@/types/IResponse";
 import axiosApi from "@/utils/Api";
 
-export const getUser = async () => {
-  try {
-    const response = await axiosApi.get('/users/get');
-    if (response?.data === undefined) {
-      throw new Error('Undefined error in response');
-    }
-    return response.data;
-  } catch (err) {
-    console.error('Error:', err);
-    throw err;
-  }
+// Update the return type to be an array of User
+export const getUser = async (): Promise<User[]> => {
+  // Make your API call and ensure it returns an array of users
+  const response = await axiosApi.get('/users/get');
+  return response.data; // Ensure response.data is an array of User objects
 };
