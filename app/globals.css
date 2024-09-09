@@ -1,0 +1,4 @@
+/* globals.css หรือไฟล์ CSS หลักของคุณ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
