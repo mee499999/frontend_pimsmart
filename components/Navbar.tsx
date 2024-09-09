@@ -43,11 +43,16 @@ const Navbar: React.FC = () => {
   return (
     <NavbarContainer>
       <LogoContainer>
-        <Image src={logoImage} alt="Logo" height={40} width={40} />
+        <Link href="/" passHref>
+          <Box className="flex items-center text-white">
+            <Image src={logoImage} alt="Logo" height={40} width={40} />
+          </Box>
+        </Link>
+        <Typography variant="h6" color="white" component="a" href="/" sx={{ textDecoration: 'none' }} >
+          PIMSMART
+        </Typography>
       </LogoContainer>
-      <Typography variant="h6" color="white">
-        PIMSMART
-      </Typography>
+
       {isMobile ? (
         <>
           <IconButton edge="start" color="inherit" onClick={toggleDrawer(true)} aria-label="menu">
@@ -61,10 +66,10 @@ const Navbar: React.FC = () => {
               onKeyDown={toggleDrawer(false)}
             >
               <List>
-                <ListItem button component={Link} href="/">
+                <ListItem button component={Link} href="/register">
                   <ListItemText primary="สมัคร" />
                 </ListItem>
-                <ListItem button component={Link} href="/volunteer">
+                <ListItem button component={Link} href="/Volunteer">
                   <ListItemText primary="จิตอาสา" />
                 </ListItem>
                 <ListItem button component={Link} href="/ccc">
@@ -79,12 +84,12 @@ const Navbar: React.FC = () => {
         </>
       ) : (
         <Box display="flex" gap={2}>
-          <Link href="/" passHref>
+          <Link href="/register" passHref>
             <Typography variant="body1" color="white">
               สมัคร
             </Typography>
           </Link>
-          <Link href="/volunteer" passHref>
+          <Link href="/Volunteer" passHref>
             <Typography variant="body1" color="white">
               จิตอาสา
             </Typography>
@@ -96,7 +101,7 @@ const Navbar: React.FC = () => {
           </Link>
           <Link href="/" passHref>
             <Typography variant="body1" color="white">
-            ข่าวสาร
+              ข่าวสาร
             </Typography>
           </Link>
         </Box>
