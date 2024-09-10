@@ -15,7 +15,7 @@ import ListItemText from "@mui/material/ListItemText";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 const NavbarContainer = styled(Box)(({ theme }) => ({
-  backgroundColor: '#0070f3', // Use primary color from the theme
+  backgroundColor: theme.palette.primary.main, // Use primary color from the theme
   padding: theme.spacing(2),
   display: 'flex',
   justifyContent: 'space-between',
@@ -25,13 +25,15 @@ const NavbarContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
-const Logo = styled(Image)({
+const LogoContainer = styled('div')({
+  display: 'flex',
+  alignItems: 'center',
   height: 40,
 });
 
 const Navbar: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const theme = useTheme(); 
+  const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const toggleDrawer = (open: boolean) => () => {
@@ -40,13 +42,15 @@ const Navbar: React.FC = () => {
 
   return (
     <NavbarContainer>
-      <Logo src={logoImage} alt="Logo" height={40} width={40} />
+      <LogoContainer>
+        <Image src={logoImage} alt="Logo" height={40} width={40} />
+      </LogoContainer>
       <Typography variant="h6" color="white">
-        My Application
+        PIMSMART
       </Typography>
       {isMobile ? (
         <>
-          <IconButton edge="start" color="inherit" onClick={toggleDrawer(true)}>
+          <IconButton edge="start" color="inherit" onClick={toggleDrawer(true)} aria-label="menu">
             <MenuIcon />
           </IconButton>
           <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
@@ -57,11 +61,17 @@ const Navbar: React.FC = () => {
               onKeyDown={toggleDrawer(false)}
             >
               <List>
-                <ListItem button component="a" href="/">
+                <ListItem button component={Link} href="/">
                   <ListItemText primary="สมัคร" />
                 </ListItem>
-                <ListItem button component="a" href="/volunteer">
+                <ListItem button component={Link} href="/Volunteer">
                   <ListItemText primary="จิตอาสา" />
+                </ListItem>
+                <ListItem button component={Link} href="/ccc">
+                  <ListItemText primary="ต่อทุน" />
+                </ListItem>
+                <ListItem button component={Link} href="/vv">
+                  <ListItemText primary="ข่าวสาร" />
                 </ListItem>
               </List>
             </Box>
@@ -74,9 +84,19 @@ const Navbar: React.FC = () => {
               สมัคร
             </Typography>
           </Link>
-          <Link href="/volunteer" passHref>
+          <Link href="/Volunteer" passHref>
             <Typography variant="body1" color="white">
               จิตอาสา
+            </Typography>
+          </Link>
+          <Link href="/" passHref>
+            <Typography variant="body1" color="white">
+              ต่อทุน
+            </Typography>
+          </Link>
+          <Link href="/" passHref>
+            <Typography variant="body1" color="white">
+            ข่าวสาร
             </Typography>
           </Link>
         </Box>
