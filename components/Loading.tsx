@@ -12,7 +12,7 @@ const Loading: React.FC<Props> = ({ open, containerRef }) => {
 
     return (
         <Backdrop
-            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            sx={{ color: '#000000FF', zIndex: (theme) => theme.zIndex.drawer + 1 }}
             open={open}
             style={{
                 position: 'absolute', // ใช้ absolute positioning
