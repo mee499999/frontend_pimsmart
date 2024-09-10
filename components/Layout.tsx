@@ -8,7 +8,7 @@ import FontLinks from './FontLinks'; // Import the FontLinks component
 
 interface LayoutProps {
   children: React.ReactNode;
-  sidebarItems?: { text: string; link: string }[];
+  sidebarItems?: { text: string; hook: () => void }[]; // Updated hook type
   contentTitle?: string; // Make contentTitle optional
 }
 

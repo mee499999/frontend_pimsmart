@@ -58,7 +58,7 @@ const CheckVolunteerHoursForm: React.FC = () => {
   };
 
   return (
-    <Layout contentTitle="ตรวจสอบชั่วโมงจิตอาสา" sidebarItems={[{ text: 'ส่งชั่วโมงจิตอาสา', link: '/volunteer-form' }]}>
+    <Layout contentTitle="ตรวจสอบชั่วโมงจิตอาสา" >
       <main>
         <Typography variant="h5" gutterBottom>
           ตรวจสอบชั่วโมงจิตอาสา

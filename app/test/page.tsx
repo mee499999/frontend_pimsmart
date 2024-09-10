@@ -71,12 +71,7 @@ const MyPage: React.FC = () => {
   return (
     <Layout
       contentTitle="My Custom Page Title"
-      sidebarItems={[
-        { text: 'สมัคร ', link: '/' },
-        { text: 'เกี่ยวกับเรา', link: '/about' },
-        { text: 'ติดต่อเรา', link: '/contact' },
-        { text: 'บริการ', link: '/services' },
-      ]}
+
     >
       <main>
         <h1>Welcome to My Page</h1>

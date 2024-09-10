@@ -1,6 +1,4 @@
-
-"use client";
-import React, { useState } from "react";
+import React from 'react';
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -10,11 +8,11 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { useTheme, useMediaQuery, Box } from "@mui/material";
 
 interface SidebarProps {
-    items: { text: string; link: string }[];
+  items: { text: string; hook: () => void }[];
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ items }) => {
-    const [drawerOpen, setDrawerOpen] = useState(false);
+    const [drawerOpen, setDrawerOpen] = React.useState(false);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -41,7 +39,7 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
             >
                 <List>
                     {items.map((item, index) => (
-                        <ListItem button key={index}>
+                        <ListItem button key={index} onClick={item.hook}>
                             <ListItemText primary={item.text} />
                         </ListItem>
                     ))}
@@ -59,7 +57,7 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
                 >
                     <List>
                         {items.map((item, index) => (
-                            <ListItem button key={index}>
+                            <ListItem button key={index} onClick={item.hook}>
                                 <ListItemText primary={item.text} />
                             </ListItem>
                         ))}
