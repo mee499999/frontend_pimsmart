@@ -94,19 +94,10 @@ const VolunteerForm: React.FC = () => {
   };
 
   return (
-    <Layout
-  contentTitle="Volunteer Submission Form"
-  sidebarItems={[
-    { text: 'บันทึกชั่วโมงจิตอาสา', link: '/Volunteer' },
-    { text: 'ตรวจสอบการบันทึกชั่วโมง', link: '/Work' },
-    { text: 'บันทึกชั่วโมงการทำงาน', link: '/work' },
-    
-  ]}
->
-
+    <Layout contentTitle="Work" sidebarItems={[{ text: 'บันทึกชั่วโมงจิตอาสา', link: '/' }]}>
       <main>
         <Typography variant="h5" gutterBottom>
-          Volunteer Submission Form
+          Work
         </Typography>
         <Box component="form" sx={{ flexGrow: 1 }} noValidate autoComplete="off" onSubmit={handleSubmit}>
           {error && <Alert severity="error">{error}</Alert>}

@@ -64,7 +64,7 @@ const Navbar: React.FC = () => {
                 <ListItem button component={Link} href="/">
                   <ListItemText primary="สมัคร" />
                 </ListItem>
-                <ListItem button component={Link} href="/volunteer">
+                <ListItem button component={Link} href="/Volunteer">
                   <ListItemText primary="จิตอาสา" />
                 </ListItem>
                 <ListItem button component={Link} href="/ccc">
@@ -84,7 +84,7 @@ const Navbar: React.FC = () => {
               สมัคร
             </Typography>
           </Link>
-          <Link href="/volunteer" passHref>
+          <Link href="/Volunteer" passHref>
             <Typography variant="body1" color="white">
               จิตอาสา
             </Typography>
