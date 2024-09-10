@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import { styled, useTheme } from "@mui/material/styles";
 import Link from "next/link";
 import Image from "next/image";
-import logoImage from "/public/pim.jpg";
+import logoImage from "/public/pim-Logo.png";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import Drawer from "@mui/material/Drawer";
@@ -28,7 +28,7 @@ const NavbarContainer = styled(Box)(({ theme }) => ({
 const LogoContainer = styled('div')({
   display: 'flex',
   alignItems: 'center',
-  height: 40,
+  height: 100,
 });
 
 const Navbar: React.FC = () => {
@@ -43,19 +43,40 @@ const Navbar: React.FC = () => {
   return (
     <NavbarContainer>
       <LogoContainer>
-        <Link href="/" passHref>
-          <Box className="flex items-center text-white">
-            <Image src={logoImage} alt="Logo" height={40} width={40} />
-          </Box>
-        </Link>
-        <Typography variant="h6" color="white" component="a" href="/" sx={{ textDecoration: 'none' }} >
-          PIMSMART
-        </Typography>
+        <Box
+          display="flex"
+          alignItems="center"
+          sx={{
+            flexDirection: { xs: 'column', sm: 'row' }, // Column for mobile, row for larger screens
+            ml: {  sm: '30px' },
+          }}
+        >
+          <Link href="/" passHref>
+            <Box className="flex items-center text-white">
+              <Image src={logoImage} alt="Logo" height={100} width={100} />
+            </Box>
+          </Link>
+          <Typography
+            variant="h6"
+            color="white"
+            component="a"
+            href="/"
+            sx={{
+              textDecoration: 'none',
+              fontSize: { xs: '1.5rem', sm: '2rem', md: '3rem' }, // Adjust font size
+              mt: { xs: '10px', sm: '0' }, // Margin-top for spacing on mobile
+              ml: { xs: '0', sm: '10px' }, // No margin-left on mobile
+            }}
+          >
+            PIMSMART
+          </Typography>
+        </Box>
       </LogoContainer>
+
 
       {isMobile ? (
         <>
-          <IconButton edge="start" color="inherit" onClick={toggleDrawer(true)} aria-label="menu">
+          <IconButton edge="start" color="inherit" onClick={toggleDrawer(true)} aria-label="menu"   sx={{ marginTop: '20px' }}>
             <MenuIcon />
           </IconButton>
           <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
@@ -84,27 +105,25 @@ const Navbar: React.FC = () => {
         </>
       ) : (
         <Box display="flex" gap={2}>
-          <Link href="/register" passHref>
-            <Typography variant="body1" color="white">
-              สมัคร
+          {[
+            { href: '/register', text: 'สมัคร' },
+            { href: '/Volunteer', text: 'จิตอาสา' },
+            { href: '/', text: 'ต่อทุน' },
+            { href: '/', text: 'ข่าวสาร' }
+          ].map(({ href, text }) => (
+            <Typography
+              key={href}
+              variant="h6"
+              color="white"
+              component="a"
+              href={href}
+              sx={{ textDecoration: 'none', fontSize: { sm: '1rem', md: '2rem' }, marginLeft: '10px' }}
+            >
+              {text}
             </Typography>
-          </Link>
-          <Link href="/Volunteer" passHref>
-            <Typography variant="body1" color="white">
-              จิตอาสา
-            </Typography>
-          </Link>
-          <Link href="/" passHref>
-            <Typography variant="body1" color="white">
-              ต่อทุน
-            </Typography>
-          </Link>
-          <Link href="/" passHref>
-            <Typography variant="body1" color="white">
-              ข่าวสาร
-            </Typography>
-          </Link>
+          ))}
         </Box>
+
       )}
     </NavbarContainer>
   );
