@@ -10,13 +10,22 @@ import Alert from '@mui/material/Alert';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
-interface VolunteerHoursResponse {
-  hours: number; // Adjust according to the actual response structure
+interface VolunteerActivity {
+  id: number;
+  studentId: string;
+  firstName: string;
+  activityName: string;
+  organizationName: string;
+  organizationPhone: string;
+  activityDescription: string;
+  activityDate: string;
+  hours: number;
+  createDate: string;
 }
-<div></div>
+
 const CheckVolunteerHoursForm: React.FC = () => {
   const [studentId, setStudentId] = useState<string>('');
-  const [hours, setHours] = useState<number | null>(null);
+  const [totalHours, setTotalHours] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -24,12 +33,15 @@ const CheckVolunteerHoursForm: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    setHours(null);
+    setTotalHours(null);
   
     try {
       // Fetch data from the API
-      const response = await axiosApi.get<VolunteerHoursResponse>(`/volunteer-activities/${studentId}`);
-      setHours(response.data.hours); // Extract hours from the response
+      const response = await axiosApi.get<VolunteerActivity[]>(`/volunteer-activities/student/${studentId}`);
+      
+      // Calculate total hours
+      const total = response.data.reduce((sum, activity) => sum + activity.hours, 0);
+      setTotalHours(total);
     } catch (error) {
       setError('ไม่พบข้อมูลนักศึกษาหรือเกิดข้อผิดพลาด กรุณาลองใหม่');
     } finally {
@@ -46,7 +58,7 @@ const CheckVolunteerHoursForm: React.FC = () => {
         </Typography>
         <Box component="form" sx={{ flexGrow: 1 }} noValidate autoComplete="off" onSubmit={handleSubmit}>
           {error && <Alert severity="error">{error}</Alert>}
-          {hours !== null && <Alert severity="success">ชั่วโมงจิตอาสา: {hours}</Alert>}
+          {totalHours !== null && <Alert severity="success">ชั่วโมงจิตอาสาทั้งหมด: {totalHours}</Alert>}
 
           <Grid container spacing={2}>
             <Grid item xs={12} md={6}>
