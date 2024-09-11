@@ -1,4 +1,3 @@
-"use client";
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -40,6 +39,13 @@ const Navbar: React.FC = () => {
     setDrawerOpen(open);
   };
 
+  const navItems = [
+    { href: '/register', text: 'สมัคร' },
+    { href: '/Volunteer', text: 'จิตอาสา' },
+    { href: '/ccc', text: 'ต่อทุน' },
+    { href: '/vv', text: 'ข่าวสาร' }
+  ];
+
   return (
     <NavbarContainer>
       <LogoContainer>
@@ -48,7 +54,7 @@ const Navbar: React.FC = () => {
           alignItems="center"
           sx={{
             flexDirection: { xs: 'column', sm: 'row' }, // Column for mobile, row for larger screens
-            ml: {  sm: '30px' },
+            ml: { sm: '30px' },
           }}
         >
           <Link href="/" passHref>
@@ -73,10 +79,9 @@ const Navbar: React.FC = () => {
         </Box>
       </LogoContainer>
 
-
       {isMobile ? (
         <>
-          <IconButton edge="start" color="inherit" onClick={toggleDrawer(true)} aria-label="menu"   sx={{ marginTop: '20px' }}>
+          <IconButton edge="start" color="inherit" onClick={toggleDrawer(true)} aria-label="menu" sx={{ marginTop: '20px' }}>
             <MenuIcon />
           </IconButton>
           <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
@@ -87,32 +92,20 @@ const Navbar: React.FC = () => {
               onKeyDown={toggleDrawer(false)}
             >
               <List>
-                <ListItem button component={Link} href="/register">
-                  <ListItemText primary="สมัคร" />
-                </ListItem>
-                <ListItem button component={Link} href="/Volunteer">
-                  <ListItemText primary="จิตอาสา" />
-                </ListItem>
-                <ListItem button component={Link} href="/ccc">
-                  <ListItemText primary="ต่อทุน" />
-                </ListItem>
-                <ListItem button component={Link} href="/vv">
-                  <ListItemText primary="ข่าวสาร" />
-                </ListItem>
+                {navItems.map(({ href, text }, index) => (
+                  <ListItem button component={Link} href={href} key={index}>
+                    <ListItemText primary={text} />
+                  </ListItem>
+                ))}
               </List>
             </Box>
           </Drawer>
         </>
       ) : (
         <Box display="flex" gap={2}>
-          {[
-            { href: '/register', text: 'สมัคร' },
-            { href: '/Volunteer', text: 'จิตอาสา' },
-            { href: '/', text: 'ต่อทุน' },
-            { href: '/', text: 'ข่าวสาร' }
-          ].map(({ href, text }) => (
+          {navItems.map(({ href, text }, index) => (
             <Typography
-              key={href}
+              key={index}
               variant="h6"
               color="white"
               component="a"
@@ -123,7 +116,6 @@ const Navbar: React.FC = () => {
             </Typography>
           ))}
         </Box>
-
       )}
     </NavbarContainer>
   );

@@ -4,11 +4,12 @@ import { styled } from '@mui/material/styles';
 const StyledContent = styled('div')(({ theme }) => ({
   fontFamily: theme.typography.fontFamily,
   fontWeight: theme.typography.fontWeightRegular,
-  display: 'flex',
+  // display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
   height: '100%', // ใช้ความสูงที่ต้องการ
+  width:'100%'
 }));
 
 const StyledTitle = styled('h1')(({ theme }) => ({
