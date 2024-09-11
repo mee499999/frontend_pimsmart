@@ -44,4 +44,17 @@ export interface User {
     nationalId?: string;
 }
 
+
+export interface FormValues {
+  studentId: string;
+  firstName: string;
+  activityName: string;
+  organizationName: string;
+  organizationPhone: string;
+  activityDescription: string;
+  activityDate: string;
+  hours: string;
+  createDate: string;
+}
+
   
