@@ -94,7 +94,7 @@ const VolunteerForm: React.FC = () => {
   };
 
   return (
-    <Layout contentTitle="Work" sidebarItems={[{ text: 'บันทึกชั่วโมงจิตอาสา', link: '/' }]}>
+    <Layout contentTitle="Work" >
       <main>
         <Typography variant="h5" gutterBottom>
           Work
