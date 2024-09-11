@@ -77,12 +77,12 @@ const Page: React.FC = () => {
           display: 'flex',
           justifyContent: 'center',
           paddingTop: 4,
+          width:'100%'
         }}
       >
         <Box
           sx={{
             width: '100%',
-            maxWidth: 600,
             padding: 2,
             paddingTop: 3,
             backgroundColor: 'background.paper',
@@ -157,6 +157,10 @@ const Page: React.FC = () => {
           )}
         </Box>
       </Box>
+
+      <main>
+        <h1>jguihuithioj</h1>
+      </main>
     </Layout>
   );
 };
