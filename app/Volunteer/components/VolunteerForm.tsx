@@ -7,15 +7,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-
-interface VolunteerFormProps {
-  onSubmit: (formValues: any) => void;
-  formValues: any;
-  setFormValues: React.Dispatch<React.SetStateAction<any>>;
-  success: string | null;
-  error: string | null;
-  loading: boolean;
-}
+import { VolunteerFormProps } from '@/types/IResponse';
 
 const VolunteerForm: React.FC<VolunteerFormProps> = ({
   onSubmit,
@@ -24,6 +16,9 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({
   success,
   error,
   loading,
+  setError,
+  setLoading,
+  setSuccessMessage,
 }) => {
   const [studentIdError, setStudentIdError] = React.useState<boolean>(false);
 
@@ -40,7 +35,7 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    if (name === 'studentId') {
+    if (name === "studentId1") {
       if (/^\d*$/.test(value)) {
         setStudentIdError(false);
         setFormValues({ ...formValues, [name]: value });
@@ -54,7 +49,47 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await onSubmit(formValues);
+    console.log('----------------------->', formValues);
+
+    try {
+      const adjustedFormValues = {
+        studentId: formValues.studentId1, // Rename the key here
+        firstName: formValues.firstName,
+        activityName: formValues.activityName,
+        organizationName: formValues.organizationName,
+        organizationPhone: formValues.organizationPhone,
+        activityDescription: formValues.activityDescription,
+        activityDate: formValues.activityDate,
+        hours: formValues.hours,
+        createDate: formValues.createDate,
+      };
+
+      await onSubmit(adjustedFormValues); // Ensure onSubmit is a promise-based function
+
+      // Clear form values
+      localStorage.removeItem('volunteerForm');
+      setFormValues({
+        studentId1: '',
+        firstName: '',
+        activityName: '',
+        organizationName: '',
+        organizationPhone: '',
+        activityDescription: '',
+        activityDate: '',
+        hours: '',
+        createDate: new Date().toISOString().slice(0, 10),
+      });
+
+      // Display success message
+      setSuccessMessage("Form submitted successfully!");
+
+      // Optionally, redirect or reload
+      // window.location.reload(); // or use router.push('/confirmation');
+    } catch (error) {
+      setError('An error occurred while submitting the form. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -71,8 +106,8 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({
             <TextField
               fullWidth
               label="รหัสนักศึกษา"
-              name="studentId"
-              value={formValues.studentId}
+              name="studentId1"
+              value={formValues.studentId1}
               onChange={handleChange}
               error={studentIdError}
               helperText={studentIdError ? 'Please enter only numbers' : ''}

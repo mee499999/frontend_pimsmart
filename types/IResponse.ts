@@ -57,4 +57,24 @@ export interface FormValues {
   createDate: string;
 }
 
-  
+export interface VolunteerHoursResponse {
+  studentId: string;
+  firstName: string;
+  activityName: string;
+  organizationName: string;
+  organizationPhone: string;
+  activityDescription: string;
+  activityDate: string;
+  hours: number;
+  createDate: string;
+}
+
+export interface VolunteerFormProps {
+  onSubmit: (formValues: any) => void;
+  formValues: any;
+  setFormValues: React.Dispatch<React.SetStateAction<any>>;
+  success: string | null;
+  error: string | null;
+  loading: boolean;
+}
+
