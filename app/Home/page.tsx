@@ -11,7 +11,6 @@ const Page: React.FC = () => {
     <Layout contentTitle="My Custom Page Title">
       <h1>Hello</h1>
 
-
     </Layout>
    
    

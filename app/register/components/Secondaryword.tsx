@@ -10,20 +10,21 @@ interface RegisterFormProps {
 const Secondaryword: React.FC<RegisterFormProps> = ({ student }) => {
   const [studentId, setStudentId] = useState('');
   const [firstName, setFirstName] = useState('');
-  const [editorValue, setEditorValue] = useState<string>('');
+  const [request, setRequest] = useState<string>('');
 
   // Update form fields if student data is provided
   useEffect(() => {
     if (student) {
       setStudentId(student.studentId || '');
       setFirstName(student.firstName || '');
+      setRequest(student.request || '');
     }
   }, [student]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // Handle form submission logic here
-    console.log(`Student ID: ${studentId}, First Name: ${firstName}`);
+    console.log(`Student ID: ${studentId}, First Name: ${firstName}  , request:  ${request}`);
   };
 
   return (
@@ -69,13 +70,14 @@ const Secondaryword: React.FC<RegisterFormProps> = ({ student }) => {
         }}
       />
 
-      <TextareaAutosize
-        aria-label="minimum height"
-        minRows={3}
-        placeholder="Minimum 3 rows"
-        value={editorValue} // Bind value to state
-        onChange={(e) => setEditorValue(e.target.value)} // Handle changes
-        style={{ width: '100%' }} // Adjust width or other styles as needed
+
+      <TextField
+        fullWidth
+        label="สงคำรอง"
+        value={request}
+        onChange={(e) => setRequest(e.target.value)}
+        multiline
+        rows={4}
       />
 
       <Button

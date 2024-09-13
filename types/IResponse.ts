@@ -42,8 +42,31 @@ export interface User {
     block?: string;
     currentGpa?: string; // Can be a string if dealing with BigDecimal
     nationalId?: string;
+
+    request? : string;
+
+    current_address: string;
+    current_postal_code: string;
+    current_province: string;
+    current_district: string;
+    current_subdistrict: string;
+    address_according_to_house_registration: string;
+    postal_code: string;
+    province: string;
+    district: string;
+    subdistrict: string;
+    create_date: string; // You might want to use `Date` if this is a date
+    first_name: string;
+
+    
 }
 
+export interface Location {
+  province: string;
+  district: string;
+  subdistrict: string;
+  zipcode: string;
+}
 
 export interface FormValues {
   studentId: string;
