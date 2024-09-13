@@ -101,3 +101,14 @@ export interface VolunteerFormProps {
   loading: boolean;
 }
 
+export interface VolunteerHoursResponse {
+  id: string;
+  studentId: string;
+  firstName: string;
+  activityName: string;
+  organizationName: string;
+  organizationPhone: string;
+  activityDescription: string;
+  activityDate: string;
+  hours: number;
+}
