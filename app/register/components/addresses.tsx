@@ -17,7 +17,7 @@ const locations: Location[] = (locationData as any[]).map(item => ({
 }));
 
 const Addresses: React.FC<RegisterFormProps> = ({ formMethods }) => {
-  const { control, register, handleSubmit, setValue, watch } = formMethods;
+  const { control, register, handleSubmit,formState: { errors }, setValue, watch } = formMethods;
 
   const [provinces, setProvinces] = useState<string[]>([]);
   const [districts, setDistricts] = useState<string[]>([]);
@@ -101,28 +101,60 @@ const Addresses: React.FC<RegisterFormProps> = ({ formMethods }) => {
     <Box
       component="form"
       onSubmit={handleSubmit(onSubmit)}
-      sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 800, mx: 'auto', my: 4, padding: 2 }}
+      sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 800, mx: 'auto', my: 4 }}
     >
-      <Typography variant="h6" gutterBottom>
+      <Typography color="secondary" align="center" sx={{ mt: 2 }}>
         ข้อมูลที่อยู่
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <TextField
             fullWidth
-            label="ที่อยู่ปัจจุบัน"
+            label="ที่อยู่ปัจจุบัน ชื่อที่พัก หอพักขณะเรียน"
             {...register('current_address')}
             variant="outlined"
-            margin="normal"
+
           />
         </Grid>
+        <Grid item xs={12} md={6}>
+          <FormControl fullWidth variant="outlined">
+            <InputLabel>นักศึกษาพักอยู่</InputLabel>
+            <Controller
+              name="student_resident"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <Select
+                  label="นักศึกษาพักอยู่"
+                  {...field}
+                  error={!!errors.student_resident}
+                >
+                  <MenuItem value="บ้านตนเอง">บ้านตนเอง</MenuItem>
+                  <MenuItem value="บ้านญาติ">บ้านญาติ</MenuItem>
+                  <MenuItem value="บ้านเช่า/หอพัก">บ้านเช่า/หอพัก</MenuItem>
+                  <MenuItem value="ยังไม่มี (กรณีนักศึกษาใหม่ยังไม่หาหอ)">ยังไม่มี (กรณีนักศึกษาใหม่ยังไม่หาหอ)</MenuItem>
+                </Select>
+              )}
+            />
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <TextField
+            fullWidth
+            label="จำนวนผู้พักอาศัย (หอพัก)"
+            {...register('number_of_residents')}
+            variant="outlined"
+
+          />
+        </Grid>
+
         <Grid item xs={12} md={6}>
           <TextField
             fullWidth
             label="ที่อยู่ตามทะเบียนบ้าน"
             {...register('address_according_to_house_registration')}
             variant="outlined"
-            margin="normal"
+
           />
         </Grid>
         <Grid item xs={12} md={6}>
@@ -133,12 +165,12 @@ const Addresses: React.FC<RegisterFormProps> = ({ formMethods }) => {
               onChange: handleInputChange
             })}
             variant="outlined"
-            margin="normal"
+
             inputProps={{ maxLength: 5 }}
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <FormControl fullWidth margin="normal" variant="outlined">
+          <FormControl fullWidth variant="outlined">
             <InputLabel>จังหวัด</InputLabel>
             <Controller
               name="current_province"
@@ -162,7 +194,7 @@ const Addresses: React.FC<RegisterFormProps> = ({ formMethods }) => {
           </FormControl>
         </Grid>
         <Grid item xs={12} md={6}>
-          <FormControl fullWidth margin="normal" variant="outlined">
+          <FormControl fullWidth variant="outlined">
             <InputLabel>อำเภอ</InputLabel>
             <Controller
               name="current_district"
@@ -186,7 +218,7 @@ const Addresses: React.FC<RegisterFormProps> = ({ formMethods }) => {
           </FormControl>
         </Grid>
         <Grid item xs={12} md={6}>
-          <FormControl fullWidth margin="normal" variant="outlined">
+          <FormControl fullWidth variant="outlined">
             <InputLabel>ตำบล</InputLabel>
             <Controller
               name="current_subdistrict"

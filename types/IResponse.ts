@@ -26,6 +26,8 @@ export interface User {
     id?: number;
     studentId?: string;
     firstName?: string;
+    prefix?: string;
+    thaiName?: string;
     lastName?: string;
     nickname?: string;
     dateOfBirth?: string; // ISO 8601 date string
@@ -37,15 +39,19 @@ export interface User {
     currentlyStudyingYear?: string;
     createDate?: string; // ISO 8601 date-time string
     studentType?: string;
-    prefix?: string;
-    congenitalDisease?: string;
     block?: string;
     currentGpa?: string; // Can be a string if dealing with BigDecimal
+    PlaceofStudy? :string;
+    otherPlace? :string;
     nationalId?: string;
-
+    
+    congenitalDisease?: string;   //ยังไมไดใส
     request? : string;
 
     current_address: string;
+    student_resident:string;
+    number_of_residents: string;
+    
     current_postal_code: string;
     current_province: string;
     current_district: string;
