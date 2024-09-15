@@ -23,8 +23,8 @@ const Addresses: React.FC<RegisterFormProps> = ({ formMethods }) => {
   const [districts, setDistricts] = useState<string[]>([]);
   const [subdistricts, setSubdistricts] = useState<string[]>([]);
 
-  const currentProvince = watch('current_province');
-  const currentDistrict = watch('current_district');
+  const currentProvince = watch('province');
+  const currentDistrict = watch('district');
 
   useEffect(() => {
     const provincesArray = Array.from(new Set(locations.map(location => location.province)));
@@ -48,13 +48,13 @@ const Addresses: React.FC<RegisterFormProps> = ({ formMethods }) => {
 
     if (foundLocation) {
       const { province, district, subdistrict } = foundLocation;
-      setValue('current_province', province);
-      setValue('current_district', district);
-      setValue('current_subdistrict', subdistrict);
+      setValue('province', province);
+      setValue('district', district);
+      setValue('subdistrict', subdistrict);
     } else {
-      setValue('current_province', '');
-      setValue('current_district', '');
-      setValue('current_subdistrict', '');
+      setValue('province', '');
+      setValue('district', '');
+      setValue('subdistrict', '');
     }
   };
 
@@ -85,9 +85,9 @@ const Addresses: React.FC<RegisterFormProps> = ({ formMethods }) => {
 
   const handleSelectChange = (name: keyof Student, value: string) => {
     setValue(name, value);
-    if (name === 'current_province') {
+    if (name === 'province') {
       updateDistricts(value);
-    } else if (name === 'current_district') {
+    } else if (name === 'district') {
       updateSubdistricts(value);
     }
   };
@@ -173,14 +173,14 @@ const Addresses: React.FC<RegisterFormProps> = ({ formMethods }) => {
           <FormControl fullWidth variant="outlined">
             <InputLabel>จังหวัด</InputLabel>
             <Controller
-              name="current_province"
+              name="province"
               control={control}
               defaultValue=""
               render={({ field }) => (
                 <Select
                   {...field}
                   label="จังหวัด"
-                  onChange={(event) => handleSelectChange('current_province', event.target.value)}
+                  onChange={(event) => handleSelectChange('province', event.target.value)}
                   value={field.value}
                 >
                   {provinces.map(province => (
@@ -197,14 +197,14 @@ const Addresses: React.FC<RegisterFormProps> = ({ formMethods }) => {
           <FormControl fullWidth variant="outlined">
             <InputLabel>อำเภอ</InputLabel>
             <Controller
-              name="current_district"
+              name="district"
               control={control}
               defaultValue=""
               render={({ field }) => (
                 <Select
                   {...field}
                   label="อำเภอ"
-                  onChange={(event) => handleSelectChange('current_district', event.target.value)}
+                  onChange={(event) => handleSelectChange('district', event.target.value)}
                   value={field.value}
                 >
                   {districts.map(district => (
@@ -221,14 +221,14 @@ const Addresses: React.FC<RegisterFormProps> = ({ formMethods }) => {
           <FormControl fullWidth variant="outlined">
             <InputLabel>ตำบล</InputLabel>
             <Controller
-              name="current_subdistrict"
+              name="subdistrict"
               control={control}
               defaultValue=""
               render={({ field }) => (
                 <Select
                   {...field}
                   label="ตำบล"
-                  onChange={(event) => handleSelectChange('current_subdistrict', event.target.value)}
+                  onChange={(event) => handleSelectChange('subdistrict', event.target.value)}
                   value={field.value}
                 >
                   {subdistricts.map(subdistrict => (
