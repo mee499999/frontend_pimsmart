@@ -17,14 +17,14 @@ const locations: Location[] = (locationData as any[]).map(item => ({
 }));
 
 const Addresses: React.FC<RegisterFormProps> = ({ formMethods }) => {
-  const { control, register, handleSubmit, setValue, watch } = formMethods;
+  const { control, register, handleSubmit,formState: { errors }, setValue, watch } = formMethods;
 
   const [provinces, setProvinces] = useState<string[]>([]);
   const [districts, setDistricts] = useState<string[]>([]);
   const [subdistricts, setSubdistricts] = useState<string[]>([]);
 
-  const currentProvince = watch('current_province');
-  const currentDistrict = watch('current_district');
+  const currentProvince = watch('province');
+  const currentDistrict = watch('district');
 
   useEffect(() => {
     const provincesArray = Array.from(new Set(locations.map(location => location.province)));
@@ -48,13 +48,13 @@ const Addresses: React.FC<RegisterFormProps> = ({ formMethods }) => {
 
     if (foundLocation) {
       const { province, district, subdistrict } = foundLocation;
-      setValue('current_province', province);
-      setValue('current_district', district);
-      setValue('current_subdistrict', subdistrict);
+      setValue('province', province);
+      setValue('district', district);
+      setValue('subdistrict', subdistrict);
     } else {
-      setValue('current_province', '');
-      setValue('current_district', '');
-      setValue('current_subdistrict', '');
+      setValue('province', '');
+      setValue('district', '');
+      setValue('subdistrict', '');
     }
   };
 
@@ -85,9 +85,9 @@ const Addresses: React.FC<RegisterFormProps> = ({ formMethods }) => {
 
   const handleSelectChange = (name: keyof Student, value: string) => {
     setValue(name, value);
-    if (name === 'current_province') {
+    if (name === 'province') {
       updateDistricts(value);
-    } else if (name === 'current_district') {
+    } else if (name === 'district') {
       updateSubdistricts(value);
     }
   };
@@ -101,28 +101,60 @@ const Addresses: React.FC<RegisterFormProps> = ({ formMethods }) => {
     <Box
       component="form"
       onSubmit={handleSubmit(onSubmit)}
-      sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 800, mx: 'auto', my: 4, padding: 2 }}
+      sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 800, mx: 'auto', my: 4 }}
     >
-      <Typography variant="h6" gutterBottom>
+      <Typography color="secondary" align="center" sx={{ mt: 2 }}>
         ข้อมูลที่อยู่
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <TextField
             fullWidth
-            label="ที่อยู่ปัจจุบัน"
+            label="ที่อยู่ปัจจุบัน ชื่อที่พัก หอพักขณะเรียน"
             {...register('current_address')}
             variant="outlined"
-            margin="normal"
+
           />
         </Grid>
+        <Grid item xs={12} md={6}>
+          <FormControl fullWidth variant="outlined">
+            <InputLabel>นักศึกษาพักอยู่</InputLabel>
+            <Controller
+              name="student_resident"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <Select
+                  label="นักศึกษาพักอยู่"
+                  {...field}
+                  error={!!errors.student_resident}
+                >
+                  <MenuItem value="บ้านตนเอง">บ้านตนเอง</MenuItem>
+                  <MenuItem value="บ้านญาติ">บ้านญาติ</MenuItem>
+                  <MenuItem value="บ้านเช่า/หอพัก">บ้านเช่า/หอพัก</MenuItem>
+                  <MenuItem value="ยังไม่มี (กรณีนักศึกษาใหม่ยังไม่หาหอ)">ยังไม่มี (กรณีนักศึกษาใหม่ยังไม่หาหอ)</MenuItem>
+                </Select>
+              )}
+            />
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <TextField
+            fullWidth
+            label="จำนวนผู้พักอาศัย (หอพัก)"
+            {...register('number_of_residents')}
+            variant="outlined"
+
+          />
+        </Grid>
+
         <Grid item xs={12} md={6}>
           <TextField
             fullWidth
             label="ที่อยู่ตามทะเบียนบ้าน"
             {...register('address_according_to_house_registration')}
             variant="outlined"
-            margin="normal"
+
           />
         </Grid>
         <Grid item xs={12} md={6}>
@@ -133,22 +165,22 @@ const Addresses: React.FC<RegisterFormProps> = ({ formMethods }) => {
               onChange: handleInputChange
             })}
             variant="outlined"
-            margin="normal"
+
             inputProps={{ maxLength: 5 }}
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <FormControl fullWidth margin="normal" variant="outlined">
+          <FormControl fullWidth variant="outlined">
             <InputLabel>จังหวัด</InputLabel>
             <Controller
-              name="current_province"
+              name="province"
               control={control}
               defaultValue=""
               render={({ field }) => (
                 <Select
                   {...field}
                   label="จังหวัด"
-                  onChange={(event) => handleSelectChange('current_province', event.target.value)}
+                  onChange={(event) => handleSelectChange('province', event.target.value)}
                   value={field.value}
                 >
                   {provinces.map(province => (
@@ -162,17 +194,17 @@ const Addresses: React.FC<RegisterFormProps> = ({ formMethods }) => {
           </FormControl>
         </Grid>
         <Grid item xs={12} md={6}>
-          <FormControl fullWidth margin="normal" variant="outlined">
+          <FormControl fullWidth variant="outlined">
             <InputLabel>อำเภอ</InputLabel>
             <Controller
-              name="current_district"
+              name="district"
               control={control}
               defaultValue=""
               render={({ field }) => (
                 <Select
                   {...field}
                   label="อำเภอ"
-                  onChange={(event) => handleSelectChange('current_district', event.target.value)}
+                  onChange={(event) => handleSelectChange('district', event.target.value)}
                   value={field.value}
                 >
                   {districts.map(district => (
@@ -186,17 +218,17 @@ const Addresses: React.FC<RegisterFormProps> = ({ formMethods }) => {
           </FormControl>
         </Grid>
         <Grid item xs={12} md={6}>
-          <FormControl fullWidth margin="normal" variant="outlined">
+          <FormControl fullWidth variant="outlined">
             <InputLabel>ตำบล</InputLabel>
             <Controller
-              name="current_subdistrict"
+              name="subdistrict"
               control={control}
               defaultValue=""
               render={({ field }) => (
                 <Select
                   {...field}
                   label="ตำบล"
-                  onChange={(event) => handleSelectChange('current_subdistrict', event.target.value)}
+                  onChange={(event) => handleSelectChange('subdistrict', event.target.value)}
                   value={field.value}
                 >
                   {subdistricts.map(subdistrict => (

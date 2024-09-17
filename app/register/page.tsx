@@ -10,6 +10,8 @@ import Checkstatus from './components/Checkstatus';
 import TabCards from '@/components/TabCards';
 import Addresses from './components/addresses';
 import { useForm, UseFormReturn } from 'react-hook-form';
+import Scholarships from './components/Scholarships';
+import Studentpersonalinformation from '../Volunteer/components/Studentpersonalinformation';
 
 
 
@@ -161,6 +163,8 @@ const Page: React.FC = () => {
                     tabs={[
                       { label: 'Register Form', component: <RegisterForm formMethods={formMethods} /> },
                       { label: 'Addresses', component: <Addresses formMethods={formMethods} /> },
+                      { label: 'Scholarships', component: <Scholarships formMethods={formMethods} /> },
+                      { label: 'Studentpersonalinformation', component: <Studentpersonalinformation formMethods={formMethods} /> },
                     ]}
                   />
                 )
