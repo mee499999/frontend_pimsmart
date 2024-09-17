@@ -9,10 +9,11 @@ import Secondaryword from './components/Secondaryword';
 import Checkstatus from './components/Checkstatus';
 import TabCards from '@/components/TabCards';
 import Addresses from './components/addresses';
-import { useForm, UseFormReturn } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import Scholarships from './components/Scholarships';
-import Studentpersonalinformation from '../Volunteer/components/Studentpersonalinformation';
+import Studentpersonalinformation from './components/Studentpersonalinformation';
 import StepFive from './components/StepFive';
+import StepSix from './components/StepSix';
 
 
 
@@ -157,7 +158,7 @@ const Page: React.FC = () => {
 
               {/* Conditional Rendering */}
               {formSubmitted && !error && studentDetails ? (
-                <Secondaryword student={studentDetails[0]} /> // Assuming studentDetails is an array
+                <Secondaryword formMethods={formMethods} /> // Assuming studentDetails is an array
               ) : (
                 formSubmitted && !error && studentDetails === null && (
                   <TabCards
@@ -167,6 +168,7 @@ const Page: React.FC = () => {
                       { label: 'Step 3', component: <Scholarships formMethods={formMethods} /> },
                       { label: 'Step 4', component: <Studentpersonalinformation formMethods={formMethods} /> },
                       { label: 'Step 5', component: <StepFive formMethods={formMethods} /> },
+                      { label: 'Step 6', component: <StepSix formMethods={formMethods} /> },
                     ]}
                   />
                 )
@@ -177,7 +179,7 @@ const Page: React.FC = () => {
       </Box>
 
       <main>
-        <h1>jguihuithioj</h1>
+        {/* <h1>jguihuithioj</h1> */}
       </main>
     </Layout>
   );

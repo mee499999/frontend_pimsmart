@@ -159,7 +159,7 @@ const Studentpersonalinformation: React.FC<RegisterFormProps> = ({ formMethods }
                             render={({ field }) => (
                                 <TextField
                                     fullWidth
-                                    label="ที่อยู่อื่นโปรดระบุ"
+                                    label="ที่อยู่อื่นโปรดระบุ (บิดา)"
                                     {...field}
                                     variant="outlined"
                                     error={!!errors.fatherAddressDetails}
@@ -206,7 +206,7 @@ const Studentpersonalinformation: React.FC<RegisterFormProps> = ({ formMethods }
                             render={({ field }) => (
                                 <TextField
                                     fullWidth
-                                    label="ที่อยู่อื่นโปรดระบุ"
+                                    label="ที่อยู่อื่นโปรดระบุ (มารดา)"
                                     {...field}
                                     variant="outlined"
                                     error={!!errors.motherAddressDetails}
