@@ -98,6 +98,11 @@ export interface Student {
   maternalStatus? : string;  //สถานภาพมารดา
   maternalStatusDetails? : string;  //สถานภาพมารดา
 
+  //StepFive
+  addressValue? : string;  // ระบุค่าที่อยู่รายเดือนรวมน้ำไฟ ( เช่าบ้าน/หอ )
+  roundTripTravel? : string; //การเดินทางไปกลับ
+  householdExpenses? : string; //ค่าใช้จ่ายภายในบ้าน
+  familyDebt? : string; //หนี้สินครอบครัว
 }
 
 

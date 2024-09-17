@@ -1,4 +1,4 @@
-import { Student,Location } from "@/types/IResponse";
+import { Student, Location } from "@/types/IResponse";
 import { Box, Grid, TextField, Typography, Button, FormControl, InputLabel, Select, MenuItem, FormHelperText } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Controller, UseFormReturn } from "react-hook-form";
@@ -22,10 +22,8 @@ const Scholarships: React.FC<RegisterFormProps> = ({ formMethods }) => {
         watch,
     } = formMethods;
 
-    const [additionalInput, setAdditionalInput] = useState<string>('');
     const [provinces, setProvinces] = useState<string[]>([]);
 
-    const selectedValue = watch('knowThePIMSMARTFundfrom') || '';
 
     useEffect(() => {
         // Extract unique provinces from locationData
@@ -35,17 +33,9 @@ const Scholarships: React.FC<RegisterFormProps> = ({ formMethods }) => {
         setProvinces(uniqueProvinces);
     }, []);
 
-    const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        const value = event.target.value as string;
-        setValue('knowThePIMSMARTFundfrom', value);
-        setAdditionalInput(value === 'อื่นๆ' || value === 'เพื่อนในกองทุน PIM SMART' ? '' : '');
-    };
 
-    const handleAdditionalInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value;
-        setAdditionalInput(value);
-        setValue('additionalDetails', value);
-    };
+
+
 
     const onSubmit = (data: Student) => {
         console.log("Form Data: ", data);
@@ -88,46 +78,59 @@ const Scholarships: React.FC<RegisterFormProps> = ({ formMethods }) => {
                     />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <FormControl fullWidth variant="outlined" error={!!errors.knowThePIMSMARTFundfrom}>
-                        <InputLabel>รู้จักกองทุน PIM SMART จาก</InputLabel>
-                        <Controller
-                            name="knowThePIMSMARTFundfrom"
-                            control={control}
-                            defaultValue=""
-                            render={({ field }) => (
-                                <Select
-                                    label="รู้จักกองทุน PIM SMART จาก"
-                                    {...field}
-                                    onChange={(e) => {
-                                        field.onChange(e);
-                                        handleSelectChange(e as React.ChangeEvent<{ value: unknown }>); 
-                                    }}
-                                >
-                                    <MenuItem value="คุณครูแนะแนวโรงเรียนมัธยม">คุณครูแนะแนวโรงเรียนมัธยม</MenuItem>
-                                    <MenuItem value="ทีมแนะแนว">ทีมแนะแนว</MenuItem>
-                                    <MenuItem value="ศิษย์เก่าที่โรงเรียน">ศิษย์เก่าที่โรงเรียน</MenuItem>
-                                    <MenuItem value="LINE OA">LINE OA</MenuItem>
-                                    <MenuItem value="FACEBOOK">FACEBOOK</MenuItem>
-                                    <MenuItem value="อาจารย์ที่ปรึกษา">อาจารย์ที่ปรึกษา</MenuItem>
-                                    <MenuItem value="เพื่อนในกองทุน PIM SMART">เพื่อนในกองทุน PIM SMART</MenuItem>
-                                    <MenuItem value="อื่นๆ">อื่นๆ</MenuItem>
-                                </Select>
-                            )}
-                        />
-                        {errors.knowThePIMSMARTFundfrom && <FormHelperText>{errors.knowThePIMSMARTFundfrom.message}</FormHelperText>}
-                    </FormControl>
-                </Grid>
-                {(selectedValue === 'อื่นๆ' || selectedValue === 'เพื่อนในกองทุน PIM SMART') && (
-                    <Grid item xs={12} md={6}>
-                        <TextField
-                            fullWidth
-                            label={selectedValue === 'อื่นๆ' ? 'โปรดระบุรายละเอียดอื่นๆ' : 'โปรดระบุชื่อเพื่อน'}
-                            variant="outlined"
-                            value={additionalInput || ''} // Ensure value is not undefined
-                            onChange={handleAdditionalInputChange}
-                        />
-                    </Grid>
-                )}
+    <FormControl fullWidth variant="outlined" error={!!errors.knowThePIMSMARTFundfrom}>
+        <InputLabel>รู้จักกองทุน PIM SMART จาก</InputLabel>
+        <Controller
+            name="knowThePIMSMARTFundfrom"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+                <Select
+                    label="รู้จักกองทุน PIM SMART จาก"
+                    {...field}
+                    onChange={(e) => {
+                        field.onChange(e);
+                    }}
+                >
+                    <MenuItem value="คุณครูแนะแนวโรงเรียนมัธยม">คุณครูแนะแนวโรงเรียนมัธยม</MenuItem>
+                    <MenuItem value="ทีมแนะแนว">ทีมแนะแนว</MenuItem>
+                    <MenuItem value="ศิษย์เก่าที่โรงเรียน">ศิษย์เก่าที่โรงเรียน</MenuItem>
+                    <MenuItem value="LINE OA">LINE OA</MenuItem>
+                    <MenuItem value="FACEBOOK">FACEBOOK</MenuItem>
+                    <MenuItem value="อาจารย์ที่ปรึกษา">อาจารย์ที่ปรึกษา</MenuItem>
+                    <MenuItem value="เพื่อนในกองทุน PIM SMART">เพื่อนในกองทุน PIM SMART</MenuItem>
+                    <MenuItem value="อื่นๆ">อื่นๆ</MenuItem>
+                </Select>
+            )}
+        />
+        {errors.knowThePIMSMARTFundfrom && <FormHelperText>{errors.knowThePIMSMARTFundfrom.message}</FormHelperText>}
+    </FormControl>
+</Grid>
+
+{/* Conditional TextField rendering */}
+{(watch('knowThePIMSMARTFundfrom') === 'อื่นๆ' || watch('knowThePIMSMARTFundfrom') === 'เพื่อนในกองทุน PIM SMART') && (
+    <Grid item xs={12} md={6}>
+        <Controller
+            name="additionalDetails"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+                <TextField
+                    fullWidth
+                    label={watch('knowThePIMSMARTFundfrom') === 'อื่นๆ' ? 'โปรดระบุรายละเอียดอื่นๆ' : 'โปรดระบุชื่อเพื่อน'}
+                    variant="outlined"
+                    {...field} // Ensures the field is correctly controlled
+                    error={!!errors.additionalDetails}
+                    helperText={errors.additionalDetails?.message}
+                />
+            )}
+        />
+    </Grid>
+)}
+
+
+
+
 
                 <Grid item xs={12} md={6}>
                     <TextField

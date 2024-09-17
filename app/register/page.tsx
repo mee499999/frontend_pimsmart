@@ -12,6 +12,7 @@ import Addresses from './components/addresses';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import Scholarships from './components/Scholarships';
 import Studentpersonalinformation from '../Volunteer/components/Studentpersonalinformation';
+import StepFive from './components/StepFive';
 
 
 
@@ -161,10 +162,11 @@ const Page: React.FC = () => {
                 formSubmitted && !error && studentDetails === null && (
                   <TabCards
                     tabs={[
-                      { label: 'Register Form', component: <RegisterForm formMethods={formMethods} /> },
-                      { label: 'Addresses', component: <Addresses formMethods={formMethods} /> },
-                      { label: 'Scholarships', component: <Scholarships formMethods={formMethods} /> },
-                      { label: 'Studentpersonalinformation', component: <Studentpersonalinformation formMethods={formMethods} /> },
+                      { label: 'Step 1', component: <RegisterForm formMethods={formMethods} /> },
+                      { label: 'Step 2', component: <Addresses formMethods={formMethods} /> },
+                      { label: 'Step 3', component: <Scholarships formMethods={formMethods} /> },
+                      { label: 'Step 4', component: <Studentpersonalinformation formMethods={formMethods} /> },
+                      { label: 'Step 5', component: <StepFive formMethods={formMethods} /> },
                     ]}
                   />
                 )

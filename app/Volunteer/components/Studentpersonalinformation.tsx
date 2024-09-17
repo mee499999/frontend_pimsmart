@@ -281,7 +281,7 @@ const Studentpersonalinformation: React.FC<RegisterFormProps> = ({ formMethods }
                             render={({ field }) => (
                                 <TextField
                                     fullWidth
-                                    label="โปรดระบุวันเดือนปี"
+                                    label="โปรดระบุวันเดือนปี (บิดา)"
                                     type="date"
                                     {...field}
                                     InputLabelProps={{
@@ -332,7 +332,7 @@ const Studentpersonalinformation: React.FC<RegisterFormProps> = ({ formMethods }
                             render={({ field }) => (
                                 <TextField
                                     fullWidth
-                                    label="โปรดระบุวันเดือนปี"
+                                    label="โปรดระบุวันเดือนปี (มารดา)"
                                     type="date"
                                     {...field}
                                     InputLabelProps={{
