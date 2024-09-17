@@ -147,6 +147,14 @@ export interface VolunteerFormProps {
   error: string | null;
   loading: boolean;
 }
+export interface SpecialWoekFormProps{
+  onSubmit: (formValues: any) => void;
+  formValues: any;
+  setFormValues: React.Dispatch<React.SetStateAction<any>>;
+  success: string | null;
+  error: string | null;
+  loading: boolean;
+}
 
 export interface VolunteerHoursResponse {
   id: string;
@@ -158,4 +166,55 @@ export interface VolunteerHoursResponse {
   activityDescription: string;
   activityDate: string;
   hours: number;
+}
+
+export interface VolunteerFormProps {
+  onSubmit: (formValues: any) => void;
+  formValues: any;
+  setFormValues: React.Dispatch<React.SetStateAction<any>>;
+  success: string | null;
+  error: string | null;
+  loading: boolean;
+}
+
+export interface VolunteerHoursResponse {
+  id: string;
+  studentId: string;
+  firstName: string;
+  activityName: string;
+  organizationName: string;
+  organizationPhone: string;
+  activityDescription: string;
+  activityDate: string;
+  hours: number;
+}
+
+interface SpecialWorkFormData {
+  studentId: string;
+  title: string;
+  firstName: string;
+  nickname: string;
+  graduete: string;
+  branch: string;
+  activityName: string;
+  organizationName: string;
+  organizationPhone: string;
+  activityDescription: string;
+  activityDate: string;
+  hours: string;
+  createDate: string;
+  yearLevel: string;
+  loanStatus: string;
+}
+
+interface SpecialWorkFormData {
+  studentId: string;
+  title: string;
+  firstName: string;
+  nickname: string;
+  graduete: string;
+  branch: string;
+  activityName: string;
+  organizationName: string;
+  organizationPhone:string;
 }

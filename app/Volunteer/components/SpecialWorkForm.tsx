@@ -1,110 +1,205 @@
 "use client";
-
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
+import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { fetchVolunteerHours } from '@/app/api/CheckHour'; // Import the fetch function
-import { VolunteerHoursResponse } from '@/types/IResponse';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import Loading from '@/components/Loading'; // Ensure you have a Loading component
+import { SpecialWoekFormProps } from '@/types/IResponse'; // Adjust the import path as needed
 
-const CheckHoursWork: React.FC = () => {
-  const [studentId, setStudentId] = useState<string>('');
-  const [data, setData] = useState<VolunteerHoursResponse[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const tableRef = useRef<HTMLDivElement>(null);
+const defaultFormValues = {
+  studentId: '',
+  fullName: '',
+  workName: '',
+  organizationName: '',
+  workType: '',
+  workDescription: '',
+  compensation: '',
+  workDates: '',
+  workTime: '',
+  createDate: new Date().toISOString().slice(0, 10),
+};
 
-  const totalHours = useMemo(() => {
-    return data.reduce((accumulator, item) => {
-      return item.hours ? accumulator + Number(item.hours) : accumulator;
-    }, 0);
-  }, [data]);
+const SpecialWork: React.FC<SpecialWoekFormProps> = ({
+  onSubmit,
+  data = defaultFormValues,
+  success,
+  error,
+  loading,
+  setError,
+  setLoading,
+  setSuccessMessage,
+  setFormValues = () => {},
+}) => {
+  const [formValues, setFormValuesState] = useState(data);
+  const [studentIdError, setStudentIdError] = useState(false);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); // Prevent default form submission behavior
-    if (!studentId) {
-      setError('Student ID is required.');
-      return;
+  useEffect(() => {
+    const savedFormData = localStorage.getItem('specialWorkForm');
+    if (savedFormData) {
+      setFormValuesState(JSON.parse(savedFormData));
     }
+  }, []);
 
+  useEffect(() => {
+    localStorage.setItem('specialWorkForm', JSON.stringify(formValues));
+  }, [formValues]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    if (name === 'studentId') {
+      if (/^\d*$/.test(value)) {
+        setStudentIdError(false);
+        setFormValuesState({ ...formValues, [name]: value });
+      } else {
+        setStudentIdError(true);
+      }
+    } else {
+      setFormValuesState({ ...formValues, [name]: value });
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setLoading(true);
-    setError(null);
-
     try {
-      const response = await fetchVolunteerHours(studentId);
-      setData(response); // Set data directly if response is an array
+      await onSubmit(formValues);
+
+      // Clear form values
+      localStorage.removeItem('specialWorkForm');
+      setFormValuesState(defaultFormValues);
+
+      // Display success message
+      setSuccessMessage('Form submitted successfully!');
     } catch (error) {
-      console.error('Error fetching volunteer hours:', error);
-      setError('Failed to fetch volunteer hours.');
+      setError('An error occurred while submitting the form. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  const rows = data.map((item) => ({
-    id: item.studentId, // Ensure `id` is unique
-    studentId: item.studentId,
-    firstName: item.firstName,
-    activityName: item.activityName,
-    organizationName: item.organizationName,
-    organizationPhone: item.organizationPhone,
-    activityDescription: item.activityDescription,
-    activityDate: new Date(item.activityDate).toLocaleDateString(),
-    hours: item.hours,
-  }));
-
-  const columns: GridColDef[] = [
-    { field: 'studentId', headerName: 'Student ID', width: 175 },
-    { field: 'firstName', headerName: 'First Name', width: 150 },
-    { field: 'activityName', headerName: 'Activity Name', width: 200 },
-    { field: 'organizationName', headerName: 'Organization Name', width: 180 },
-    { field: 'organizationPhone', headerName: 'Organization Phone', width: 150 },
-    { field: 'activityDescription', headerName: 'Activity Description', width: 250 },
-    { field: 'activityDate', headerName: 'Activity Date', width: 150 },
-    { field: 'hours', headerName: 'Hours', width: 100 },
-  ];
-
   return (
     <main>
       <Typography variant="h5" gutterBottom>
-        ตรวจสอบชั่วโมงจิตอาสา
+        บันทึกข้อมูลการทำงานพิเศษ
       </Typography>
       <Box component="form" sx={{ flexGrow: 1 }} noValidate autoComplete="off" onSubmit={handleSubmit}>
-        <TextField
-          fullWidth
-          label="รหัสนักศึกษา"
-          name="studentId"
-          value={studentId}
-          onChange={(e) => setStudentId(e.target.value)}
-          required
-        />
-        <Box sx={{ mt: 3 }}>
-          <Button type="submit" variant="contained" fullWidth disabled={loading}>
-            {loading ? <CircularProgress size={24} /> : 'ตรวจสอบ'}
-          </Button>
-        </Box>
-      </Box>
-
-      {/* Display total hours */}
-      <Box sx={{ mt: 3 }}>
-        <Typography variant="h6">
-          Total Hours: {totalHours}
-        </Typography>
-      </Box>
-
-      {/* Display data below the form */}
-      <Box sx={{ mt: 3, height: 400, width: '100%' }} ref={tableRef}>
-        <Loading open={loading} containerRef={tableRef} />
-        <DataGrid rows={rows} columns={columns} pageSize={10} />
         {error && <Alert severity="error">{error}</Alert>}
+        {success && <Alert severity="success">{success}</Alert>}
+
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={6}>
+            <TextField
+              fullWidth
+              label="รหัสนักศึกษา"
+              name="studentId"
+              value={formValues.studentId}
+              onChange={handleChange}
+              error={studentIdError}
+              helperText={studentIdError ? 'กรุณากรอกตัวเลขเท่านั้น' : ''}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <TextField
+              fullWidth
+              label="ชื่อ-นามสกุล"
+              name="fullName"
+              value={formValues.fullName}
+              onChange={handleChange}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <TextField
+              fullWidth
+              label="ชื่อกิจกรรม"
+              name="workName"
+              value={formValues.workName}
+              onChange={handleChange}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <TextField
+              fullWidth
+              label="ชื่อองค์กร"
+              name="organizationName"
+              value={formValues.organizationName}
+              onChange={handleChange}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <TextField
+              fullWidth
+              select
+              label="ประเภทงาน"
+              name="workType"
+              value={formValues.workType}
+              onChange={handleChange}
+              SelectProps={{ native: true }}
+            >
+              <option value="">เลือกประเภทงาน</option>
+              <option value="งานพิเศษ">งานพิเศษ</option>
+              <option value="งานประจำ">งานประจำ</option>
+            </TextField>
+          </Grid>
+
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="รายละเอียดงาน"
+              name="workDescription"
+              value={formValues.workDescription}
+              onChange={handleChange}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <TextField
+              fullWidth
+              label="ค่าตอบแทน"
+              name="compensation"
+              type="number"
+              value={formValues.compensation}
+              onChange={handleChange}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <TextField
+              fullWidth
+              label="วัน-เดือน-ปี"
+              name="workDates"
+              value={formValues.workDates}
+              onChange={handleChange}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <TextField
+              fullWidth
+              label="เวลา"
+              name="workTime"
+              value={formValues.workTime}
+              onChange={handleChange}
+            />
+          </Grid>
+        </Grid>
+
+        <Grid container spacing={2} justifyContent="flex-end" mt={2}>
+          <Grid item>
+            <Button type="submit" variant="contained" color="primary" disabled={loading}>
+              {loading ? <CircularProgress size={24} /> : 'Submit'}
+            </Button>
+          </Grid>
+        </Grid>
       </Box>
     </main>
   );
 };
 
-export default CheckHoursWork;
+export default SpecialWork;

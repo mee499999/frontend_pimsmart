@@ -252,7 +252,7 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({
           <Grid item xs={12} md={6}>
             <TextField
               fullWidth
-              label="ชื่อกิจกรรมจิตอาสา"
+              label="ชื่อกิจกรรมจิตอาสา" 
               name="activityName"
               value={formValues.activityName}
               onChange={handleChange}
