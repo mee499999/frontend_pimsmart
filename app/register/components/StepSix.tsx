@@ -43,61 +43,54 @@ const StepSix: React.FC<RegisterFormProps> = ({ formMethods }) => {
             }}
         >
             <Typography color="secondary" align="center" sx={{ mt: 2 }}>
-                ข้อมูลของท่านยังไม่มีในระบบ
+                ข้อมูลการติดต่อกลับ
             </Typography>
             <Grid container spacing={2}>
 
 
-            <Grid item xs={12} md={6}>
-                    <FormControl fullWidth variant="outlined">
-                        <InputLabel>นักศึกษาได้ทำการเสริมความงามระหว่างการศึกษาได้หรือไม่?</InputLabel>
-                        <Controller
-                            name="BeautyEnhancement"
-                            control={control}
-                            defaultValue=""
-                            render={({ field }) => (
-                                <Select
-                                    label="นักศึกษาสามารถทำการเสริมความงามระหว่างการศึกษาได้หรือไม่?"
-                                    {...field}
-                                    error={!!errors.fatherAddress}
-                                    onChange={(e) => {
-                                        const value = e.target.value;
-                                        field.onChange(e);
-                                        if (value !== 'ทำเสริมความงาม') {
-                                            setValue('BeautyEnhancementDetails', '');  
-                                        }
-                                    }}
-                                >
-                                    <MenuItem value="ทำเสริมความงาม">ทำเสริมความงาม</MenuItem>
-                                    <MenuItem value="ไม่">ไม่</MenuItem>
-                                </Select>
-                            )}
-                        />
-                    </FormControl>
+
+                <Grid item xs={12} md={6}>
+                    <TextField
+                        fullWidth
+                        label="ข้อมูลการติดต่อกลับ"
+                        {...register("contactInformation")}
+                        error={!!errors.contactInformation}
+                        helperText={errors.contactInformation?.message}
+                    />
                 </Grid>
-                {watch('BeautyEnhancement') === 'ทำเสริมความงาม' && (
-                    <Grid item xs={12} md={6}>
-                        <Controller
-                            name="BeautyEnhancementDetails"
-                            control={control}
-                            defaultValue=""
-                            render={({ field }) => (
-                                <TextField
-                                    fullWidth
-                                    label="โปรดระบุเหตุผล"
-                                    {...field}
-                                    variant="outlined"
-                                    error={!!errors.BeautyEnhancementDetails}
-                                    helperText={errors.BeautyEnhancementDetails?.message}
-                                />
-                            )}
-                        />
-                    </Grid>
-                )}
+                <Grid item xs={12} md={6}>
+                    <TextField
+                        fullWidth
+                        label="ชื่อ - นามสกุล ผู้ที่สามารถติดต่อได้ในกรณีฉุกเฉิน"
+                        {...register("emergencyContact")}
+                        error={!!errors.emergencyContact}
+                        helperText={errors.emergencyContact?.message}
+                    />
                 </Grid>
+                <Grid item xs={12} md={6}>
+                    <TextField
+                        fullWidth
+                        label="ความสัมพันธ์"
+                        multiline
+                        {...register("relationship")}
+                        error={!!errors.relationship}
+                        helperText={errors.relationship?.message}
+                    />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <TextField
+                        fullWidth
+                        label="เบอร์โทรศัพท์ผู้ติดต่อฉุกเฉิน ที่สามารถติดต่อได้"
+                        multiline
+                        {...register("emergencyContactPhoneNumber")}
+                        error={!!errors.emergencyContactPhoneNumber}
+                        helperText={errors.emergencyContactPhoneNumber?.message}
+                    />
+                </Grid>
+            </Grid>
 
 
-           
+
 
 
 

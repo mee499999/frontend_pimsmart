@@ -344,9 +344,54 @@ const Studentpersonalinformation: React.FC<RegisterFormProps> = ({ formMethods }
                                 />
                             )}
                         />
+
                     </Grid>
                 )}
-
+                <Grid item xs={12} md={6}>
+                    <TextField
+                        label="มีพี่น้อง ( รวมนักศึกษา )"
+                        {...register("haveSiblings")}
+                        fullWidth
+                        error={!!errors.haveSiblings}
+                        helperText={errors.haveSiblings ? "This field is required" : ""}
+                    />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <TextField
+                        label="เป็นหญิง"
+                        {...register("woman")}
+                        fullWidth
+                        error={!!errors.woman}
+                        helperText={errors.woman ? "This field is required" : ""}
+                    />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <TextField
+                        label="เป็นชาย"
+                        {...register("man")}
+                        fullWidth
+                        error={!!errors.man}
+                        helperText={errors.man ? "This field is required" : ""}
+                    />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <TextField
+                        label="นักศึกษาเป็นลูกคนที่ (ของจำนวนพี่น้อง)"
+                        {...register("personWho")}
+                        fullWidth
+                        error={!!errors.personWho}
+                        helperText={errors.personWho ? "This field is required" : ""}
+                    />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <TextField
+                        label="กรณีไม่ได้อยู่กับพ่อแม่กรอกข้อมูลผู้ปกครอง"
+                        {...register("ParentInformation")}
+                        fullWidth
+                        error={!!errors.ParentInformation}
+                        helperText={errors.ParentInformation ? "This field is required" : ""}
+                    />
+                </Grid>
 
 
 

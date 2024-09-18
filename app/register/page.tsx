@@ -14,6 +14,10 @@ import Scholarships from './components/Scholarships';
 import Studentpersonalinformation from './components/Studentpersonalinformation';
 import StepFive from './components/StepFive';
 import StepSix from './components/StepSix';
+import StepSeven from './components/StepSeven';
+import StepEight from './components/StepEight';
+import StepNine from './components/StepNine';
+import StepTen from './components/StepTen';
 
 
 
@@ -169,6 +173,10 @@ const Page: React.FC = () => {
                       { label: 'Step 4', component: <Studentpersonalinformation formMethods={formMethods} /> },
                       { label: 'Step 5', component: <StepFive formMethods={formMethods} /> },
                       { label: 'Step 6', component: <StepSix formMethods={formMethods} /> },
+                      { label: 'Step 7', component: <StepSeven formMethods={formMethods} /> },
+                      { label: 'Step 8', component: <StepEight formMethods={formMethods} /> },
+                      { label: 'Step 9', component: <StepNine formMethods={formMethods} /> },
+                      { label: 'Step 10', component: <StepTen formMethods={formMethods} /> },
                     ]}
                   />
                 )

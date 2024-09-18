@@ -97,8 +97,9 @@ export interface Student {
   fatherStatusDetails? : string;  //สถานภาพบิดา
   maternalStatus? : string;  //สถานภาพมารดา
   maternalStatusDetails? : string;  //สถานภาพมารดา
+  haveSiblings? : string, //มีพี่น้อง ( รวมนักศึกษา )
+  woman? : string, //เป็นหญิง
 
-  
   //StepFive
   addressValue? : string;  // ระบุค่าที่อยู่รายเดือนรวมน้ำไฟ ( เช่าบ้าน/หอ )
   roundTripTravel? : string; //การเดินทางไปกลับ
@@ -106,8 +107,41 @@ export interface Student {
   familyDebt? : string; //หนี้สินครอบครัว
 
   //StepSix
+  contactInformation? :string; //ข้อมูลการติดต่อกลับ
+  emergencyContact? :string; //ชื่อ - นามสกุล ผู้ที่สามารถติดต่อได้ในกรณีฉุกเฉิน
+  relationship? :string; //ความสัมพันธ์
+  emergencyContactPhoneNumber? :string; //เบอร์โทรศัพท์ผู้ติดต่อฉุกเฉิน ที่สามารถติดต่อได้
+  
+  
+  //StepSeven
   BeautyEnhancement? :string; //เสริมความงาม
   BeautyEnhancementDetails? :string; //เสริมความงาม
+  man? : string, //เป็นชาย
+  personWho? : string, //นักศึกษาเป็นลูกคนที่
+  ParentInformation? : string, //นักศึกษาเป็นลูกคนที่
+  talent? : string, //ความสามารถพิเศษของนักศึกษา
+  primary? : string, //ประถม
+  middleSchool? : string, //มัธยมต้น
+  highSchool? : string, //มัธยมปลาย
+  current? : string, //ปัจจุบัน
+  specialWork? : string, //งานพิเศษที่เคยทำ
+  
+
+  //StepEight
+  hope? :string; //ความมุ่งหวังหลังจากจบการศึกษา
+  committee? :string; //อยากบอกอะไรกับคณะกรรมการฯ
+
+
+  //StepNine
+  familyHistory? :string; //เล่าประวัติครอบครัวคร่าวๆ และเหตุผลในการขอทุน มีความจำเป็น ความเดือนร้อน ความต้องการให้กองทุนฯช่วยเหลือ
+
+
+  //StepTen
+
+  uploadPictureHouse?: FileList | File[]; //อัพโหลดอย่างน้อย 2 รูป ภาพรวมนอกบ้าน ภาพรวมในบ้าน
+  
+
+
 }
 
 
