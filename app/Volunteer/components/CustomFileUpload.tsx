@@ -7,16 +7,16 @@ interface CustomFileUploadProps {
     value: File[];
     multiple?: boolean;
     onChange: (files: File[]) => void;
+    onRemove: (file: File) => void;
     accept?: string;
 }
 
-const CustomFileUpload: React.FC<CustomFileUploadProps> = ({ value, multiple = false, onChange, accept }) => {
-    
+const CustomFileUpload: React.FC<CustomFileUploadProps> = ({ value, multiple = false, onChange, onRemove, accept }) => {
     const [dragOver, setDragOver] = useState(false);
 
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
-        onChange([...value, ...files]); // Ensure to update the existing value
+        onChange(files);
     };
 
     const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -32,12 +32,7 @@ const CustomFileUpload: React.FC<CustomFileUploadProps> = ({ value, multiple = f
         e.preventDefault();
         setDragOver(false);
         const files = Array.from(e.dataTransfer.files);
-        onChange([...value, ...files]); // Ensure to update the existing value
-    };
-
-    const handleRemove = (file: File) => {
-        const updatedFiles = value.filter(f => f !== file);
-        onChange(updatedFiles);
+        onChange(files);
     };
 
     return (
@@ -74,7 +69,7 @@ const CustomFileUpload: React.FC<CustomFileUploadProps> = ({ value, multiple = f
                         {value.map((file, index) => (
                             <li key={`${file.name}-${index}`} style={{ alignItems: 'center', marginBottom: '8px' }}>
                                 {file.name}
-                                <IconButton onClick={() => handleRemove(file)} aria-label="delete" style={{ marginLeft: '16px' }}>
+                                <IconButton onClick={() => onRemove(file)} aria-label="delete" style={{ marginLeft: '16px' }}>
                                     <DeleteIcon />
                                 </IconButton>
                             </li>

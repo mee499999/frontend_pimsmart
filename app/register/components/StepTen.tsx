@@ -1,8 +1,8 @@
 import { Student } from "@/types/IResponse";
 import { Box, Grid, Typography, Button, FormHelperText, TextField } from "@mui/material";
-import { UseFormReturn, Controller } from "react-hook-form";
-import { useState } from "react";
+import { UseFormReturn, Controller, useFieldArray } from "react-hook-form";
 import CustomFileUpload from "@/app/Volunteer/components/CustomFileUpload";
+import { useState, useEffect } from "react";
 
 interface RegisterFormProps {
     formMethods: UseFormReturn<Student>;
@@ -11,28 +11,44 @@ interface RegisterFormProps {
 const StepTen: React.FC<RegisterFormProps> = ({ formMethods }) => {
     const {
         control,
-        register,
         handleSubmit,
         formState: { errors },
         setValue,
-        setError,
-        clearErrors,
         watch,
+        
     } = formMethods;
 
-    const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-    
-    const handleFileChange = (files: File[]) => {
-        setSelectedFiles(files);
-        setValue("uploadPictureHouse", files);
-        clearErrors("uploadPictureHouse");
+    const uploadPictureHouse = watch("uploadPictureHouse");
+    const [files, setFiles] = useState<File[]>([]);
+    const [fileError, setFileError] = useState<string | null>(null);
+
+
+    useEffect(() => {
+        if (uploadPictureHouse instanceof FileList) {
+            setFiles(Array.from(uploadPictureHouse));
+        } else if (Array.isArray(uploadPictureHouse)) {
+            setFiles(uploadPictureHouse);
+        }
+    }, [uploadPictureHouse]);
+
+    const handleFileChange = (newFiles: File[]) => {
+        const updatedFiles = [...files, ...newFiles];
+        setFiles(updatedFiles);
+        setValue("uploadPictureHouse", updatedFiles, { shouldValidate: true });
+    };
+
+    const handleFileRemove = (fileToRemove: File) => {
+        const updatedFiles = files.filter(file => file !== fileToRemove);
+        setFiles(updatedFiles);
+        setValue("uploadPictureHouse", updatedFiles, { shouldValidate: true });
     };
 
     const validateFiles = () => {
-        if (selectedFiles.length < 2) {
-            setError("uploadPictureHouse", { type: "manual", message: "กรุณาอัพโหลดรูปอย่างน้อย 2 รูป" });
+        if (files.length < 2) {
+            setFileError("กรุณาอัพโหลดรูปอย่างน้อย 2 รูป");
             return false;
         }
+        setFileError(null);
         return true;
     };
 
@@ -40,9 +56,7 @@ const StepTen: React.FC<RegisterFormProps> = ({ formMethods }) => {
         if (!validateFiles()) return;
 
         console.log("Form Data: ", data);
-        if (selectedFiles.length > 0) {
-            console.log("Selected Files: ", selectedFiles);
-        }
+        console.log("Uploaded Files: ", data.uploadPictureHouse);
 
         // Proceed with form submission logic
     };
@@ -69,14 +83,14 @@ const StepTen: React.FC<RegisterFormProps> = ({ formMethods }) => {
                         อัพโหลดอย่างน้อย 2 รูป ภาพรวมนอกบ้าน ภาพรวมในบ้าน
                     </Typography>
                     <CustomFileUpload
-                    
-                        value={selectedFiles}
+                        value={files}
                         multiple
                         onChange={handleFileChange}
+                        onRemove={handleFileRemove}
                         accept="image/*"
                     />
-                    {errors.uploadPictureHouse && (
-                        <FormHelperText error>{errors.uploadPictureHouse.message}</FormHelperText>
+                    {fileError && (
+                        <FormHelperText error>{fileError}</FormHelperText>
                     )}
                 </Grid>
                 <Grid item xs={12}>
@@ -92,7 +106,7 @@ const StepTen: React.FC<RegisterFormProps> = ({ formMethods }) => {
                                 rows={5}
                                 {...field}
                                 error={!!errors.familyHistory}
-                                helperText={errors.familyHistory?.message}
+                                helperText={errors.familyHistory?.message as string}
                             />
                         )}
                     />

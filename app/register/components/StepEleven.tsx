@@ -1,8 +1,8 @@
 import { Student } from "@/types/IResponse";
-import { Box, Grid, Typography, Button, FormHelperText } from "@mui/material";
-import { UseFormReturn } from "react-hook-form";
-import { useState } from "react";
+import { Box, Grid, Typography, Button, FormHelperText, TextField } from "@mui/material";
+import { UseFormReturn, Controller, useFieldArray } from "react-hook-form";
 import CustomFileUpload from "@/app/Volunteer/components/CustomFileUpload";
+import { useState, useEffect } from "react";
 
 interface RegisterFormProps {
     formMethods: UseFormReturn<Student>;
@@ -10,36 +10,58 @@ interface RegisterFormProps {
 
 const StepEleven: React.FC<RegisterFormProps> = ({ formMethods }) => {
     const {
+        control,
         handleSubmit,
         formState: { errors },
         setValue,
-        setError,
-        clearErrors,
+        watch,
+        
     } = formMethods;
 
-    const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+    const volunteerPictures = watch("volunteerPictures");
+    const [files, setFiles] = useState<File[]>([]);
     const [fileError, setFileError] = useState<string | null>(null);
 
-    const handleFileChange = (files: File[]) => {
-        setSelectedFiles(files);
-        setValue("volunteerPictures", files);
-        clearErrors("uploadPictureHouse");
+
+    useEffect(() => {
+        if (volunteerPictures instanceof FileList) {
+            setFiles(Array.from(volunteerPictures));
+        } else if (Array.isArray(volunteerPictures)) {
+            setFiles(volunteerPictures);
+        }
+    }, [volunteerPictures]);
+
+    const handleFileChange = (newFiles: File[]) => {
+        const updatedFiles = [...files, ...newFiles];
+        setFiles(updatedFiles);
+        setValue("volunteerPictures", updatedFiles, { shouldValidate: true });
+    };
+
+    const handleFileRemove = (fileToRemove: File) => {
+        const updatedFiles = files.filter(file => file !== fileToRemove);
+        setFiles(updatedFiles);
+        setValue("volunteerPictures", updatedFiles, { shouldValidate: true });
+    };
+
+    const validateFiles = () => {
+        if (files.length < 2) {
+            setFileError("กรุณาอัพโหลดรูปอย่างน้อย 2 รูป");
+            return false;
+        }
         setFileError(null);
+        return true;
     };
 
     const onSubmit = (data: Student) => {
-        if (selectedFiles.length < 2) {
-            setFileError("กรุณาอัพโหลดรูปอย่างน้อย 2 รูป");
-            return;
-        }
+        if (!validateFiles()) return;
 
         console.log("Form Data: ", data);
-        if (selectedFiles.length > 0) {
-            console.log("Selected Files: ", selectedFiles);
-        }
+        console.log("Uploaded Files: ", data.volunteerPictures);
+        
 
         // Proceed with form submission logic
     };
+    
 
     return (
         <Box
@@ -55,7 +77,7 @@ const StepEleven: React.FC<RegisterFormProps> = ({ formMethods }) => {
             }}
         >
             <Typography color="secondary" align="center" sx={{ mt: 2 }}>
-                ภาพทำจิตอาสา 1-5 รูป เป็นจิอาสาที่ทำย้อนหลังไม่เกิน 1 ปี
+                เล่าประวัติครอบครัวคร่าวๆ และเหตุผลในการขอทุน มีความจำเป็น ความเดือนร้อน ความต้องการให้กองทุนฯช่วยเหลือ
             </Typography>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
@@ -63,14 +85,33 @@ const StepEleven: React.FC<RegisterFormProps> = ({ formMethods }) => {
                         ภาพทำจิตอาสา 1-5 รูป เป็นจิอาสาที่ทำย้อนหลังไม่เกิน 1 ปี
                     </Typography>
                     <CustomFileUpload
-                        value={selectedFiles}
+                        value={files}
                         multiple
                         onChange={handleFileChange}
+                        onRemove={handleFileRemove}
                         accept="image/*"
                     />
-                    {fileError && (
+                    {errors && (
                         <FormHelperText error>{fileError}</FormHelperText>
                     )}
+                </Grid>
+                <Grid item xs={12}>
+                    <Controller
+                        name="familyHistory"
+                        control={control}
+                        rules={{ required: "กรุณากรอกประวัติครอบครัว" }}
+                        render={({ field }) => (
+                            <TextField
+                                fullWidth
+                                label="เล่าประวัติครอบครัวคร่าวๆ และเหตุผลในการขอทุน มีความจำเป็น ความเดือนร้อน ความต้องการให้กองทุนฯช่วยเหลือ"
+                                multiline
+                                rows={5}
+                                {...field}
+                                error={!!errors.familyHistory}
+                                helperText={errors.familyHistory?.message as string}
+                            />
+                        )}
+                    />
                 </Grid>
             </Grid>
 
