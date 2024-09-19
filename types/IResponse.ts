@@ -144,57 +144,43 @@ export interface Student {
 
 }
 
-
+// Location interface for geographic data
 export interface Location {
   province: string;
   district: string;
   subdistrict: string;
   zipcode: string;
 }
-
-
-
 export interface FormValues {
-  studentId: string;
-  firstName: string;
-  activityName: string;
-  organizationName: string;
-  organizationPhone: string;
-  activityDescription: string;
-  activityDate: string;
-  hours: string;
-  createDate: string;
+  studentId?: string;
+  studentId1?: string; // Additional field used for the form
+  title?: string;
+  firstName?: string;
+  nickname?: string;
+  graduate?: string;
+  branch?: string;
+  activityName?: string;
+  organizationName?: string;
+  organizationPhone?: string;
+  activityDescription?: string;
+  activityDate?: string;
+  hours?: string;
+  createDate?: string;
+  loanStatus?: string;
+  yearLevel?: string; 
+  formdata?: string; // Optional
+  student_id?: string;
+  full_name?: string;
+  activity_name?: string;
+  organization_name?: string;
+  organization_phone?: string;
+  activity_description?: string;
+  activity_date?: string;
+  
+  activity_image?: File;
 }
 
-export interface VolunteerHoursResponse {
-  studentId: string;
-  firstName: string;
-  activityName: string;
-  organizationName: string;
-  organizationPhone: string;
-  activityDescription: string;
-  activityDate: string;
-  hours: number;
-  createDate: string;
-}
-
-export interface VolunteerFormProps {
-  onSubmit: (formValues: any) => void;
-  formValues: any;
-  setFormValues: React.Dispatch<React.SetStateAction<any>>;
-  success: string | null;
-  error: string | null;
-  loading: boolean;
-}
-export interface SpecialWoekFormProps{
-  onSubmit: (formValues: any) => void;
-  formValues: any;
-  setFormValues: React.Dispatch<React.SetStateAction<any>>;
-  success: string | null;
-  error: string | null;
-  loading: boolean;
-}
-
+// Response structure when fetching volunteer hours
 export interface VolunteerHoursResponse {
   id: string;
   studentId: string;
@@ -205,35 +191,39 @@ export interface VolunteerHoursResponse {
   activityDescription: string;
   activityDate: string;
   hours: number;
+  
 }
 
+// Props for the VolunteerForm component
 export interface VolunteerFormProps {
-  onSubmit: (formValues: any) => void;
-  formValues: any;
-  setFormValues: React.Dispatch<React.SetStateAction<any>>;
+  onSubmit: (formValues: FormValues) => Promise<void>;
+  formValues: FormValues;
+  setFormValues: React.Dispatch<React.SetStateAction<FormValues>>;
+  success: string | null;
+  error: string | null;
+  loading: boolean;
+  setError: (error: string | null) => void; // Function to set error message
+  setLoading: (loading: boolean) => void;   // Function to set loading state
+  setSuccessMessage: (message: string | null) => void; // Function to set success message
+}
+
+// Props for the SpecialWorkForm component
+export interface SpecialWorkFormProps {
+  onSubmit: (formValues: SpecialWorkFormData) => void;
+  formValues: SpecialWorkFormData;
+  setFormValues: React.Dispatch<React.SetStateAction<SpecialWorkFormData>>;
   success: string | null;
   error: string | null;
   loading: boolean;
 }
 
-export interface VolunteerHoursResponse {
-  id: string;
-  studentId: string;
-  firstName: string;
-  activityName: string;
-  organizationName: string;
-  organizationPhone: string;
-  activityDescription: string;
-  activityDate: string;
-  hours: number;
-}
-
-interface SpecialWorkFormData {
+// Data structure for special work form submissions
+export interface SpecialWorkFormData {
   studentId: string;
   title: string;
   firstName: string;
   nickname: string;
-  graduete: string;
+  graduate: string;
   branch: string;
   activityName: string;
   organizationName: string;
@@ -244,16 +234,4 @@ interface SpecialWorkFormData {
   createDate: string;
   yearLevel: string;
   loanStatus: string;
-}
-
-interface SpecialWorkFormData {
-  studentId: string;
-  title: string;
-  firstName: string;
-  nickname: string;
-  graduete: string;
-  branch: string;
-  activityName: string;
-  organizationName: string;
-  organizationPhone:string;
 }
