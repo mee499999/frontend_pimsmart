@@ -8,7 +8,7 @@ interface RegisterFormProps {
     formMethods: UseFormReturn<Student>;
 }
 
-const StepTen: React.FC<RegisterFormProps> = ({ formMethods }) => {
+const StepEleven: React.FC<RegisterFormProps> = ({ formMethods }) => {
     const {
         control,
         handleSubmit,
@@ -18,29 +18,29 @@ const StepTen: React.FC<RegisterFormProps> = ({ formMethods }) => {
         
     } = formMethods;
 
-    const uploadPictureHouse = watch("uploadPictureHouse");
+    const volunteerPictures = watch("volunteerPictures");
     const [files, setFiles] = useState<File[]>([]);
     const [fileError, setFileError] = useState<string | null>(null);
 
 
     useEffect(() => {
-        if (uploadPictureHouse instanceof FileList) {
-            setFiles(Array.from(uploadPictureHouse));
-        } else if (Array.isArray(uploadPictureHouse)) {
-            setFiles(uploadPictureHouse);
+        if (volunteerPictures instanceof FileList) {
+            setFiles(Array.from(volunteerPictures));
+        } else if (Array.isArray(volunteerPictures)) {
+            setFiles(volunteerPictures);
         }
-    }, [uploadPictureHouse]);
+    }, [volunteerPictures]);
 
     const handleFileChange = (newFiles: File[]) => {
         const updatedFiles = [...files, ...newFiles];
         setFiles(updatedFiles);
-        setValue("uploadPictureHouse", updatedFiles, { shouldValidate: true });
+        setValue("volunteerPictures", updatedFiles, { shouldValidate: true });
     };
 
     const handleFileRemove = (fileToRemove: File) => {
         const updatedFiles = files.filter(file => file !== fileToRemove);
         setFiles(updatedFiles);
-        setValue("uploadPictureHouse", updatedFiles, { shouldValidate: true });
+        setValue("volunteerPictures", updatedFiles, { shouldValidate: true });
     };
 
     const validateFiles = () => {
@@ -56,10 +56,12 @@ const StepTen: React.FC<RegisterFormProps> = ({ formMethods }) => {
         if (!validateFiles()) return;
 
         console.log("Form Data: ", data);
-        console.log("Uploaded Files: ", data.uploadPictureHouse);
+        console.log("Uploaded Files: ", data.volunteerPictures);
+        
 
         // Proceed with form submission logic
     };
+    
 
     return (
         <Box
@@ -80,7 +82,7 @@ const StepTen: React.FC<RegisterFormProps> = ({ formMethods }) => {
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <Typography variant="body1" sx={{ mb: 1 }}>
-                        อัพโหลดอย่างน้อย 2 รูป ภาพรวมนอกบ้าน ภาพรวมในบ้าน
+                        ภาพทำจิตอาสา 1-5 รูป เป็นจิอาสาที่ทำย้อนหลังไม่เกิน 1 ปี
                     </Typography>
                     <CustomFileUpload
                         value={files}
@@ -89,7 +91,7 @@ const StepTen: React.FC<RegisterFormProps> = ({ formMethods }) => {
                         onRemove={handleFileRemove}
                         accept="image/*"
                     />
-                    {fileError && (
+                    {errors && (
                         <FormHelperText error>{fileError}</FormHelperText>
                     )}
                 </Grid>
@@ -120,4 +122,4 @@ const StepTen: React.FC<RegisterFormProps> = ({ formMethods }) => {
     );
 };
 
-export default StepTen;
+export default StepEleven;
