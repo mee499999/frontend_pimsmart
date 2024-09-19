@@ -22,6 +22,8 @@
     "@tailwindcss/typography": "^0.5.13",
     "@tanstack/react-query": "^4.36.1",
     "@tanstack/react-query-devtools": "^4.36.1",
+    "react-material-file-upload": "0.0.4",
+    "react-mui-fileuploader": "0.1.2",
     "axios": "^1.7.2",
     "dayjs": "^1.11.11",
     "file-saver": "^2.0.5",

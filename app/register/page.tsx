@@ -18,6 +18,7 @@ import StepSeven from './components/StepSeven';
 import StepEight from './components/StepEight';
 import StepNine from './components/StepNine';
 import StepTen from './components/StepTen';
+import StepEleven from './components/StepEleven';
 
 
 
@@ -177,6 +178,7 @@ const Page: React.FC = () => {
                       { label: 'Step 8', component: <StepEight formMethods={formMethods} /> },
                       { label: 'Step 9', component: <StepNine formMethods={formMethods} /> },
                       { label: 'Step 10', component: <StepTen formMethods={formMethods} /> },
+                      { label: 'Step 11', component: <StepEleven formMethods={formMethods} /> },
                     ]}
                   />
                 )
