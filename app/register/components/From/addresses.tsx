@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { TextField, Button, Typography, Box, Grid, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import locationData from '@/components/ThaiPostcode/thailand-province-district-subdistrict-zipcode.json';
 
-import { Location, Student } from '@/types/IResponse';
+import { Location, Student } from '@/types/Register';
 import { Controller, UseFormReturn } from 'react-hook-form';
 
 interface RegisterFormProps {
@@ -242,14 +242,14 @@ const Addresses: React.FC<RegisterFormProps> = ({ formMethods }) => {
           </FormControl>
         </Grid>
       </Grid>
-      <Button
+      {/* <Button
         type="submit"
         variant="contained"
         color="primary"
         sx={{ mt: 2 }}
       >
         Update
-      </Button>
+      </Button> */}
     </Box>
   );
 };

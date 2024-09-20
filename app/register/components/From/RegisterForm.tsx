@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { TextField, Button, Typography, Box, Grid, InputAdornment, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import { UseFormReturn, Controller } from 'react-hook-form';
-import { Student } from '@/types/IResponse';
+import { Student } from "@/types/Register";
+
 import { faculties, Faculty, fieldsOfStudy, } from '@/types/university';
 
 
@@ -445,7 +446,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ formMethods }) => {
         </Grid>
 
         {/* Submit Button */}
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <Button
             type="submit"
             variant="contained"
@@ -454,7 +455,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ formMethods }) => {
           >
             ส่งข้อมูล
           </Button>
-        </Grid>
+        </Grid> */}
       </Grid>
     </Box>
   );

@@ -1,8 +1,7 @@
-import { Student, Location } from "@/types/IResponse";
 import { Box, Grid, TextField, Typography, Button, FormControl, InputLabel, Select, MenuItem, FormHelperText } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Controller, UseFormReturn } from "react-hook-form";
-import locationData from '@/components/ThaiPostcode/thailand-province-district-subdistrict-zipcode.json';
+import { Student } from "@/types/Register";
 
 
 // Define the structure of the location data
@@ -80,10 +79,10 @@ const StepEight: React.FC<RegisterFormProps> = ({ formMethods }) => {
 
 
 
-
+{/* 
             <Button type="submit" variant="contained" color="primary">
                 Update
-            </Button>
+            </Button> */}
         </Box>
     );
 };

@@ -1,14 +1,14 @@
-import { Student } from "@/types/IResponse";
+import { Student } from "@/types/Register";
 import { Box, Grid, Typography, Button, FormHelperText, TextField } from "@mui/material";
 import { UseFormReturn, Controller, useFieldArray } from "react-hook-form";
-import CustomFileUpload from "@/app/Volunteer/components/CustomFileUpload";
 import { useState, useEffect } from "react";
+import CustomFileUpload from "@/components/CustomFileUpload";
 
 interface RegisterFormProps {
     formMethods: UseFormReturn<Student>;
 }
 
-const StepEleven: React.FC<RegisterFormProps> = ({ formMethods }) => {
+const StepTen: React.FC<RegisterFormProps> = ({ formMethods }) => {
     const {
         control,
         handleSubmit,
@@ -18,29 +18,29 @@ const StepEleven: React.FC<RegisterFormProps> = ({ formMethods }) => {
         
     } = formMethods;
 
-    const volunteerPictures = watch("volunteerPictures");
+    const uploadPictureHouse = watch("uploadPictureHouse");
     const [files, setFiles] = useState<File[]>([]);
     const [fileError, setFileError] = useState<string | null>(null);
 
 
     useEffect(() => {
-        if (volunteerPictures instanceof FileList) {
-            setFiles(Array.from(volunteerPictures));
-        } else if (Array.isArray(volunteerPictures)) {
-            setFiles(volunteerPictures);
+        if (uploadPictureHouse instanceof FileList) {
+            setFiles(Array.from(uploadPictureHouse));
+        } else if (Array.isArray(uploadPictureHouse)) {
+            setFiles(uploadPictureHouse);
         }
-    }, [volunteerPictures]);
+    }, [uploadPictureHouse]);
 
     const handleFileChange = (newFiles: File[]) => {
         const updatedFiles = [...files, ...newFiles];
         setFiles(updatedFiles);
-        setValue("volunteerPictures", updatedFiles, { shouldValidate: true });
+        setValue("uploadPictureHouse", updatedFiles, { shouldValidate: true });
     };
 
     const handleFileRemove = (fileToRemove: File) => {
         const updatedFiles = files.filter(file => file !== fileToRemove);
         setFiles(updatedFiles);
-        setValue("volunteerPictures", updatedFiles, { shouldValidate: true });
+        setValue("uploadPictureHouse", updatedFiles, { shouldValidate: true });
     };
 
     const validateFiles = () => {
@@ -56,12 +56,10 @@ const StepEleven: React.FC<RegisterFormProps> = ({ formMethods }) => {
         if (!validateFiles()) return;
 
         console.log("Form Data: ", data);
-        console.log("Uploaded Files: ", data.volunteerPictures);
-        
+        console.log("Uploaded Files: ", data.uploadPictureHouse);
 
         // Proceed with form submission logic
     };
-    
 
     return (
         <Box
@@ -82,7 +80,7 @@ const StepEleven: React.FC<RegisterFormProps> = ({ formMethods }) => {
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <Typography variant="body1" sx={{ mb: 1 }}>
-                        ภาพทำจิตอาสา 1-5 รูป เป็นจิอาสาที่ทำย้อนหลังไม่เกิน 1 ปี
+                        อัพโหลดอย่างน้อย 2 รูป ภาพรวมนอกบ้าน ภาพรวมในบ้าน
                     </Typography>
                     <CustomFileUpload
                         value={files}
@@ -91,35 +89,18 @@ const StepEleven: React.FC<RegisterFormProps> = ({ formMethods }) => {
                         onRemove={handleFileRemove}
                         accept="image/*"
                     />
-                    {errors && (
+                    {fileError && (
                         <FormHelperText error>{fileError}</FormHelperText>
                     )}
                 </Grid>
-                <Grid item xs={12}>
-                    <Controller
-                        name="familyHistory"
-                        control={control}
-                        rules={{ required: "กรุณากรอกประวัติครอบครัว" }}
-                        render={({ field }) => (
-                            <TextField
-                                fullWidth
-                                label="เล่าประวัติครอบครัวคร่าวๆ และเหตุผลในการขอทุน มีความจำเป็น ความเดือนร้อน ความต้องการให้กองทุนฯช่วยเหลือ"
-                                multiline
-                                rows={5}
-                                {...field}
-                                error={!!errors.familyHistory}
-                                helperText={errors.familyHistory?.message as string}
-                            />
-                        )}
-                    />
-                </Grid>
+
             </Grid>
 
-            <Button type="submit" variant="contained" color="primary">
+            {/* <Button type="submit" variant="contained" color="primary">
                 Update
-            </Button>
+            </Button> */}
         </Box>
     );
 };
 
-export default StepEleven;
+export default StepTen;
