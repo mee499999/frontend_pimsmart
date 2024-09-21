@@ -1,8 +1,7 @@
-import { Student, Location } from "@/types/IResponse";
+import { Student } from "@/types/Register";
 import { Box, Grid, TextField, Typography, Button, FormControl, InputLabel, Select, MenuItem, FormHelperText } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Controller, UseFormReturn } from "react-hook-form";
-import locationData from '@/components/ThaiPostcode/thailand-province-district-subdistrict-zipcode.json';
 
 
 // Define the structure of the location data
@@ -12,7 +11,7 @@ interface RegisterFormProps {
     formMethods: UseFormReturn<Student>;
 }
 
-const StepFive: React.FC<RegisterFormProps> = ({ formMethods }) => {
+const StepSix: React.FC<RegisterFormProps> = ({ formMethods }) => {
     const {
         control,
         register,
@@ -43,59 +42,58 @@ const StepFive: React.FC<RegisterFormProps> = ({ formMethods }) => {
             }}
         >
             <Typography color="secondary" align="center" sx={{ mt: 2 }}>
-                ข้อมูลของท่านยังไม่มีในระบบ
+                ข้อมูลการติดต่อกลับ
             </Typography>
-
             <Grid container spacing={2}>
+
+
+
                 <Grid item xs={12} md={6}>
                     <TextField
-                        label="ระบุค่าที่อยู่ต่อเดือนรวมน้ำไฟ ( เช่าบ้าน/หอ )"
-                        {...register("addressValue")}
                         fullWidth
-                        error={!!errors.addressValue}
-                        helperText={errors.addressValue ? "This field is required" : ""}
+                        label="ข้อมูลการติดต่อกลับ"
+                        {...register("contactInformation")}
+                        error={!!errors.contactInformation}
+                        helperText={errors.contactInformation?.message}
                     />
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <TextField
-                        label="ค่าเดินทางไป - กลับต่อวัน"
-                        {...register("roundTripTravel")}
                         fullWidth
-                        error={!!errors.roundTripTravel}
-                        helperText={errors.roundTripTravel ? "This field is required" : ""}
+                        label="ชื่อ - นามสกุล ผู้ที่สามารถติดต่อได้ในกรณีฉุกเฉิน"
+                        {...register("emergencyContact")}
+                        error={!!errors.emergencyContact}
+                        helperText={errors.emergencyContact?.message}
                     />
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <TextField
-                        label="ค่าใช้จ่ายภายในบ้าน"
-                        {...register("householdExpenses")}
                         fullWidth
-                        error={!!errors.householdExpenses}
-                        helperText={errors.householdExpenses ? "This field is required" : ""}
+                        label="ความสัมพันธ์"
+                        multiline
+                        {...register("relationship")}
+                        error={!!errors.relationship}
+                        helperText={errors.relationship?.message}
                     />
                 </Grid>
-
                 <Grid item xs={12} md={6}>
                     <TextField
-                        label="หนี้สินครอบครัว"
-                        {...register("familyDebt")}
                         fullWidth
-                        error={!!errors.familyDebt}
-                        helperText={errors.familyDebt ? "This field is required" : ""}
+                        label="เบอร์โทรศัพท์ผู้ติดต่อฉุกเฉิน ที่สามารถติดต่อได้"
+                        multiline
+                        {...register("emergencyContactPhoneNumber")}
+                        error={!!errors.emergencyContactPhoneNumber}
+                        helperText={errors.emergencyContactPhoneNumber?.message}
                     />
                 </Grid>
-
-
-
-
-
             </Grid>
 
-            <Button type="submit" variant="contained" color="primary">
-                Update
-            </Button>
+
+
+
+
         </Box>
     );
 };
 
-export default StepFive;
+export default StepSix;

@@ -2,7 +2,7 @@ import React from 'react';
 import { TextField, Button, Typography, Box, InputAdornment, Grid } from '@mui/material';
 import { Controller, UseFormReturn } from 'react-hook-form';
 import LockIcon from '@mui/icons-material/Lock';
-import { Student } from '@/types/IResponse';
+import { Student } from "@/types/Register";
 
 interface RegisterFormProps {
   formMethods: UseFormReturn<Student>;

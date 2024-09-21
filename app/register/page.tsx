@@ -1,29 +1,16 @@
 "use client";
 import React, { useState } from 'react';
 import Layout from '@/components/Layout';
-import { TextField, Box, Button, Grid, Typography } from '@mui/material';
+import { TextField, Box, Button, Grid, Typography, CircularProgress } from '@mui/material';
 import { Register } from '@/app/api/Register'; // Ensure this path is correct
-import { Student } from '@/types/IResponse';
-import RegisterForm from './components/RegisterForm';
 import Secondaryword from './components/Secondaryword';
 import Checkstatus from './components/Checkstatus';
-import TabCards from '@/components/TabCards';
-import Addresses from './components/addresses';
+import { Student } from "@/types/Register";
 import { useForm } from 'react-hook-form';
-import Scholarships from './components/Scholarships';
-import Studentpersonalinformation from './components/Studentpersonalinformation';
-import StepFive from './components/StepFive';
-import StepSix from './components/StepSix';
-import StepSeven from './components/StepSeven';
-import StepEight from './components/StepEight';
-import StepNine from './components/StepNine';
-import StepTen from './components/StepTen';
-import StepEleven from './components/StepEleven';
-
-
+import CustomTabCards from './components/CustomTabCards';
 
 const Page: React.FC = () => {
-  const formMethods = useForm<Student>(); // Initialize useForm
+  const formMethods = useForm<Student>();
   const { handleSubmit, register, formState: { errors } } = formMethods;
   const [studentDetails, setStudentDetails] = useState<Student[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -33,13 +20,15 @@ const Page: React.FC = () => {
 
   const handleSidebarClick = (formName: string) => {
     setSelectedForm(formName);
+    setFormSubmitted(false); // Reset form submission state when changing forms
+    setError(null); // Reset error message when changing forms
+    setStudentDetails(null); // Reset student details when changing forms
   };
-
 
   const onSubmit = async (data: Student) => {
     setFormSubmitted(true);
+    setError(null); // Clear previous errors
 
-    // Ensure that studentId and firstName are defined before using them
     if (!data.studentId || !data.firstName) {
       setError('กรุณากรอกข้อมูลให้ครบถ้วน');
       return;
@@ -47,14 +36,13 @@ const Page: React.FC = () => {
 
     try {
       setIsLoading(true);
-      const result = await Register(data.studentId, data.firstName); // Call Register with required arguments
+      const result = await Register(data.studentId, data.firstName);
 
       if (result) {
-        setStudentDetails(result); // Set studentDetails with the result directly
-        setError(null);
+        setStudentDetails(result);
+        // formMethods.reset(); // Reset the form fields
       } else {
         setStudentDetails(null);
-        setError(null);
       }
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -63,9 +51,6 @@ const Page: React.FC = () => {
       setIsLoading(false);
     }
   };
-
-
-
 
   return (
     <Layout
@@ -77,7 +62,7 @@ const Page: React.FC = () => {
         },
         {
           text: 'ตรวจสอบสถานะ',
-          hook: () => handleSidebarClick('Checkstatus') // Hide all forms on clicking "ตรวจสอบสถานะ"
+          hook: () => handleSidebarClick('Checkstatus') // Show Checkstatus on clicking "ตรวจสอบสถานะ"
         }
       ]}
     >
@@ -105,82 +90,70 @@ const Page: React.FC = () => {
           {/* Conditionally render the form and other components only if "Register" is selected */}
           {selectedForm === 'Register' && (
             <>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <Grid container spacing={2}>
-                  {/* First Section */}
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="รหัสนักศึกษา"
-                      {...register('studentId', { required: 'Required' })}
-                      variant="outlined"
-                      error={!!errors.studentId}
-                      helperText={errors.studentId?.message}
-                    />
-                  </Grid>
-
-                  {/* Second Section */}
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="ชื่อ (กรุณาใส่ชื่อเป็นภาษาอังกฤษและไม่ต้องใส่นามสกุล)"
-                      {...register('firstName', {
-                        required: 'Required',
-                        pattern: {
-                          value: /^[A-Za-z\s]+$/,
-                          message: 'Only English letters are allowed'
-                        }
-                      })}
-                      variant="outlined"
-                      error={!!errors.firstName}
-                      helperText={errors.firstName?.message}
-                    />
-                  </Grid>
-
-                  {/* Error Message */}
-                  {error && (
+              {!formSubmitted && (
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <Grid container spacing={2}>
+                    {/* First Section */}
                     <Grid item xs={12}>
-                      <Typography color="error" align="center">
-                        {error}
-                      </Typography>
+                      <TextField
+                        fullWidth
+                        label="รหัสนักศึกษา"
+                        {...register('studentId', { required: 'Required' })}
+                        variant="outlined"
+                        error={!!errors.studentId}
+                        helperText={errors.studentId?.message}
+                      />
                     </Grid>
-                  )}
 
-                  {/* Submit Button */}
-                  <Grid item xs={12} display="flex" justifyContent="center">
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                      sx={{ mt: 2 }}
-                      disabled={isLoading} // Disable button while loading
-                    >
-                      ส่งข้อมูล
-                    </Button>
+                    {/* Second Section */}
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="ชื่อ (กรุณาใส่ชื่อเป็นภาษาอังกฤษและไม่ต้องใส่นามสกุล)"
+                        {...register('firstName', {
+                          required: 'Required',
+                          pattern: {
+                            value: /^[A-Za-z\s]+$/,
+                            message: 'Only English letters are allowed'
+                          }
+                        })}
+                        variant="outlined"
+                        error={!!errors.firstName}
+                        helperText={errors.firstName?.message}
+                      />
+                    </Grid>
+
+                    {/* Error Message */}
+                    {error && (
+                      <Grid item xs={12}>
+                        <Typography color="error" align="center">
+                          {error}
+                        </Typography>
+                      </Grid>
+                    )}
+
+                    {/* Submit Button */}
+                    <Grid item xs={12} display="flex" justifyContent="center">
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        sx={{ mt: 2 }}
+                        disabled={isLoading} // Disable button while loading
+                      >
+                        {isLoading ? <CircularProgress size={24} /> : 'ส่งข้อมูล'}
+                      </Button>
+                    </Grid>
                   </Grid>
-                </Grid>
-              </form>
+                </form>
+              )}
 
               {/* Conditional Rendering */}
               {formSubmitted && !error && studentDetails ? (
-                <Secondaryword formMethods={formMethods} /> // Assuming studentDetails is an array
+                <Secondaryword formMethods={formMethods} />
               ) : (
                 formSubmitted && !error && studentDetails === null && (
-                  <TabCards
-                    tabs={[
-                      { label: 'Step 1', component: <RegisterForm formMethods={formMethods} /> },
-                      { label: 'Step 2', component: <Addresses formMethods={formMethods} /> },
-                      { label: 'Step 3', component: <Scholarships formMethods={formMethods} /> },
-                      { label: 'Step 4', component: <Studentpersonalinformation formMethods={formMethods} /> },
-                      { label: 'Step 5', component: <StepFive formMethods={formMethods} /> },
-                      { label: 'Step 6', component: <StepSix formMethods={formMethods} /> },
-                      { label: 'Step 7', component: <StepSeven formMethods={formMethods} /> },
-                      { label: 'Step 8', component: <StepEight formMethods={formMethods} /> },
-                      { label: 'Step 9', component: <StepNine formMethods={formMethods} /> },
-                      { label: 'Step 10', component: <StepTen formMethods={formMethods} /> },
-                      { label: 'Step 11', component: <StepEleven formMethods={formMethods} /> },
-                    ]}
-                  />
+                  <CustomTabCards formMethods={formMethods} />
                 )
               )}
             </>
@@ -189,7 +162,7 @@ const Page: React.FC = () => {
       </Box>
 
       <main>
-        {/* <h1>jguihuithioj</h1> */}
+        {/* Additional content can go here */}
       </main>
     </Layout>
   );

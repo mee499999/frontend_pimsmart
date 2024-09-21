@@ -1,14 +1,14 @@
-import { Student } from "@/types/IResponse";
+import { Student } from "@/types/Register";
 import { Box, Grid, Typography, Button, FormHelperText, TextField } from "@mui/material";
 import { UseFormReturn, Controller, useFieldArray } from "react-hook-form";
-import CustomFileUpload from "@/app/Volunteer/components/CustomFileUpload";
 import { useState, useEffect } from "react";
+import CustomFileUpload from "@/components/CustomFileUpload";
 
 interface RegisterFormProps {
     formMethods: UseFormReturn<Student>;
 }
 
-const StepTen: React.FC<RegisterFormProps> = ({ formMethods }) => {
+const StepEleven: React.FC<RegisterFormProps> = ({ formMethods }) => {
     const {
         control,
         handleSubmit,
@@ -93,31 +93,14 @@ const StepTen: React.FC<RegisterFormProps> = ({ formMethods }) => {
                         <FormHelperText error>{fileError}</FormHelperText>
                     )}
                 </Grid>
-                <Grid item xs={12}>
-                    <Controller
-                        name="familyHistory"
-                        control={control}
-                        rules={{ required: "กรุณากรอกประวัติครอบครัว" }}
-                        render={({ field }) => (
-                            <TextField
-                                fullWidth
-                                label="เล่าประวัติครอบครัวคร่าวๆ และเหตุผลในการขอทุน มีความจำเป็น ความเดือนร้อน ความต้องการให้กองทุนฯช่วยเหลือ"
-                                multiline
-                                rows={5}
-                                {...field}
-                                error={!!errors.familyHistory}
-                                helperText={errors.familyHistory?.message as string}
-                            />
-                        )}
-                    />
-                </Grid>
+
             </Grid>
 
-            <Button type="submit" variant="contained" color="primary">
+            {/* <Button type="submit" variant="contained" color="primary">
                 Update
-            </Button>
+            </Button> */}
         </Box>
     );
 };
 
-export default StepTen;
+export default StepEleven;

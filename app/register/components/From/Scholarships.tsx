@@ -1,4 +1,4 @@
-import { Student, Location } from "@/types/IResponse";
+import { Student, Location } from "@/types/Register";
 import { Box, Grid, TextField, Typography, Button, FormControl, InputLabel, Select, MenuItem, FormHelperText } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Controller, UseFormReturn } from "react-hook-form";
@@ -211,9 +211,9 @@ const Scholarships: React.FC<RegisterFormProps> = ({ formMethods }) => {
 
             </Grid>
 
-            <Button type="submit" variant="contained" color="primary">
+            {/* <Button type="submit" variant="contained" color="primary">
                 Update
-            </Button>
+            </Button> */}
         </Box>
     );
 };
