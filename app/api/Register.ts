@@ -1,4 +1,5 @@
-import { Student } from "@/types/IResponse";
+import { ApiResponse } from "@/types/IResponse";
+import { Student } from "@/types/Register";
 import axiosApi from "@/utils/Api";
 
 export const Register = async (studentId: string, fullName: string): Promise<Student[]> => {
@@ -11,3 +12,59 @@ export const Register = async (studentId: string, fullName: string): Promise<Stu
         throw error;
     }
 };
+
+
+
+
+// Function to send student data to backend
+
+
+
+export const sendStudentDataApi = async (
+  studentData: Student,
+  endpoint: string = '/students/register' // กำหนด endpoint ที่นี่
+): Promise<ApiResponse> => {
+  try {
+    const response = await axiosApi.post<ApiResponse>(endpoint, studentData);
+
+    return {
+      success: true,
+      message: 'Student data sent successfully',
+      data: response.data.data,
+    };
+  } catch (err: any) {
+    return { success: false, message: err.response?.data?.message || err.message || 'Network error' };
+  }
+};
+
+  
+
+
+// API function to upload files
+export const uploadFilesApi = async (
+    files: File[],
+    studentId: string,
+    endpoint: string = '/students/uploadToGoogleDrive' // Default endpoint for file upload
+  ): Promise<ApiResponse> => {
+    const formData = new FormData();
+    files.forEach(file => {
+      formData.append('files', file);
+    });
+    formData.append('studentId', studentId); // Add studentId to form data
+  
+    try {
+      const response = await axiosApi.post<ApiResponse>(endpoint, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+  
+      return {
+        success: true,
+        message: 'Files uploaded successfully',
+        data: response.data.data,
+      };
+    } catch (err: any) {
+      return { success: false, message: err.response?.data?.message || err.message || 'Network error' };
+    }
+  };

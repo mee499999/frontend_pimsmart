@@ -1,7 +1,6 @@
 
 
 export interface Student {
-    housePictures(arg0: string, housePictures: any): unknown;
     // ข้อมูลส่วนบุคคล
     id?: number;  // รหัสนักเรียน
     studentId?: string;  // รหัสประจำตัวนักเรียน
@@ -25,9 +24,7 @@ export interface Student {
     PlaceofStudy?: string;  // สถานที่ศึกษา
     otherPlace?: string;  // สถานที่ศึกษาอื่นๆ
   
-    // ข้อคำร้อง
-    request?: string;  // คำร้องขอพิเศษ
-  
+    
     // ที่อยู่ปัจจุบัน
     current_address: string;  // ที่อยู่ปัจจุบัน
     student_resident: string;  // ที่พักนักศึกษา
@@ -41,7 +38,7 @@ export interface Student {
     district: string;  // อำเภอ
     subdistrict: string;  // ตำบล
     postal_code: string;  // รหัสไปรษณีย์
-  
+    
     // ทุนการศึกษา   Scholarships
     advisorNameSurname?: string; // อาจารย์ที่ปรึกษา ชื่อ - นามสกุล
     advisorPhoneNumber?: string; // เบอร์โทรอาจารย์ที่ปรึกษา
@@ -52,9 +49,9 @@ export interface Student {
     educationLoan?: string; // กยศ สินเชื่อเพื่อการศึกษา
     graduatedFromSchool?: string; //จบจากโรงเรียน
     provinceSchool?: string; //จังหวัด(โรงเรียน)
-  
+    
     //Student personal information
-  
+    
     lineID?: string;
     facebook?: string;
     fatherNameSurname?: string;
@@ -67,7 +64,7 @@ export interface Student {
     fatherAddressDetails?: string;
     motherAddress?: string;
     motherAddressDetails?: string;
-  
+    
     // ข้อมูลด้านสุขภาพ
     congenitalDisease?: string;  // โรคประจำตัว 
     paternalMemoryDisorder? : string;  //โรคจำตัวบิดา
@@ -78,13 +75,13 @@ export interface Student {
     maternalStatusDetails? : string;  //สถานภาพมารดา
     haveSiblings? : string, //มีพี่น้อง ( รวมนักศึกษา )
     woman? : string, //เป็นหญิง
-  
+    
     //StepFive
     addressValue? : string;  // ระบุค่าที่อยู่รายเดือนรวมน้ำไฟ ( เช่าบ้าน/หอ )
     roundTripTravel? : string; //การเดินทางไปกลับ
     householdExpenses? : string; //ค่าใช้จ่ายภายในบ้าน
     familyDebt? : string; //หนี้สินครอบครัว
-  
+    
     //StepSix
     contactInformation? :string; //ข้อมูลการติดต่อกลับ
     emergencyContact? :string; //ชื่อ - นามสกุล ผู้ที่สามารถติดต่อได้ในกรณีฉุกเฉิน
@@ -105,29 +102,43 @@ export interface Student {
     current? : string, //ปัจจุบัน
     specialWork? : string, //งานพิเศษที่เคยทำ
     
-  
+    
     //StepEight
     hope? :string; //ความมุ่งหวังหลังจากจบการศึกษา
     committee? :string; //อยากบอกอะไรกับคณะกรรมการฯ
-  
-  
+    
+    
     //StepNine
     familyHistory? :string; //เล่าประวัติครอบครัวคร่าวๆ และเหตุผลในการขอทุน มีความจำเป็น ความเดือนร้อน ความต้องการให้กองทุนฯช่วยเหลือ
-  
-  
+    
+    
     //StepTen
   
     uploadPictureHouse?: FileList | File[]; //อัพโหลดอย่างน้อย 2 รูป ภาพรวมนอกบ้าน ภาพรวมในบ้าน
     volunteerPictures?: FileList | File[]; //ภาพทำจิตอาสา 1-5 รูป เป็นจิอาสาที่ทำย้อนหลังไม่เกิน 1 ปี
-    
-  
-  
-  }
+    studentPicture? : FileList | File[]; //อัพโหลดรูปนักศึกษา
 
+    
+
+
+
+
+
+
+
+
+
+    // ข้อคำร้อง
+    request?: string;  // คำร้องขอพิเศษ
+    
+  }
+  
   // Location interface for geographic data
-export interface Location {
+  export interface Location {
     province: string;
     district: string;
     subdistrict: string;
     zipcode: string;
   }
+
+  

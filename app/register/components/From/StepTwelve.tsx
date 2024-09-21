@@ -1,41 +1,46 @@
 import { Student } from "@/types/Register";
-import { Box, Grid, Typography, FormHelperText } from "@mui/material";
-import { UseFormReturn } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { Box, Grid, Typography, Button, FormHelperText, TextField } from "@mui/material";
+import { UseFormReturn, Controller, useFieldArray } from "react-hook-form";
+import { useState, useEffect } from "react";
 import CustomFileUpload from "@/components/CustomFileUpload";
 
 interface RegisterFormProps {
     formMethods: UseFormReturn<Student>;
 }
 
-const StepTen: React.FC<RegisterFormProps> = ({ formMethods }) => {
+const StepTwelve: React.FC<RegisterFormProps> = ({ formMethods }) => {
     const {
         control,
         handleSubmit,
+        formState: { errors },
         setValue,
         watch,
+        
     } = formMethods;
 
-    const studentPicture = watch("studentPicture");
+    const volunteerPictures = watch("volunteerPictures");
     const [files, setFiles] = useState<File[]>([]);
     const [fileError, setFileError] = useState<string | null>(null);
 
+
     useEffect(() => {
-        if (studentPicture) {
-            setFiles(Array.isArray(studentPicture) ? studentPicture : Array.from(studentPicture));
+        if (volunteerPictures instanceof FileList) {
+            setFiles(Array.from(volunteerPictures));
+        } else if (Array.isArray(volunteerPictures)) {
+            setFiles(volunteerPictures);
         }
-    }, [studentPicture]);
+    }, [volunteerPictures]);
 
     const handleFileChange = (newFiles: File[]) => {
         const updatedFiles = [...files, ...newFiles];
         setFiles(updatedFiles);
-        setValue("studentPicture", updatedFiles, { shouldValidate: true });
+        setValue("volunteerPictures", updatedFiles, { shouldValidate: true });
     };
 
     const handleFileRemove = (fileToRemove: File) => {
         const updatedFiles = files.filter(file => file !== fileToRemove);
         setFiles(updatedFiles);
-        setValue("studentPicture", updatedFiles, { shouldValidate: true });
+        setValue("volunteerPictures", updatedFiles, { shouldValidate: true });
     };
 
     const validateFiles = () => {
@@ -51,10 +56,12 @@ const StepTen: React.FC<RegisterFormProps> = ({ formMethods }) => {
         if (!validateFiles()) return;
 
         console.log("Form Data: ", data);
-        console.log("Uploaded Files: ", data.studentPicture);
+        console.log("Uploaded Files: ", data.volunteerPictures);
+        
 
         // Proceed with form submission logic
     };
+    
 
     return (
         <Box
@@ -70,12 +77,12 @@ const StepTen: React.FC<RegisterFormProps> = ({ formMethods }) => {
             }}
         >
             <Typography color="secondary" align="center" sx={{ mt: 2 }}>
-                อัพโหลดรูปนักศึกษา 1 รูป เป็นรูปหน้าตรง เห็นหน้าชัดเจน ไม่สวมแว่นกันแดดหรือแมสปิดใบหน้า
+                เล่าประวัติครอบครัวคร่าวๆ และเหตุผลในการขอทุน มีความจำเป็น ความเดือนร้อน ความต้องการให้กองทุนฯช่วยเหลือ
             </Typography>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <Typography variant="body1" sx={{ mb: 1 }}>
-                        อัพโหลดรูปนักศึกษา
+                        ภาพทำจิตอาสา 1-5 รูป เป็นจิอาสาที่ทำย้อนหลังไม่เกิน 1 ปี
                     </Typography>
                     <CustomFileUpload
                         value={files}
@@ -84,11 +91,23 @@ const StepTen: React.FC<RegisterFormProps> = ({ formMethods }) => {
                         onRemove={handleFileRemove}
                         accept="image/*"
                     />
-                    {fileError && <FormHelperText error>{fileError}</FormHelperText>}
+                    {errors && (
+                        <FormHelperText error>{fileError}</FormHelperText>
+                    )}
                 </Grid>
+
             </Grid>
+
+            {/* <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            sx={{ mt: 2 }}
+          >
+            ส่งข้อมูล
+          </Button> */}
         </Box>
     );
 };
 
-export default StepTen;
+export default StepTwelve;

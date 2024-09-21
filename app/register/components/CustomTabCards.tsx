@@ -16,18 +16,58 @@ import StepTen from './From/StepTen';
 import Studentpersonalinformation from './From/Studentpersonalinformation';
 import { UseFormReturn } from 'react-hook-form';
 import { Box, Button } from '@mui/material';
+import StepTwelve from './From/StepTwelve';
+import { useStudentApi } from '@/hooks/RegisterH';
+import { sendStudentDataApi } from '@/app/api/Register';
 
 interface RegisterFormProps {
   formMethods: UseFormReturn<Student>;
 }
-const onSubmit = (data: Student) => {
-  console.log("Form Data: ", data);
-};
+
 
 
 const CustomTabCards: React.FC<RegisterFormProps> = ({ formMethods }) => {
   const { control, register, handleSubmit, formState: { errors }, setValue, watch } = formMethods;
+  const { loading, error, response, sendStudentData, uploadFiles } = useStudentApi();
 
+
+  const onSubmit = async (data: Student) => {
+    const { uploadPictureHouse, volunteerPictures, studentPicture } = data;
+  
+    if (
+      (!uploadPictureHouse || uploadPictureHouse.length < 2) ||
+      (!volunteerPictures || volunteerPictures.length < 1) ||
+      (!studentPicture)
+    ) {
+      alert("Please ensure all required files are uploaded.");
+      return; // Prevent submission if validation fails
+    }
+  
+    console.log("Form Data: ", data);
+    const result = await sendStudentData(data); // Send student data to backend
+  
+    // Check if the result is valid before trying to access data
+    const studentId = data.studentId; // Adjust based on your actual response structure
+    console.log("555",studentId)
+  
+    if (!studentId) {
+      alert("Failed to get student ID.");
+      return; // Prevent further processing if studentId is not valid
+    }
+  
+    // Collect the files to upload
+    const filesToUpload = [
+      ...(uploadPictureHouse ? Array.from(uploadPictureHouse) : []),
+      ...(volunteerPictures ? Array.from(volunteerPictures) : []),
+      ...(studentPicture ? Array.from(studentPicture) : []),
+    ];
+  
+    // Call the upload function with studentId
+    await uploadFiles(filesToUpload, studentId); // Upload files to Google Drive
+  };
+  
+
+  
   return (
     <Box
       component="form"
@@ -69,6 +109,7 @@ const CustomTabCards: React.FC<RegisterFormProps> = ({ formMethods }) => {
           { label: 'Step 9', component: <StepNine formMethods={formMethods} /> },
           { label: 'Step 10', component: <StepTen formMethods={formMethods} /> },
           { label: 'Step 11', component: <StepEleven formMethods={formMethods} /> },
+          { label: 'Step 12', component: <StepTwelve formMethods={formMethods} /> },
         ]}
       />
     </Box>

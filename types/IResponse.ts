@@ -7,6 +7,18 @@ export interface IResponse<T> {
 
 }
 
+// Define the response type for the backend
+export interface ApiResponse {
+  success: boolean;
+  message: string;
+  data?: any;
+}
+
+
+export interface UploadFilesResult {
+  success: boolean;
+  message?: string;
+}
 
 
 // In '@/types/IResponse.ts'
