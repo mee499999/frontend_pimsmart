@@ -10,6 +10,7 @@ import CheckHoursWork from './components/checkHourWork';
 import { submitVolunteerForm } from '@/app/api/Volunteer';
 import { fetchVolunteerHours } from '@/app/api/CheckHour';
 import { FormValues } from '@/types/IResponse';
+import { State } from '@/types/IResponse';
 
 // Define action types
 type Action =
@@ -21,14 +22,6 @@ type Action =
   | { type: "SET_SELECTED_FORM"; payload: string };
 
 // Define state type
-interface State {
-  selectedForm: string;
-  formValues: FormValues;
-  success: string | null;
-  error: string | null;
-  loading: boolean;
-  volunteerHours: number | null;
-}
 
 // Define initial state
 const initialState: State = {
@@ -150,13 +143,13 @@ const CheckVolunteerHoursForm: React.FC = () => {
   return (
     <Layout sidebarItems={sidebarItems}>
       <main>
-        <Typography variant="h5" gutterBottom>
+        {/* <Typography variant="h5" gutterBottom>
           {selectedForm === "volunteerForm"
             ? "Volunteer Form"
             : selectedForm === "CheckHoursForm"
             ? "Check Hours Form"
             : ""}
-        </Typography>
+        </Typography> */}
 
         {selectedForm === "CheckHoursForm" && volunteerHours !== null && (
           <Typography variant="h6">Volunteer Hours: {volunteerHours}</Typography>

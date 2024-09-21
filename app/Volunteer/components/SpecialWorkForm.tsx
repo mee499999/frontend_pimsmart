@@ -1,205 +1,395 @@
+//submitSpecialWorkForm.tsx
+
 "use client";
-import React, { useState, useEffect } from 'react';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import CircularProgress from '@mui/material/CircularProgress';
-import Alert from '@mui/material/Alert';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import { SpecialWoekFormProps } from '@/types/IResponse'; // Adjust the import path as needed
 
-const defaultFormValues = {
-  studentId: '',
-  fullName: '',
-  workName: '',
-  organizationName: '',
-  workType: '',
-  workDescription: '',
-  compensation: '',
-  workDates: '',
-  workTime: '',
-  createDate: new Date().toISOString().slice(0, 10),
-};
+import React, { useEffect, useState } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { TextField, Button, Typography, Box, Grid, InputAdornment, FormControl, FormLabel, RadioGroup, FormControlLabel, FormHelperText, Radio, MenuItem } from '@mui/material';
+import LockIcon from '@mui/icons-material/Lock';
+import { FormValues } from '@/types/IResponse';
+import CustomFileUpload from './CustomFileUpload';
+import { watch } from 'fs';
 
-const SpecialWork: React.FC<SpecialWoekFormProps> = ({
-  onSubmit,
-  data = defaultFormValues,
-  success,
-  error,
-  loading,
-  setError,
-  setLoading,
-  setSuccessMessage,
-  setFormValues = () => {},
-}) => {
-  const [formValues, setFormValuesState] = useState(data);
-  const [studentIdError, setStudentIdError] = useState(false);
 
-  useEffect(() => {
-    const savedFormData = localStorage.getItem('specialWorkForm');
-    if (savedFormData) {
-      setFormValuesState(JSON.parse(savedFormData));
-    }
-  }, []);
+interface WorlFormProps {
+  onSubmit: (data: FormValues) => void;
+}
 
-  useEffect(() => {
-    localStorage.setItem('specialWorkForm', JSON.stringify(formValues));
-  }, [formValues]);
+const VolunteerForm: React.FC<WorlFormProps> = ({ onSubmit }) => {
+  const { control,
+         handleSubmit, 
+         formState: { errors },
+         setValue,
+         watch,
+        } = useForm<FormValues>();
+  const uploadPictureHouse = watch("uploadVolunteer");
+    const [files, setFiles] = useState<File[]>([]);
+    const [fileError, setFileError] = useState<string | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    if (name === 'studentId') {
-      if (/^\d*$/.test(value)) {
-        setStudentIdError(false);
-        setFormValuesState({ ...formValues, [name]: value });
-      } else {
-        setStudentIdError(true);
-      }
-    } else {
-      setFormValuesState({ ...formValues, [name]: value });
-    }
-  };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      await onSubmit(formValues);
+    useEffect(() => {
+        if (uploadPictureHouse instanceof FileList) {
+            setFiles(Array.from(uploadPictureHouse));
+        } else if (Array.isArray(uploadPictureHouse)) {
+            setFiles(uploadPictureHouse);
+        }
+    }, [uploadPictureHouse]);
 
-      // Clear form values
-      localStorage.removeItem('specialWorkForm');
-      setFormValuesState(defaultFormValues);
+    const handleFileChange = (newFiles: File[]) => {
+        const updatedFiles = [...files, ...newFiles];
+        setFiles(updatedFiles);
+        setValue("uploadVolunteer", updatedFiles, { shouldValidate: true });
+    };
 
-      // Display success message
-      setSuccessMessage('Form submitted successfully!');
-    } catch (error) {
-      setError('An error occurred while submitting the form. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+    const handleFileRemove = (fileToRemove: File) => {
+        const updatedFiles = files.filter(file => file !== fileToRemove);
+        setFiles(updatedFiles);
+        setValue("uploadVolunteer", updatedFiles, { shouldValidate: true });
+    };
 
+  
+
+  
   return (
-    <main>
-      <Typography variant="h5" gutterBottom>
-        บันทึกข้อมูลการทำงานพิเศษ
+    <Box
+      component="form"
+      onSubmit={handleSubmit(onSubmit)}
+      sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 800, mx: 'auto', my: 4 }}
+    >
+      <Typography color="secondary" align="center" sx={{ mt: 2 }}>
+        Submit Volunteer Activity
       </Typography>
-      <Box component="form" sx={{ flexGrow: 1 }} noValidate autoComplete="off" onSubmit={handleSubmit}>
-        {error && <Alert severity="error">{error}</Alert>}
-        {success && <Alert severity="success">{success}</Alert>}
 
+      <Grid container spacing={2}>
+        {/* Student ID Field */}
+        <Grid item xs={12} md={6}>
+          <Controller
+            name="student_id"
+            control={control}
+            defaultValue=""
+            rules={{ required: 'Student ID is required' }}
+            render={({ field }) => (
+              <TextField
+                fullWidth
+                label="Student ID"
+                {...field}
+                variant="outlined"
+                error={!!errors.student_id}
+                helperText={errors.student_id?.message}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            )}
+          />
+        </Grid>
+
+        {/* Prefix (Mr./Ms.) Field */}
+
+        <Grid item xs={12} md={6}>
+          <Controller
+            name="prefix"
+            control={control}
+            defaultValue=""
+            rules={{ required: 'Please select your prefix' }}
+            render={({ field }) => (
+              <TextField
+                select
+                fullWidth
+                label="Prefix"
+                {...field}
+                variant="outlined"
+                error={!!errors.prefix}
+                helperText={errors.prefix?.message}
+              >
+                <MenuItem value="male">ชาย</MenuItem>
+                <MenuItem value="female">หญิง</MenuItem>
+              </TextField>
+            )}
+          />
+        </Grid>
+
+
+
+
+
+
+
+        {/* Full Name Field */}
+        <Grid item xs={12} md={6}>
+          <Controller
+            name="full_name"
+            control={control}
+            defaultValue=""
+            rules={{ required: 'Full Name is required' }}
+            render={({ field }) => (
+              <TextField
+                fullWidth
+                label="Full Name"
+                {...field}
+                variant="outlined"
+                error={!!errors.full_name}
+                helperText={errors.full_name?.message}
+              />
+            )}
+          />
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <Controller
+            name="nickname"
+            control={control}
+            defaultValue=""
+            rules={{ required: 'Full Name is required' }}
+            render={({ field }) => (
+              <TextField
+                fullWidth
+                label="nickname"
+                {...field}
+                variant="outlined"
+                error={!!errors.nickname}
+                helperText={errors.nickname?.message}
+              />
+            )}
+          />
+        </Grid>
+
+
+
+
+
+        <Grid item xs={12} md={6}>
+          <Controller
+            name="graduate"
+            control={control}
+            defaultValue=""
+            rules={{ required: 'Please select your graduation year' }}
+            render={({ field }) => (
+              <TextField
+                select
+                fullWidth
+                label="Graduation Year"
+                {...field}
+                variant="outlined"
+                error={!!errors.graduate}
+                helperText={errors.graduate?.message}
+              >
+                <MenuItem value="ชั้นปีที่ 1">ชั้นปีที่ 1</MenuItem>
+                <MenuItem value="ชั้นปีที่ 2">ชั้นปีที่ 2</MenuItem>
+                <MenuItem value="ชั้นปีที่ 3">ชั้นปีที่ 3</MenuItem>
+                <MenuItem value="ชั้นปีที่ 4">ชั้นปีที่ 4</MenuItem>
+                <MenuItem value="ชั้นปีที่ 5">ชั้นปีที่ 5</MenuItem>
+              </TextField>
+            )}
+          />
+        </Grid>
+
+        {/* Graduation Year Field */}
+        <Grid item xs={12} md={6}>
+          <Controller
+            name="branch"
+            control={control}
+            defaultValue=""
+            rules={{ required: 'Please select your field of study' }}
+            render={({ field }) => (
+              <TextField
+                select
+                fullWidth
+                label="สาขา"
+                {...field}
+                variant="outlined"
+                error={!!errors.branch}
+                helperText={errors.branch?.message}
+              >
+                {/* Add each MenuItem from the image list */}
+                <MenuItem value="MTM">MTM</MenuItem>
+                <MenuItem value="IMTM">IMTM</MenuItem>
+                <MenuItem value="FBM">FBM</MenuItem>
+                <MenuItem value="RBM">RBM</MenuItem>
+                <MenuItem value="LTM">LTM</MenuItem>
+                <MenuItem value="BC">BC</MenuItem>
+                <MenuItem value="BJ">BJ</MenuItem>
+                <MenuItem value="CEB">CEB</MenuItem>
+                <MenuItem value="CB">CB</MenuItem>
+                <MenuItem value="CJ">CJ</MenuItem>
+                <MenuItem value="DIT">DIT</MenuItem>
+                <MenuItem value="CAI">CAI</MenuItem>
+                <MenuItem value="IE">IE</MenuItem>
+                <MenuItem value="AME">AME</MenuItem>
+                <MenuItem value="RAE">RAE</MenuItem>
+                <MenuItem value="IAM">IAM</MenuItem>
+                <MenuItem value="AVI">AVI</MenuItem>
+                <MenuItem value="HTM">HTM</MenuItem>
+                <MenuItem value="RPM">RPM</MenuItem>
+                <MenuItem value="HROM">HROM</MenuItem>
+                <MenuItem value="FTM">FTM</MenuItem>
+                <MenuItem value="PTM">PTM</MenuItem>
+                <MenuItem value="TCL">TCL</MenuItem>
+                <MenuItem value="ELT">ELT</MenuItem>
+                <MenuItem value="NS">NS</MenuItem>
+                <MenuItem value="NS">HIT</MenuItem>
+              </TextField>
+            )}
+          />
+        </Grid>
+
+
+
+
+
+
+
+        {/* Activity Name Field */}
+        <Grid item xs={12} md={6}>
+          <Controller
+            name="activity_name"
+            control={control}
+            defaultValue=""
+            rules={{ required: 'Activity Name is required' }}
+            render={({ field }) => (
+              <TextField
+                fullWidth
+                label="Activity Name"
+                {...field}
+                variant="outlined"
+                error={!!errors.activity_name}
+                helperText={errors.activity_name?.message}
+              />
+            )}
+          />
+        </Grid>
+
+        {/* Organization Name Field */}
+        <Grid item xs={12} md={6}>
+          <Controller
+            name="organization_name"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <TextField
+                fullWidth
+                label="Organization Name"
+                {...field}
+                variant="outlined"
+              />
+            )}
+          />
+        </Grid>
+
+        {/* Organization Phone Field */}
+        <Grid item xs={12} md={6}>
+          <Controller
+            name="organization_phone"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <TextField
+                fullWidth
+                label="Organization Phone"
+                {...field}
+                variant="outlined"
+                error={!!errors.organization_phone}
+                helperText={errors.organization_phone?.message}
+              />
+            )}
+          />
+        </Grid>
+
+        {/* Activity Description Field */}
+        <Grid item xs={12}>
+          <Controller
+            name="activity_description"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <TextField
+                fullWidth
+                label="Activity Description"
+                {...field}
+                variant="outlined"
+                multiline
+                rows={4}
+              />
+            )}
+          />
+        </Grid>
+
+        {/* Activity Date Field */}
+        <Grid item xs={12} md={6}>
+          <Controller
+            name="activity_date"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <TextField
+                fullWidth
+                label="Activity Date"
+                type="date"
+                {...field}
+                InputLabelProps={{ shrink: true }}
+                variant="outlined"
+              />
+            )}
+          />
+        </Grid>
+
+        {/* Hours Field */}
+        <Grid item xs={12} md={6}>
+          <Controller
+            name="hours"
+            control={control}
+            defaultValue={0}
+            render={({ field }) => (
+              <TextField
+                fullWidth
+                label="Number of Hours"
+                type="number"
+                {...field}
+                variant="outlined"
+              />
+            )}
+          />
+        </Grid>
+
+        {/* Activity Image Field */}
         <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
-            <TextField
-              fullWidth
-              label="รหัสนักศึกษา"
-              name="studentId"
-              value={formValues.studentId}
-              onChange={handleChange}
-              error={studentIdError}
-              helperText={studentIdError ? 'กรุณากรอกตัวเลขเท่านั้น' : ''}
-            />
-          </Grid>
+                <Grid item xs={12}>
+                    <Typography variant="body1" sx={{ mb: 1 }}>
+                        อัพโหลดอย่างน้อย 2 รูป ภาพรวมนอกบ้าน ภาพรวมในบ้าน
+                    </Typography>
+                    <CustomFileUpload
+                        value={files}
+                        multiple
+                        onChange={handleFileChange}
+                        onRemove={handleFileRemove}
+                        accept="image/*"
+                    />
+                    {fileError && (
+                        <FormHelperText error>{fileError}</FormHelperText>
+                    )}
+                </Grid>
+                
+            </Grid>
 
-          <Grid item xs={12} md={6}>
-            <TextField
-              fullWidth
-              label="ชื่อ-นามสกุล"
-              name="fullName"
-              value={formValues.fullName}
-              onChange={handleChange}
-            />
-          </Grid>
 
-          <Grid item xs={12} md={6}>
-            <TextField
-              fullWidth
-              label="ชื่อกิจกรรม"
-              name="workName"
-              value={formValues.workName}
-              onChange={handleChange}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <TextField
-              fullWidth
-              label="ชื่อองค์กร"
-              name="organizationName"
-              value={formValues.organizationName}
-              onChange={handleChange}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <TextField
-              fullWidth
-              select
-              label="ประเภทงาน"
-              name="workType"
-              value={formValues.workType}
-              onChange={handleChange}
-              SelectProps={{ native: true }}
-            >
-              <option value="">เลือกประเภทงาน</option>
-              <option value="งานพิเศษ">งานพิเศษ</option>
-              <option value="งานประจำ">งานประจำ</option>
-            </TextField>
-          </Grid>
-
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="รายละเอียดงาน"
-              name="workDescription"
-              value={formValues.workDescription}
-              onChange={handleChange}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <TextField
-              fullWidth
-              label="ค่าตอบแทน"
-              name="compensation"
-              type="number"
-              value={formValues.compensation}
-              onChange={handleChange}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <TextField
-              fullWidth
-              label="วัน-เดือน-ปี"
-              name="workDates"
-              value={formValues.workDates}
-              onChange={handleChange}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <TextField
-              fullWidth
-              label="เวลา"
-              name="workTime"
-              value={formValues.workTime}
-              onChange={handleChange}
-            />
-          </Grid>
+        {/* Submit Button */}
+        <Grid item xs={12}>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            sx={{ mt: 2 }}
+          >
+            Submit
+          </Button>
         </Grid>
-
-        <Grid container spacing={2} justifyContent="flex-end" mt={2}>
-          <Grid item>
-            <Button type="submit" variant="contained" color="primary" disabled={loading}>
-              {loading ? <CircularProgress size={24} /> : 'Submit'}
-            </Button>
-          </Grid>
-        </Grid>
-      </Box>
-    </main>
+      </Grid>
+    </Box>
   );
 };
 
-export default SpecialWork;
+export default VolunteerForm;

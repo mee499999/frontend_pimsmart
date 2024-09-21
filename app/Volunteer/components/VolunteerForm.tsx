@@ -1,18 +1,53 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { TextField, Button, Typography, Box, Grid, InputAdornment } from '@mui/material';
+import { TextField, Button, Typography, Box, Grid, InputAdornment, FormControl, FormLabel, RadioGroup, FormControlLabel, FormHelperText, Radio, MenuItem } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import { FormValues } from '@/types/IResponse';
+import CustomFileUpload from './CustomFileUpload';
+import { watch } from 'fs';
+
 
 interface VolunteerFormProps {
   onSubmit: (data: FormValues) => void;
 }
 
 const VolunteerForm: React.FC<VolunteerFormProps> = ({ onSubmit }) => {
-  const { control, handleSubmit, formState: { errors } } = useForm<FormValues>();
+  const { control,
+         handleSubmit, 
+         formState: { errors },
+         setValue,
+         watch,
+        } = useForm<FormValues>();
+  const uploadPictureHouse = watch("uploadVolunteer");
+    const [files, setFiles] = useState<File[]>([]);
+    const [fileError, setFileError] = useState<string | null>(null);
 
+
+    useEffect(() => {
+        if (uploadPictureHouse instanceof FileList) {
+            setFiles(Array.from(uploadPictureHouse));
+        } else if (Array.isArray(uploadPictureHouse)) {
+            setFiles(uploadPictureHouse);
+        }
+    }, [uploadPictureHouse]);
+
+    const handleFileChange = (newFiles: File[]) => {
+        const updatedFiles = [...files, ...newFiles];
+        setFiles(updatedFiles);
+        setValue("uploadVolunteer", updatedFiles, { shouldValidate: true });
+    };
+
+    const handleFileRemove = (fileToRemove: File) => {
+        const updatedFiles = files.filter(file => file !== fileToRemove);
+        setFiles(updatedFiles);
+        setValue("uploadVolunteer", updatedFiles, { shouldValidate: true });
+    };
+
+  
+
+  
   return (
     <Box
       component="form"
@@ -42,7 +77,7 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ onSubmit }) => {
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
-                      <LockIcon />
+
                     </InputAdornment>
                   ),
                 }}
@@ -50,6 +85,37 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ onSubmit }) => {
             )}
           />
         </Grid>
+
+        {/* Prefix (Mr./Ms.) Field */}
+
+        <Grid item xs={12} md={6}>
+          <Controller
+            name="prefix"
+            control={control}
+            defaultValue=""
+            rules={{ required: 'Please select your prefix' }}
+            render={({ field }) => (
+              <TextField
+                select
+                fullWidth
+                label="Prefix"
+                {...field}
+                variant="outlined"
+                error={!!errors.prefix}
+                helperText={errors.prefix?.message}
+              >
+                <MenuItem value="male">ชาย</MenuItem>
+                <MenuItem value="female">หญิง</MenuItem>
+              </TextField>
+            )}
+          />
+        </Grid>
+
+
+
+
+
+
 
         {/* Full Name Field */}
         <Grid item xs={12} md={6}>
@@ -70,6 +136,110 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ onSubmit }) => {
             )}
           />
         </Grid>
+
+        <Grid item xs={12} md={6}>
+          <Controller
+            name="nickname"
+            control={control}
+            defaultValue=""
+            rules={{ required: 'Full Name is required' }}
+            render={({ field }) => (
+              <TextField
+                fullWidth
+                label="nickname"
+                {...field}
+                variant="outlined"
+                error={!!errors.nickname}
+                helperText={errors.nickname?.message}
+              />
+            )}
+          />
+        </Grid>
+
+
+
+
+
+        <Grid item xs={12} md={6}>
+          <Controller
+            name="graduate"
+            control={control}
+            defaultValue=""
+            rules={{ required: 'Please select your graduation year' }}
+            render={({ field }) => (
+              <TextField
+                select
+                fullWidth
+                label="Graduation Year"
+                {...field}
+                variant="outlined"
+                error={!!errors.graduate}
+                helperText={errors.graduate?.message}
+              >
+                <MenuItem value="ชั้นปีที่ 1">ชั้นปีที่ 1</MenuItem>
+                <MenuItem value="ชั้นปีที่ 2">ชั้นปีที่ 2</MenuItem>
+                <MenuItem value="ชั้นปีที่ 3">ชั้นปีที่ 3</MenuItem>
+                <MenuItem value="ชั้นปีที่ 4">ชั้นปีที่ 4</MenuItem>
+                <MenuItem value="ชั้นปีที่ 5">ชั้นปีที่ 5</MenuItem>
+              </TextField>
+            )}
+          />
+        </Grid>
+
+        {/* Graduation Year Field */}
+        <Grid item xs={12} md={6}>
+          <Controller
+            name="branch"
+            control={control}
+            defaultValue=""
+            rules={{ required: 'Please select your field of study' }}
+            render={({ field }) => (
+              <TextField
+                select
+                fullWidth
+                label="สาขา"
+                {...field}
+                variant="outlined"
+                error={!!errors.branch}
+                helperText={errors.branch?.message}
+              >
+                {/* Add each MenuItem from the image list */}
+                <MenuItem value="MTM">MTM</MenuItem>
+                <MenuItem value="IMTM">IMTM</MenuItem>
+                <MenuItem value="FBM">FBM</MenuItem>
+                <MenuItem value="RBM">RBM</MenuItem>
+                <MenuItem value="LTM">LTM</MenuItem>
+                <MenuItem value="BC">BC</MenuItem>
+                <MenuItem value="BJ">BJ</MenuItem>
+                <MenuItem value="CEB">CEB</MenuItem>
+                <MenuItem value="CB">CB</MenuItem>
+                <MenuItem value="CJ">CJ</MenuItem>
+                <MenuItem value="DIT">DIT</MenuItem>
+                <MenuItem value="CAI">CAI</MenuItem>
+                <MenuItem value="IE">IE</MenuItem>
+                <MenuItem value="AME">AME</MenuItem>
+                <MenuItem value="RAE">RAE</MenuItem>
+                <MenuItem value="IAM">IAM</MenuItem>
+                <MenuItem value="AVI">AVI</MenuItem>
+                <MenuItem value="HTM">HTM</MenuItem>
+                <MenuItem value="RPM">RPM</MenuItem>
+                <MenuItem value="HROM">HROM</MenuItem>
+                <MenuItem value="FTM">FTM</MenuItem>
+                <MenuItem value="PTM">PTM</MenuItem>
+                <MenuItem value="TCL">TCL</MenuItem>
+                <MenuItem value="ELT">ELT</MenuItem>
+                <MenuItem value="NS">NS</MenuItem>
+                <MenuItem value="NS">HIT</MenuItem>
+              </TextField>
+            )}
+          />
+        </Grid>
+
+
+
+
+
+
 
         {/* Activity Name Field */}
         <Grid item xs={12} md={6}>
@@ -184,27 +354,25 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ onSubmit }) => {
         </Grid>
 
         {/* Activity Image Field */}
-        <Grid item xs={12} md={6}>
-          <Controller
-            name="activity_image"
-            control={control}
-            defaultValue={null}
-            render={({ field }) => (
-              <TextField
-                fullWidth
-                label="Upload Activity Image"
-                type="file"
-                inputProps={{
-                  accept: "image/*",
-                }}
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  field.onChange(file);
-                }}
-              />
-            )}
-          />
-        </Grid>
+        <Grid container spacing={2}>
+                <Grid item xs={12}>
+                    <Typography variant="body1" sx={{ mb: 1 }}>
+                        อัพโหลดอย่างน้อย 2 รูป ภาพรวมนอกบ้าน ภาพรวมในบ้าน
+                    </Typography>
+                    <CustomFileUpload
+                        value={files}
+                        multiple
+                        onChange={handleFileChange}
+                        onRemove={handleFileRemove}
+                        accept="image/*"
+                    />
+                    {fileError && (
+                        <FormHelperText error>{fileError}</FormHelperText>
+                    )}
+                </Grid>
+                
+            </Grid>
+
 
         {/* Submit Button */}
         <Grid item xs={12}>

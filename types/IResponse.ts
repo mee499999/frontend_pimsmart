@@ -153,6 +153,9 @@ export interface Location {
   zipcode: string;
 }
 export interface FormValues {
+  uploadVolunteer?: FileList | File[];
+  Graduet?: string;
+  prefix?: string;
   studentId?: string;
   studentId1?: string; // Additional field used for the form
   title?: string;
@@ -177,7 +180,7 @@ export interface FormValues {
   organization_phone?: string;
   activity_description?: string;
   activity_date?: string;
-  
+  formValues?:string;
   activity_image?: File;
 }
 
@@ -235,4 +238,13 @@ export interface SpecialWorkFormData {
   createDate: string;
   yearLevel: string;
   loanStatus: string;
+}
+
+export interface State {
+  selectedForm: string;
+  formValues: FormValues;
+  success: string | null;
+  error: string | null;
+  loading: boolean;
+  volunteerHours: number | null;
 }
