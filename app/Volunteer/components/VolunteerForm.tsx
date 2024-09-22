@@ -5,8 +5,9 @@ import { useForm, Controller } from 'react-hook-form';
 import { TextField, Button, Typography, Box, Grid, InputAdornment, FormControl, FormLabel, RadioGroup, FormControlLabel, FormHelperText, Radio, MenuItem } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import { FormValues } from '@/types/IResponse';
-import CustomFileUpload from './CustomFileUpload';
+
 import { watch } from 'fs';
+import CustomFileUpload from '@/components/CustomFileUpload';
 
 
 interface VolunteerFormProps {

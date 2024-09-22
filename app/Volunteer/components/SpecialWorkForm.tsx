@@ -1,70 +1,63 @@
-//submitSpecialWorkForm.tsx
-
 "use client";
 
 import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { TextField, Button, Typography, Box, Grid, InputAdornment, FormControl, FormLabel, RadioGroup, FormControlLabel, FormHelperText, Radio, MenuItem } from '@mui/material';
-import LockIcon from '@mui/icons-material/Lock';
-import { FormValues } from '@/types/IResponse';
-import CustomFileUpload from './CustomFileUpload';
-import { watch } from 'fs';
+import { TextField, Button, Typography, Box, Grid, MenuItem, FormHelperText } from '@mui/material';
+import { FormValuesWork } from '@/types/IResponse';
+import CustomFileUpload from '@/components/CustomFileUpload';
 
-
-interface WorlFormProps {
-  onSubmit: (data: FormValues) => void;
+interface WorkFormProps {
+  onSubmit: (data: FormValuesWork) => void;
 }
 
-const VolunteerForm: React.FC<WorlFormProps> = ({ onSubmit }) => {
-  const { control,
-         handleSubmit, 
-         formState: { errors },
-         setValue,
-         watch,
-        } = useForm<FormValues>();
-  const uploadPictureHouse = watch("uploadVolunteer");
-    const [files, setFiles] = useState<File[]>([]);
-    const [fileError, setFileError] = useState<string | null>(null);
+const SpecialWorkForm: React.FC<WorkFormProps> = ({ onSubmit }) => {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch,
+  } = useForm<FormValuesWork>();
 
+  const uploadPictureHouse = watch("uploadSpecialwork");
+  const [files, setFiles] = useState<File[]>([]);
+  const [fileError, setFileError] = useState<string | null>(null);
 
-    useEffect(() => {
-        if (uploadPictureHouse instanceof FileList) {
-            setFiles(Array.from(uploadPictureHouse));
-        } else if (Array.isArray(uploadPictureHouse)) {
-            setFiles(uploadPictureHouse);
-        }
-    }, [uploadPictureHouse]);
+  useEffect(() => {
+    if (uploadPictureHouse instanceof FileList) {
+      setFiles(Array.from(uploadPictureHouse));
+    } else if (Array.isArray(uploadPictureHouse)) {
+      setFiles(uploadPictureHouse);
+    }
+  }, [uploadPictureHouse]);
 
-    const handleFileChange = (newFiles: File[]) => {
-        const updatedFiles = [...files, ...newFiles];
-        setFiles(updatedFiles);
-        setValue("uploadVolunteer", updatedFiles, { shouldValidate: true });
-    };
+  const handleFileChange = (newFiles: File[]) => {
+    const updatedFiles = [...files, ...newFiles];
+    setFiles(updatedFiles);
+    setValue("uploadSpecialwork", updatedFiles, { shouldValidate: true });
+  };
 
-    const handleFileRemove = (fileToRemove: File) => {
-        const updatedFiles = files.filter(file => file !== fileToRemove);
-        setFiles(updatedFiles);
-        setValue("uploadVolunteer", updatedFiles, { shouldValidate: true });
-    };
+  const handleFileRemove = (fileToRemove: File) => {
+    const updatedFiles = files.filter((file) => file !== fileToRemove);
+    setFiles(updatedFiles);
+    setValue("uploadSpecialwork", updatedFiles, { shouldValidate: true });
+  };
 
-  
-
-  
   return (
     <Box
       component="form"
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(onSubmit)} // Form submission handled here
       sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 800, mx: 'auto', my: 4 }}
     >
       <Typography color="secondary" align="center" sx={{ mt: 2 }}>
-        Submit Volunteer Activity
+        Submit Special Work Activity
       </Typography>
 
       <Grid container spacing={2}>
         {/* Student ID Field */}
         <Grid item xs={12} md={6}>
           <Controller
-            name="student_id"
+            name="studentId"
             control={control}
             defaultValue=""
             rules={{ required: 'Student ID is required' }}
@@ -74,22 +67,14 @@ const VolunteerForm: React.FC<WorlFormProps> = ({ onSubmit }) => {
                 label="Student ID"
                 {...field}
                 variant="outlined"
-                error={!!errors.student_id}
-                helperText={errors.student_id?.message}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-
-                    </InputAdornment>
-                  ),
-                }}
+                error={!!errors.studentId}
+                helperText={errors.studentId?.message}
               />
             )}
           />
         </Grid>
 
         {/* Prefix (Mr./Ms.) Field */}
-
         <Grid item xs={12} md={6}>
           <Controller
             name="prefix"
@@ -113,16 +98,10 @@ const VolunteerForm: React.FC<WorlFormProps> = ({ onSubmit }) => {
           />
         </Grid>
 
-
-
-
-
-
-
         {/* Full Name Field */}
         <Grid item xs={12} md={6}>
           <Controller
-            name="full_name"
+            name="firstName"
             control={control}
             defaultValue=""
             rules={{ required: 'Full Name is required' }}
@@ -132,23 +111,24 @@ const VolunteerForm: React.FC<WorlFormProps> = ({ onSubmit }) => {
                 label="Full Name"
                 {...field}
                 variant="outlined"
-                error={!!errors.full_name}
-                helperText={errors.full_name?.message}
+                error={!!errors.firstName}
+                helperText={errors.firstName?.message}
               />
             )}
           />
         </Grid>
 
+        {/* Nickname Field */}
         <Grid item xs={12} md={6}>
           <Controller
             name="nickname"
             control={control}
             defaultValue=""
-            rules={{ required: 'Full Name is required' }}
+            rules={{ required: 'Nickname is required' }}
             render={({ field }) => (
               <TextField
                 fullWidth
-                label="nickname"
+                label="Nickname"
                 {...field}
                 variant="outlined"
                 error={!!errors.nickname}
@@ -158,10 +138,7 @@ const VolunteerForm: React.FC<WorlFormProps> = ({ onSubmit }) => {
           />
         </Grid>
 
-
-
-
-
+        {/* Graduation Year */}
         <Grid item xs={12} md={6}>
           <Controller
             name="graduate"
@@ -188,65 +165,35 @@ const VolunteerForm: React.FC<WorlFormProps> = ({ onSubmit }) => {
           />
         </Grid>
 
-        {/* Graduation Year Field */}
+        {/* Branch Field */}
         <Grid item xs={12} md={6}>
           <Controller
             name="branch"
             control={control}
             defaultValue=""
-            rules={{ required: 'Please select your field of study' }}
+            rules={{ required: 'Please select your branch' }}
             render={({ field }) => (
               <TextField
                 select
                 fullWidth
-                label="สาขา"
+                label="Branch"
                 {...field}
                 variant="outlined"
                 error={!!errors.branch}
                 helperText={errors.branch?.message}
               >
-                {/* Add each MenuItem from the image list */}
                 <MenuItem value="MTM">MTM</MenuItem>
                 <MenuItem value="IMTM">IMTM</MenuItem>
-                <MenuItem value="FBM">FBM</MenuItem>
-                <MenuItem value="RBM">RBM</MenuItem>
-                <MenuItem value="LTM">LTM</MenuItem>
-                <MenuItem value="BC">BC</MenuItem>
-                <MenuItem value="BJ">BJ</MenuItem>
-                <MenuItem value="CEB">CEB</MenuItem>
-                <MenuItem value="CB">CB</MenuItem>
-                <MenuItem value="CJ">CJ</MenuItem>
-                <MenuItem value="DIT">DIT</MenuItem>
-                <MenuItem value="CAI">CAI</MenuItem>
-                <MenuItem value="IE">IE</MenuItem>
-                <MenuItem value="AME">AME</MenuItem>
-                <MenuItem value="RAE">RAE</MenuItem>
-                <MenuItem value="IAM">IAM</MenuItem>
-                <MenuItem value="AVI">AVI</MenuItem>
-                <MenuItem value="HTM">HTM</MenuItem>
-                <MenuItem value="RPM">RPM</MenuItem>
-                <MenuItem value="HROM">HROM</MenuItem>
-                <MenuItem value="FTM">FTM</MenuItem>
-                <MenuItem value="PTM">PTM</MenuItem>
-                <MenuItem value="TCL">TCL</MenuItem>
-                <MenuItem value="ELT">ELT</MenuItem>
-                <MenuItem value="NS">NS</MenuItem>
-                <MenuItem value="NS">HIT</MenuItem>
+                {/* Add more options as needed */}
               </TextField>
             )}
           />
         </Grid>
 
-
-
-
-
-
-
         {/* Activity Name Field */}
         <Grid item xs={12} md={6}>
           <Controller
-            name="activity_name"
+            name="workName"
             control={control}
             defaultValue=""
             rules={{ required: 'Activity Name is required' }}
@@ -256,8 +203,8 @@ const VolunteerForm: React.FC<WorlFormProps> = ({ onSubmit }) => {
                 label="Activity Name"
                 {...field}
                 variant="outlined"
-                error={!!errors.activity_name}
-                helperText={errors.activity_name?.message}
+                error={!!errors.workName}
+                helperText={errors.workName?.message}
               />
             )}
           />
@@ -266,15 +213,17 @@ const VolunteerForm: React.FC<WorlFormProps> = ({ onSubmit }) => {
         {/* Organization Name Field */}
         <Grid item xs={12} md={6}>
           <Controller
-            name="organization_name"
+            name="organizationName"
             control={control}
             defaultValue=""
             render={({ field }) => (
               <TextField
-                fullWidth
+                fullWidth 
                 label="Organization Name"
                 {...field}
                 variant="outlined"
+                error={!!errors.organizationName}
+                helperText={errors.organizationName?.message}
               />
             )}
           />
@@ -302,7 +251,7 @@ const VolunteerForm: React.FC<WorlFormProps> = ({ onSubmit }) => {
         {/* Activity Description Field */}
         <Grid item xs={12}>
           <Controller
-            name="activity_description"
+            name="workDescription"
             control={control}
             defaultValue=""
             render={({ field }) => (
@@ -311,8 +260,8 @@ const VolunteerForm: React.FC<WorlFormProps> = ({ onSubmit }) => {
                 label="Activity Description"
                 {...field}
                 variant="outlined"
-                multiline
-                rows={4}
+                error={!!errors.workDescription}
+                helperText={errors.workDescription?.message}
               />
             )}
           />
@@ -355,26 +304,103 @@ const VolunteerForm: React.FC<WorlFormProps> = ({ onSubmit }) => {
           />
         </Grid>
 
+        {/* Work Type Field */}
+        <Grid item xs={12} md={6}>
+          <Controller
+            name="workType"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <TextField
+                select
+                fullWidth
+                label="Work Type"
+                {...field}
+                variant="outlined"
+              >
+                <MenuItem value="Full-Time">Full-Time</MenuItem>
+                <MenuItem value="Part-Time">Part-Time</MenuItem>
+                <MenuItem value="Internship">Internship</MenuItem>
+                {/* Add more options as needed */}
+              </TextField>
+            )}
+          />
+        </Grid>
+
+        {/* Compensation Field */}
+        <Grid item xs={12} md={6}>
+          <Controller
+            name="compensation"
+            control={control}
+            defaultValue={0}
+            render={({ field }) => (
+              <TextField
+                fullWidth
+                label="Compensation"
+                type="number"
+                {...field}
+                variant="outlined"
+              />
+            )}
+          />
+        </Grid>
+
+        {/* Work Dates Field */}
+        <Grid item xs={12} md={6}>
+          <Controller
+            name="workDates"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <TextField
+                fullWidth
+                label="Work Dates"
+                {...field}
+                variant="outlined"
+                error={!!errors.workDates}
+                helperText={errors.workDates?.message}
+              />
+            )}
+          />
+        </Grid>
+
+        {/* Work Time Field */}
+        <Grid item xs={12} md={6}>
+          <Controller
+            name="workTime"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <TextField
+                fullWidth
+                label="Work Time"
+                {...field}
+                variant="outlined"
+                error={!!errors.workTime}
+                helperText={errors.workTime?.message}
+              />
+            )}
+          />
+        </Grid>
+
         {/* Activity Image Field */}
         <Grid container spacing={2}>
-                <Grid item xs={12}>
-                    <Typography variant="body1" sx={{ mb: 1 }}>
-                        อัพโหลดอย่างน้อย 2 รูป ภาพรวมนอกบ้าน ภาพรวมในบ้าน
-                    </Typography>
-                    <CustomFileUpload
-                        value={files}
-                        multiple
-                        onChange={handleFileChange}
-                        onRemove={handleFileRemove}
-                        accept="image/*"
-                    />
-                    {fileError && (
-                        <FormHelperText error>{fileError}</FormHelperText>
-                    )}
-                </Grid>
-                
-            </Grid>
-
+          <Grid item xs={12}>
+            <Typography variant="body1" sx={{ mb: 1 }}>
+              Upload at least 2 images (Outside and inside views)
+            </Typography>
+            <CustomFileUpload
+              value={files}
+              multiple
+              onChange={handleFileChange}
+              onRemove={handleFileRemove}
+              accept="image/*"
+            />
+            {fileError && (
+              <FormHelperText error>{fileError}</FormHelperText>
+            )}
+          </Grid>
+        </Grid>
 
         {/* Submit Button */}
         <Grid item xs={12}>
@@ -392,4 +418,4 @@ const VolunteerForm: React.FC<WorlFormProps> = ({ onSubmit }) => {
   );
 };
 
-export default VolunteerForm;
+export default SpecialWorkForm;
