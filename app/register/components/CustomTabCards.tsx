@@ -34,40 +34,44 @@ const CustomTabCards: React.FC<RegisterFormProps> = ({ formMethods }) => {
   const onSubmit = async (data: Student) => {
     const { uploadPictureHouse, volunteerPictures, studentPicture } = data;
   
-    if (
-      (!uploadPictureHouse || uploadPictureHouse.length < 2) ||
-      (!volunteerPictures || volunteerPictures.length < 1) ||
-      (!studentPicture)
-    ) {
-      alert("Please ensure all required files are uploaded.");
-      return; // Prevent submission if validation fails
+    if 
+    // (!uploadPictureHouse || uploadPictureHouse.length < 2) ||
+    // (!volunteerPictures || volunteerPictures.length < 1) ||
+    (!studentPicture) 
+    {
+      alert("โปรดตรวจสอบให้แน่ใจว่าได้อัปโหลดไฟล์ที่จำเป็นทั้งหมดแล้ว");
+      return;
     }
   
     console.log("Form Data: ", data);
-    const result = await sendStudentData(data); // Send student data to backend
+    const result = await sendStudentData(data);
   
-    // Check if the result is valid before trying to access data
-    const studentId = data.studentId; // Adjust based on your actual response structure
-    console.log("555",studentId)
+    const studentId = data.studentId;
+    const firstName = data.firstName;
   
-    if (!studentId) {
-      alert("Failed to get student ID.");
-      return; // Prevent further processing if studentId is not valid
+    if (!studentId || !firstName) {
+      alert("ไม่พบข้อมูล studentId หรือ firstName");
+      return;
     }
   
-    // Collect the files to upload
-    const filesToUpload = [
-      ...(uploadPictureHouse ? Array.from(uploadPictureHouse) : []),
-      ...(volunteerPictures ? Array.from(volunteerPictures) : []),
-      ...(studentPicture ? Array.from(studentPicture) : []),
+    // สร้างชุดของไฟล์และ imageType
+    const fileGroups = [
+      { files: Array.from(uploadPictureHouse || []), imageType: "uploadPictureHouse" },
+      { files: Array.from(volunteerPictures || []), imageType: "volunteerPictures" },
+      { files: Array.from(studentPicture || []), imageType: "studentPicture" }
     ];
   
-    // Call the upload function with studentId
-    await uploadFiles(filesToUpload, studentId); // Upload files to Google Drive
+    // กรองเอาเฉพาะกลุ่มที่มีไฟล์
+    const validFileGroups = fileGroups.filter(group => group.files.length > 0);
+  
+    for (const group of validFileGroups) {
+      await uploadFiles(group.files, studentId, firstName, group.imageType);
+    }
   };
   
-
   
+
+
   return (
     <Box
       component="form"
