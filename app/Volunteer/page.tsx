@@ -5,12 +5,14 @@ import Layout from '@/components/Layout';
 import Typography from '@mui/material/Typography';
 import VolunteerForm from './components/VolunteerForm';
 import SpecialWorkForm from './components/SpecialWorkForm';
-import CheckHoursForm from './components/checkHour';
-import CheckHoursWork from './components/checkHourWork';
-import { submitVolunteerForm } from '@/app/api/Volunteer';
+// import CheckHoursForm from './components/CheckHour';
+
+import { submitVolunteerForm, uploadFilesApi } from '@/app/api/Volunteer';
 import { fetchVolunteerHours } from '@/app/api/CheckHour';
+import { submitSpecialWorkForm } from '@/app/api/SpecialWork';
 import { FormValues } from '@/types/IResponse';
 import { State } from '@/types/IResponse';
+// import CheckHoursWork from './components/CheckHour';
 
 // Define action types
 type Action =
@@ -20,8 +22,6 @@ type Action =
   | { type: "SET_LOADING"; payload: boolean }
   | { type: "SET_VOLUNTEER_HOURS"; payload: number | null }
   | { type: "SET_SELECTED_FORM"; payload: string };
-
-// Define state type
 
 // Define initial state
 const initialState: State = {
@@ -86,8 +86,7 @@ const CheckVolunteerHoursForm: React.FC = () => {
     () => [
       { text: "ส่งชั่วโมงจิตอาสา", hook: () => handleSidebarClick("volunteerForm") },
       { text: "เช็คชั่วโมงจิตอาสา", hook: () => handleSidebarClick("CheckHoursForm") },
-      { text: "งานพิเศษ", hook: () => handleSidebarClick("SpecialWorkForm") },
-      { text: "เช็คชัวโมงงานพิเศษ", hook: () => handleSidebarClick("CheckHoursWork") },
+      { text: "ส่งชั่วโมงงานพิเศษ", hook: () => handleSidebarClick("SpecialWorkForm") },
     ],
     []
   );
@@ -116,17 +115,27 @@ const CheckVolunteerHoursForm: React.FC = () => {
     dispatch({ type: "SET_ERROR", payload: null });
   };
 
-  const handleSubmit = async (values: FormValues) => {
+  const handleSubmit = async (values: FormValues, files: File[]) => {
     dispatch({ type: "SET_LOADING", payload: true });
     dispatch({ type: "SET_ERROR", payload: null });
     dispatch({ type: "SET_SUCCESS", payload: null });
 
     try {
-      await submitVolunteerForm(values);
+      // Call the appropriate API based on the selected form
+      if (selectedForm === "volunteerForm") {
+        await submitVolunteerForm(values);
+        if (files.length) {
+          await uploadFilesApi(files, values.studentId);
+        }
+      } else if (selectedForm === "SpecialWorkForm") {
+        await submitSpecialWorkForm(values);
+      }
+
       dispatch({
         type: "SET_SUCCESS",
-        payload: "Volunteer hours submitted successfully!",
+        payload: "Form submitted successfully!",
       });
+
       if (values.studentId && selectedForm === "CheckHoursForm") {
         await fetchAndSetVolunteerHours(values.studentId);
       }
@@ -143,14 +152,6 @@ const CheckVolunteerHoursForm: React.FC = () => {
   return (
     <Layout sidebarItems={sidebarItems}>
       <main>
-        {/* <Typography variant="h5" gutterBottom>
-          {selectedForm === "volunteerForm"
-            ? "Volunteer Form"
-            : selectedForm === "CheckHoursForm"
-            ? "Check Hours Form"
-            : ""}
-        </Typography> */}
-
         {selectedForm === "CheckHoursForm" && volunteerHours !== null && (
           <Typography variant="h6">Volunteer Hours: {volunteerHours}</Typography>
         )}
@@ -177,8 +178,9 @@ const CheckVolunteerHoursForm: React.FC = () => {
           />
         )}
         {selectedForm === "CheckHoursForm" && <CheckHoursForm />}
-        {selectedForm === "SpecialWorkForm" && <SpecialWorkForm />}
-        {selectedForm === "CheckHoursWork" && <CheckHoursWork />}
+        {selectedForm === "SpecialWorkForm" && (
+          <SpecialWorkForm onSubmit={handleSubmit} />
+        )}
       </main>
     </Layout>
   );

@@ -34,6 +34,7 @@ export interface User {
 
 
 export interface FormValues {
+  uploadSpecialwork?: FileList | File[];
   uploadVolunteer?: FileList | File[];
   Graduet?: string;
   prefix?: string;
@@ -55,7 +56,7 @@ export interface FormValues {
   yearLevel?: string; 
   formdata?: string; // Optional
   student_id?: string;
-  full_name?: string;
+  
   activity_name?: string;
   organization_name?: string;
   organization_phone?: string;
@@ -63,6 +64,25 @@ export interface FormValues {
   activity_date?: string;
   formValues?:string;
   activity_image?: File;
+  //work.
+ 
+}
+
+export interface FormValuesWork {
+  studentId?: string;               // Student ID
+  firstName?: string;               // Full name of the student
+  prefix?: string;                  // Prefix (Mr., Ms., Dr., etc.)
+  nickname?: string;                // Nickname of the student
+  graduate?: string;                // Graduation year or status
+  branch?: string;                  // Branch of study
+  workName?: string;                // Activity/Work Name
+  organizationName?: string;        // Organization Name
+  organization_phone?: string;      // Organization Phone Number
+  activity_description?: string;    // Description of the activity
+  activity_date?: string;           // Date of the activity
+  hours?: number;                   // Number of hours spent on activity
+  uploadSpecialwork?: FileList | File[]; // File(s) for special work upload
+  workDescription?: string; 
 }
 
 // Response structure when fetching volunteer hours
