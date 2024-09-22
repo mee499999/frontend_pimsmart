@@ -42,16 +42,20 @@ export const useStudentApi = () => {
 
 
 
- const uploadFiles = async (files: File[], studentId: string) => {
+  const uploadFiles = async (
+    files: File[],
+    studentId: string,
+    firstName: string,
+    imageType: string
+  ) => {
     setLoading(true);
     setError(null);
-
+  
     try {
-      const result = await uploadFilesApi(files, studentId); // Pass studentId to the API function
-
-      if (result.success) {
-        // Handle successful upload response if needed
-      } else {
+      const fileNames = files.map(file => file.name);
+      const result = await uploadFilesApi(files, studentId, firstName, fileNames, imageType);
+  
+      if (!result.success) {
         setError(result.message);
       }
     } catch (err: any) {
@@ -60,6 +64,7 @@ export const useStudentApi = () => {
       setLoading(false);
     }
   };
+  
 
   return {
     loading,
