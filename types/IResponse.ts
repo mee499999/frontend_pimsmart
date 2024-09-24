@@ -8,11 +8,23 @@ export interface IResponse<T> {
 }
 
 // Define the response type for the backend
-export interface ApiResponse {
+export interface ApiResponse<T> {
   success: boolean;
   message: string;
-  data?: any;
+  data?: T | null; // ใช้ประเภทเจนเนอริกที่นี่
+  error?: string;
+
 }
+
+
+
+
+
+
+export interface ErrorResponse {
+  message?: string;
+}
+
 
 
 export interface UploadFilesResult {

@@ -74,9 +74,7 @@ const StepTen: React.FC<RegisterFormProps> = ({ formMethods }) => {
             </Typography>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
-                    <Typography variant="body1" sx={{ mb: 1 }}>
-                        อัพโหลดรูปนักศึกษา
-                    </Typography>
+
                     <CustomFileUpload
                         value={files}
                         multiple

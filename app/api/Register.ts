@@ -2,16 +2,23 @@ import { ApiResponse } from "@/types/IResponse";
 import { Student } from "@/types/Register";
 import axiosApi from "@/utils/Api";
 
-export const Register = async (studentId: string, fullName: string): Promise<Student[]> => {
+import { AxiosError } from 'axios';
+
+
+
+export const Register = async (studentId: string, fullName: string): Promise<ApiResponse<Student | null>> => {
   try {
     const url = `students/search?studentId=${encodeURIComponent(studentId)}&firstName=${encodeURIComponent(fullName)}`;
-    const response = await axiosApi.get<Student[]>(url);
+    const response = await axiosApi.get<ApiResponse<Student | null>>(url);
     return response.data; // Return the full response data
   } catch (error) {
     console.error('Error fetching student data:', error);
     throw error;
   }
 };
+
+
+
 
 
 
@@ -23,9 +30,9 @@ export const Register = async (studentId: string, fullName: string): Promise<Stu
 export const sendStudentDataApi = async (
   studentData: Student,
   endpoint: string = '/students/register' // กำหนด endpoint ที่นี่
-): Promise<ApiResponse> => {
+): Promise<ApiResponse<any>> => { // ใช้ any ถ้าข้อมูลที่ส่งคืนไม่แน่นอน
   try {
-    const response = await axiosApi.post<ApiResponse>(endpoint, studentData);
+    const response = await axiosApi.post<ApiResponse<any>>(endpoint, studentData);
 
     return {
       success: true,
@@ -48,7 +55,7 @@ export const uploadFilesApi = async (
   fileNames: string[],
   imageType: string,
   endpoint: string = '/students/uploadToGoogleDrive'
-): Promise<ApiResponse> => {
+): Promise<ApiResponse<any>> => { // ใช้ any ถ้าข้อมูลที่ส่งคืนไม่แน่นอน
   const formData = new FormData();
   files.forEach(file => {
     formData.append('files', file);
@@ -61,7 +68,7 @@ export const uploadFilesApi = async (
   formData.append('imageType', imageType);
 
   try {
-    const response = await axiosApi.post<ApiResponse>(endpoint, formData, {
+    const response = await axiosApi.post<ApiResponse<any>>(endpoint, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

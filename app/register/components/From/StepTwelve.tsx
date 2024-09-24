@@ -15,7 +15,7 @@ const StepTwelve: React.FC<RegisterFormProps> = ({ formMethods }) => {
         formState: { errors },
         setValue,
         watch,
-        
+
     } = formMethods;
 
     const volunteerPictures = watch("volunteerPictures");
@@ -57,11 +57,11 @@ const StepTwelve: React.FC<RegisterFormProps> = ({ formMethods }) => {
 
         console.log("Form Data: ", data);
         console.log("Uploaded Files: ", data.volunteerPictures);
-        
+
 
         // Proceed with form submission logic
     };
-    
+
 
     return (
         <Box
@@ -77,13 +77,11 @@ const StepTwelve: React.FC<RegisterFormProps> = ({ formMethods }) => {
             }}
         >
             <Typography color="secondary" align="center" sx={{ mt: 2 }}>
-                เล่าประวัติครอบครัวคร่าวๆ และเหตุผลในการขอทุน มีความจำเป็น ความเดือนร้อน ความต้องการให้กองทุนฯช่วยเหลือ
+                ภาพทำจิตอาสา 1-5 รูป เป็นจิอาสาที่ทำย้อนหลังไม่เกิน 1 ปี
             </Typography>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
-                    <Typography variant="body1" sx={{ mb: 1 }}>
-                        ภาพทำจิตอาสา 1-5 รูป เป็นจิอาสาที่ทำย้อนหลังไม่เกิน 1 ปี
-                    </Typography>
+
                     <CustomFileUpload
                         value={files}
                         multiple

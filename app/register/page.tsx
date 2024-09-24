@@ -8,15 +8,21 @@ import Checkstatus from './components/Checkstatus';
 import { Student } from "@/types/Register";
 import { useForm } from 'react-hook-form';
 import CustomTabCards from './components/CustomTabCards';
+import { ApiResponse } from '@/types/IResponse';
+import { AxiosError } from 'axios';
+
+
 
 const Page: React.FC = () => {
   const formMethods = useForm<Student>();
   const { handleSubmit, register, formState: { errors } } = formMethods;
-  const [studentDetails, setStudentDetails] = useState<Student[] | null>(null);
+  const [studentDetails, setStudentDetails] = useState<Student | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [selectedForm, setSelectedForm] = useState<string>('Register'); // Default is "Register"
   const [error, setError] = useState<string | null>(null);
+  const [alertMessage, setAlertMessage] = useState<string | null>(null); // New state for alert message
+
 
   const handleSidebarClick = (formName: string) => {
     setSelectedForm(formName);
@@ -25,24 +31,34 @@ const Page: React.FC = () => {
     setStudentDetails(null); // Reset student details when changing forms
   };
 
-  const onSubmit = async (data: Student) => {
-    setFormSubmitted(true);
-    setError(null); // Clear previous errors
 
+
+  const onSubmit = async (data: Student) => {
+  setFormSubmitted(true);
+  setError(null); // Clear previous errors
+  setAlertMessage(null); // Clear previous alert messages
+  
     if (!data.studentId || !data.firstName) {
       setError('กรุณากรอกข้อมูลให้ครบถ้วน');
       return;
     }
-
+  
     try {
       setIsLoading(true);
       const result = await Register(data.studentId, data.firstName);
+  
+      if (result.success) {
+        if (result.message === "Student found") {
+          setStudentDetails(result.data || null); // Here, result.data will be a Student or null
+        } else if (result.message === "StudentId exists but firstName does not match") {
+          alert("รหัสนักศึกษาได้ถูกใช้แล้ว แต่ชื่อไม่ตรงกัน"); // Alert for name mismatch in Thai
+          setStudentDetails(null); // Keep it null if the name doesn't match
+          setFormSubmitted(false);
 
-      if (result) {
-        setStudentDetails(result);
-        // formMethods.reset(); // Reset the form fields
+        }
       } else {
         setStudentDetails(null);
+        alert("ไม่พบข้อมูลนักเรียน หรือมีรหัสนักศึกษาเดิม"); // Alert for no student found in Thai
       }
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -51,6 +67,9 @@ const Page: React.FC = () => {
       setIsLoading(false);
     }
   };
+  
+
+
 
   return (
     <Layout
@@ -70,7 +89,7 @@ const Page: React.FC = () => {
         sx={{
           display: 'flex',
           justifyContent: 'center',
-          paddingTop: 4,
+          // paddingTop: 4,
           width: '100%',
         }}
       >
@@ -78,7 +97,7 @@ const Page: React.FC = () => {
           sx={{
             width: '100%',
             padding: 2,
-            paddingTop: 3,
+            // paddingTop: 3,
             backgroundColor: 'background.paper',
             borderRadius: 1,
             boxShadow: 1,
@@ -86,6 +105,7 @@ const Page: React.FC = () => {
         >
           {/* Show Checkstatus component only if selected */}
           {selectedForm === 'Checkstatus' && <Checkstatus />}
+          
 
           {/* Conditionally render the form and other components only if "Register" is selected */}
           {selectedForm === 'Register' && (

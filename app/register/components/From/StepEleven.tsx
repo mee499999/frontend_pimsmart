@@ -15,7 +15,7 @@ const StepEleven: React.FC<RegisterFormProps> = ({ formMethods }) => {
         formState: { errors },
         setValue,
         watch,
-        
+
     } = formMethods;
 
     const uploadPictureHouse = watch("uploadPictureHouse");
@@ -75,13 +75,13 @@ const StepEleven: React.FC<RegisterFormProps> = ({ formMethods }) => {
             }}
         >
             <Typography color="secondary" align="center" sx={{ mt: 2 }}>
-                เล่าประวัติครอบครัวคร่าวๆ และเหตุผลในการขอทุน มีความจำเป็น ความเดือนร้อน ความต้องการให้กองทุนฯช่วยเหลือ
+                อัพโหลดรูปภาพบ้าน(ที่อยู่ตามทะเบียนบ้าน หรือที่อยู่อาศัยก่อนมาเรียนต่อระดับปริญญาตรี)<br />
+                อัพโหลดอย่างน้อย 2 รูป ภาพรวมนอกบ้าน ภาพรวมในบ้าน
             </Typography>
+
             <Grid container spacing={2}>
                 <Grid item xs={12}>
-                    <Typography variant="body1" sx={{ mb: 1 }}>
-                        อัพโหลดอย่างน้อย 2 รูป ภาพรวมนอกบ้าน ภาพรวมในบ้าน
-                    </Typography>
+
                     <CustomFileUpload
                         value={files}
                         multiple
