@@ -1,53 +1,82 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useForm, Controller, UseFormReturn } from 'react-hook-form';
 import { TextField, Button, Typography, Box, Grid, InputAdornment, FormControl, FormLabel, RadioGroup, FormControlLabel, FormHelperText, Radio, MenuItem } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import { FormValues } from '@/types/IResponse';
 import { watch } from 'fs';
 import CustomFileUpload from '@/components/CustomFileUpload';
+import { submitVolunteerForm } from '@/app/api/Volunteer';
+import { useVolunteerFilesApi } from '@/hooks/Volunteer';
 
 
 interface VolunteerFormProps {
-  onSubmit: (data: FormValues) => void;
+  formValunteer: UseFormReturn<FormValues>;
 }
 
-const VolunteerForm: React.FC<VolunteerFormProps> = ({ onSubmit }) => {
+
+const VolunteerForm: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
   const { control,
-         handleSubmit, 
-         formState: { errors },
-         setValue,
-         watch,
-        } = useForm<FormValues>();
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch,
+  } = formValunteer;
+
+
   const uploadPictureHouse = watch("uploadVolunteer");
-    const [files, setFiles] = useState<File[]>([]);
-    const [fileError, setFileError] = useState<string | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
+  const [fileError, setFileError] = useState<string | null>(null);
+  const { loading, error, response, uploadVolunteerFiles } = useVolunteerFilesApi();
 
 
-    useEffect(() => {
-        if (uploadPictureHouse instanceof FileList) {
-            setFiles(Array.from(uploadPictureHouse));
-        } else if (Array.isArray(uploadPictureHouse)) {
-            setFiles(uploadPictureHouse);
-        }
-    }, [uploadPictureHouse]);
+  useEffect(() => {
+    if (uploadPictureHouse instanceof FileList) {
+      setFiles(Array.from(uploadPictureHouse));
+    } else if (Array.isArray(uploadPictureHouse)) {
+      setFiles(uploadPictureHouse);
+    }
+  }, [uploadPictureHouse]);
 
-    const handleFileChange = (newFiles: File[]) => {
-        const updatedFiles = [...files, ...newFiles];
-        setFiles(updatedFiles);
-        setValue("uploadVolunteer", updatedFiles, { shouldValidate: true });
-    };
+  const handleFileChange = (newFiles: File[]) => {
+    const updatedFiles = [...files, ...newFiles];
+    setFiles(updatedFiles);
+    setValue("uploadVolunteer", updatedFiles, { shouldValidate: true });
+  };
 
-    const handleFileRemove = (fileToRemove: File) => {
-        const updatedFiles = files.filter(file => file !== fileToRemove);
-        setFiles(updatedFiles);
-        setValue("uploadVolunteer", updatedFiles, { shouldValidate: true });
-    };
+  const handleFileRemove = (fileToRemove: File) => {
+    const updatedFiles = files.filter(file => file !== fileToRemove);
+    setFiles(updatedFiles);
+    setValue("uploadVolunteer", updatedFiles, { shouldValidate: true });
+  };
 
-  
+  const onSubmit = useCallback(async (data: FormValues) => {
+    console.log("Form Data Submitted: ", data);
+    
+    if (!data.uploadVolunteer || data.uploadVolunteer.length === 0) {
+      setFileError("โปรดตรวจสอบให้แน่ใจว่าได้อัปโหลดไฟล์ที่จำเป็นทั้งหมดแล้ว");
+      return;
+    }
 
-  
+    const { studentId, firstName } = data;
+    if (!studentId || !firstName) {
+      setFileError("ไม่พบข้อมูล studentId หรือ firstName");
+      return;
+    }
+
+    const imageType: "Volunteer" = "Volunteer"; 
+
+    const sendResult = await submitVolunteerForm(data);
+    if (!sendResult) {
+      setFileError("การส่งข้อมูลจิตอาสาล้มเหลว");
+      return;
+    }
+
+    await uploadVolunteerFiles(files, studentId, firstName, imageType);
+  }, [submitVolunteerForm, uploadVolunteerFiles]);
+
+
   return (
     <Box
       component="form"
@@ -57,12 +86,12 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ onSubmit }) => {
       <Typography color="secondary" align="center" sx={{ mt: 2 }}>
         Submit Volunteer Activity
       </Typography>
-
       <Grid container spacing={2}>
+
         {/* Student ID Field */}
         <Grid item xs={12} md={6}>
           <Controller
-            name="student_id"
+            name="studentId"
             control={control}
             defaultValue=""
             rules={{ required: 'Student ID is required' }}
@@ -72,15 +101,9 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ onSubmit }) => {
                 label="Student ID"
                 {...field}
                 variant="outlined"
-                error={!!errors.student_id}
-                helperText={errors.student_id?.message}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
+                error={!!errors.studentId}
+                helperText={errors.studentId?.message}
 
-                    </InputAdornment>
-                  ),
-                }}
               />
             )}
           />
@@ -112,15 +135,10 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ onSubmit }) => {
         </Grid>
 
 
-
-
-
-
-
         {/* Full Name Field */}
         <Grid item xs={12} md={6}>
           <Controller
-            name="full_name"
+            name="firstName"
             control={control}
             defaultValue=""
             rules={{ required: 'Full Name is required' }}
@@ -130,8 +148,8 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ onSubmit }) => {
                 label="Full Name"
                 {...field}
                 variant="outlined"
-                error={!!errors.full_name}
-                helperText={errors.full_name?.message}
+                error={!!errors.firstName}
+                helperText={errors.firstName?.message}
               />
             )}
           />
@@ -236,15 +254,10 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ onSubmit }) => {
         </Grid>
 
 
-
-
-
-
-
         {/* Activity Name Field */}
         <Grid item xs={12} md={6}>
           <Controller
-            name="activity_name"
+            name="activityName"
             control={control}
             defaultValue=""
             rules={{ required: 'Activity Name is required' }}
@@ -254,8 +267,8 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ onSubmit }) => {
                 label="Activity Name"
                 {...field}
                 variant="outlined"
-                error={!!errors.activity_name}
-                helperText={errors.activity_name?.message}
+                error={!!errors.activityName}
+                helperText={errors.activityName?.message}
               />
             )}
           />
@@ -264,7 +277,7 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ onSubmit }) => {
         {/* Organization Name Field */}
         <Grid item xs={12} md={6}>
           <Controller
-            name="organization_name"
+            name="organizationName"
             control={control}
             defaultValue=""
             render={({ field }) => (
@@ -281,7 +294,7 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ onSubmit }) => {
         {/* Organization Phone Field */}
         <Grid item xs={12} md={6}>
           <Controller
-            name="organization_phone"
+            name="organizationPhone"
             control={control}
             defaultValue=""
             render={({ field }) => (
@@ -290,36 +303,19 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ onSubmit }) => {
                 label="Organization Phone"
                 {...field}
                 variant="outlined"
-                error={!!errors.organization_phone}
-                helperText={errors.organization_phone?.message}
+                error={!!errors.organizationPhone}
+                helperText={errors.organizationPhone?.message}
               />
             )}
           />
         </Grid>
 
-        {/* Activity Description Field */}
-        <Grid item xs={12}>
-          <Controller
-            name="activity_description"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <TextField
-                fullWidth
-                label="Activity Description"
-                {...field}
-                variant="outlined"
-                multiline
-                rows={4}
-              />
-            )}
-          />
-        </Grid>
+
 
         {/* Activity Date Field */}
         <Grid item xs={12} md={6}>
           <Controller
-            name="activity_date"
+            name="activityDate"
             control={control}
             defaultValue=""
             render={({ field }) => (
@@ -352,40 +348,53 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ onSubmit }) => {
             )}
           />
         </Grid>
+        {/* Activity Description Field */}
+        <Grid item xs={12}>
+          <Controller
+            name="activityDescription"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <TextField
+                fullWidth
+                label="Activity Description"
+                {...field}
+                variant="outlined"
+                multiline
+                rows={4}
+              />
+            )}
+          />
+        </Grid>
 
         {/* Activity Image Field */}
-        <Grid container spacing={2}>
-                <Grid item xs={12}>
-                    <Typography variant="body1" sx={{ mb: 1 }}>
-                        อัพโหลดอย่างน้อย 2 รูป ภาพรวมนอกบ้าน ภาพรวมในบ้าน
-                    </Typography>
-                    <CustomFileUpload
-                        value={files}
-                        multiple
-                        onChange={handleFileChange}
-                        onRemove={handleFileRemove}
-                        accept="image/*"
-                    />
-                    {fileError && (
-                        <FormHelperText error>{fileError}</FormHelperText>
-                    )}
-                </Grid>
-                
-            </Grid>
-
-
-        {/* Submit Button */}
         <Grid item xs={12}>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            sx={{ mt: 2 }}
-          >
-            Submit
-          </Button>
+          <Typography variant="body1" sx={{ mb: 1 }}>
+            อัพโหลดอย่างน้อย 2 รูป ภาพรวมนอกบ้าน ภาพรวมในบ้าน
+          </Typography>
+          <CustomFileUpload
+            value={files}
+            multiple
+            onChange={handleFileChange}
+            onRemove={handleFileRemove}
+            accept="image/*"
+          />
+          {fileError && (
+            <FormHelperText error>{fileError}</FormHelperText>
+          )}
         </Grid>
+
       </Grid>
+
+
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        sx={{ mt: 2 }}
+      >
+        ส่งข้อมูล
+      </Button>
     </Box>
   );
 };

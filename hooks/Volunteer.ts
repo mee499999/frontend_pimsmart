@@ -1,57 +1,35 @@
-// hooks/RegisterH.ts
+// hooks/Volunteer.ts
 import { useState } from 'react';
-import { Student } from '@/types/Register';
-import { sendVolunteerDataApi, uploadFilesApi } from '@/app/api/Volunteer';
+import {   uploadVolunteerFilesApi } from '@/app/api/Volunteer';
 
-// Define the response type for the backend
+
 interface ApiResponse {
   success: boolean;
   message: string;
   data?: any;
 }
 
-// Custom hook for managing student API calls
-export const useStudentApi = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [response, setResponse] = useState<ApiResponse | null>(null);
 
-  const sendStudentData = async (studentData: Student): Promise<ApiResponse | null> => {
+  export const useVolunteerFilesApi = () => {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [response, setResponse] = useState<ApiResponse | null>(null);
+
+
+  const uploadVolunteerFiles = async (
+    files: File[],
+    studentId: string,
+    firstName: string,
+    imageType: string
+  ) => {
     setLoading(true);
     setError(null);
-    setResponse(null);
-
+  
     try {
-      const result = await sendVolunteerDataApi(studentData); // Use the API function
-
-      if (result.success) {
-        setResponse(result); // Save response
-        return result; // Return the result
-      } else {
-        setError(result.message);
-        return null; // Return null in case of error
-      }
-    } catch (err: any) {
-      setError(err.message || 'Network error');
-      return null; // Return null in case of exception
-    } finally {
-      setLoading(false);
-    }
-  };
-
-
-
-
- const uploadFiles = async (files: File[], studentId: string) => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const result = await uploadFilesApi(files, studentId); // Pass studentId to the API function
-
-      if (result.success) {
-        // Handle successful upload response if needed
-      } else {
+      const fileNames = files.map(file => file.name);
+      const result = await uploadVolunteerFilesApi(files, studentId, firstName, fileNames, imageType);
+  
+      if (!result.success) {
         setError(result.message);
       }
     } catch (err: any) {
@@ -65,7 +43,6 @@ export const useStudentApi = () => {
     loading,
     error,
     response,
-    sendStudentData,
-    uploadFiles, // Export the uploadFiles function
-  };
+    uploadVolunteerFiles
+    };
 };

@@ -1,27 +1,35 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useForm, Controller, UseFormReturn } from 'react-hook-form';
 import { TextField, Button, Typography, Box, Grid, MenuItem, FormHelperText } from '@mui/material';
 import { FormValuesWork } from '@/types/IResponse';
 import CustomFileUpload from '@/components/CustomFileUpload';
+import { useuploadSpecialWorkApi } from '@/hooks/SpecialWork';
+import { submitSpecialWorkForm } from '@/app/api/SpecialWork';
+
 
 interface WorkFormProps {
-  onSubmit: (data: FormValuesWork) => void;
+  formwork: UseFormReturn<FormValuesWork>;
 }
 
-const SpecialWorkForm: React.FC<WorkFormProps> = ({ onSubmit }) => {
+
+
+const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
   const {
     control,
     handleSubmit,
     formState: { errors },
     setValue,
     watch,
-  } = useForm<FormValuesWork>();
+  } = formwork;
 
   const uploadPictureHouse = watch("uploadSpecialwork");
   const [files, setFiles] = useState<File[]>([]);
   const [fileError, setFileError] = useState<string | null>(null);
+  const { loading, error, response, uploadSpecialWork } = useuploadSpecialWorkApi();
+
+
 
   useEffect(() => {
     if (uploadPictureHouse instanceof FileList) {
@@ -43,10 +51,40 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ onSubmit }) => {
     setValue("uploadSpecialwork", updatedFiles, { shouldValidate: true });
   };
 
+  const onSubmit = useCallback(async (data: FormValuesWork) => {
+    console.log("Form Data Submitted: ", data);
+    // Additional form submission logic here
+
+    if (!data.uploadSpecialwork || data.uploadSpecialwork.length === 0) {
+      setFileError("โปรดตรวจสอบให้แน่ใจว่าได้อัปโหลดไฟล์ที่จำเป็นทั้งหมดแล้ว");
+      return;
+    }
+
+    const { studentId, firstName } = data;
+    if (!studentId || !firstName) {
+      setFileError("ไม่พบข้อมูล studentId หรือ firstName");
+      return;
+    }
+    const imageType: "Specialwork" = "Specialwork"; 
+
+    const sendResult = await submitSpecialWorkForm(data);
+    if (!sendResult) {
+      setFileError("การส่งข้อมูลจิตอาสาล้มเหลว");
+      return;
+    }
+
+    await uploadSpecialWork(files, studentId, firstName, imageType);
+  }, [submitSpecialWorkForm, uploadSpecialWork]);
+
+
+
+
+
+
   return (
     <Box
       component="form"
-      onSubmit={handleSubmit(onSubmit)} // Form submission handled here
+      onSubmit={handleSubmit(onSubmit)}
       sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 800, mx: 'auto', my: 4 }}
     >
       <Typography color="secondary" align="center" sx={{ mt: 2 }}>
@@ -184,7 +222,30 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ onSubmit }) => {
               >
                 <MenuItem value="MTM">MTM</MenuItem>
                 <MenuItem value="IMTM">IMTM</MenuItem>
-                {/* Add more options as needed */}
+                <MenuItem value="FBM">FBM</MenuItem>
+                <MenuItem value="RBM">RBM</MenuItem>
+                <MenuItem value="LTM">LTM</MenuItem>
+                <MenuItem value="BC">BC</MenuItem>
+                <MenuItem value="BJ">BJ</MenuItem>
+                <MenuItem value="CEB">CEB</MenuItem>
+                <MenuItem value="CB">CB</MenuItem>
+                <MenuItem value="CJ">CJ</MenuItem>
+                <MenuItem value="DIT">DIT</MenuItem>
+                <MenuItem value="CAI">CAI</MenuItem>
+                <MenuItem value="IE">IE</MenuItem>
+                <MenuItem value="AME">AME</MenuItem>
+                <MenuItem value="RAE">RAE</MenuItem>
+                <MenuItem value="IAM">IAM</MenuItem>
+                <MenuItem value="AVI">AVI</MenuItem>
+                <MenuItem value="HTM">HTM</MenuItem>
+                <MenuItem value="RPM">RPM</MenuItem>
+                <MenuItem value="HROM">HROM</MenuItem>
+                <MenuItem value="FTM">FTM</MenuItem>
+                <MenuItem value="PTM">PTM</MenuItem>
+                <MenuItem value="TCL">TCL</MenuItem>
+                <MenuItem value="ELT">ELT</MenuItem>
+                <MenuItem value="NS">NS</MenuItem>
+                <MenuItem value="NS">HIT</MenuItem>
               </TextField>
             )}
           />
@@ -218,7 +279,7 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ onSubmit }) => {
             defaultValue=""
             render={({ field }) => (
               <TextField
-                fullWidth 
+                fullWidth
                 label="Organization Name"
                 {...field}
                 variant="outlined"
@@ -232,7 +293,7 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ onSubmit }) => {
         {/* Organization Phone Field */}
         <Grid item xs={12} md={6}>
           <Controller
-            name="organization_phone"
+            name="organizationPhone"
             control={control}
             defaultValue=""
             render={({ field }) => (
@@ -241,8 +302,8 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ onSubmit }) => {
                 label="Organization Phone"
                 {...field}
                 variant="outlined"
-                error={!!errors.organization_phone}
-                helperText={errors.organization_phone?.message}
+                error={!!errors.organizationPhone}
+                helperText={errors.organizationPhone?.message}
               />
             )}
           />
@@ -270,7 +331,7 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ onSubmit }) => {
         {/* Activity Date Field */}
         <Grid item xs={12} md={6}>
           <Controller
-            name="activity_date"
+            name="activityDate"
             control={control}
             defaultValue=""
             render={({ field }) => (
@@ -384,36 +445,32 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ onSubmit }) => {
         </Grid>
 
         {/* Activity Image Field */}
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Typography variant="body1" sx={{ mb: 1 }}>
-              Upload at least 2 images (Outside and inside views)
-            </Typography>
-            <CustomFileUpload
-              value={files}
-              multiple
-              onChange={handleFileChange}
-              onRemove={handleFileRemove}
-              accept="image/*"
-            />
-            {fileError && (
-              <FormHelperText error>{fileError}</FormHelperText>
-            )}
-          </Grid>
-        </Grid>
-
-        {/* Submit Button */}
         <Grid item xs={12}>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            sx={{ mt: 2 }}
-          >
-            Submit
-          </Button>
+          <Typography variant="body1" sx={{ mb: 1 }}>
+            อัพโหลดอย่างน้อย 2 รูป ภาพรวมนอกบ้าน ภาพรวมในบ้าน
+          </Typography>
+          <CustomFileUpload
+            value={files}
+            multiple
+            onChange={handleFileChange}
+            onRemove={handleFileRemove}
+            accept="image/*"
+          />
+          {fileError && (
+            <FormHelperText error>{fileError}</FormHelperText>
+          )}
         </Grid>
       </Grid>
+
+      {/* Submit Button */}
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        sx={{ mt: 2 }}
+      >
+        Submit
+      </Button>
     </Box>
   );
 };

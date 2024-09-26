@@ -1,5 +1,6 @@
 
 
+import { ApiResponse } from '@/types/IResponse';
 import axiosApi from '@/utils/Api'; // Ensure axiosApi is properly configured
 
 // Function to handle special-work form submission
@@ -14,3 +15,40 @@ export const submitSpecialWorkForm = async (formData: any) => {
   }
 };
 
+
+// API function to upload files
+export const uploadFilesWorkApi = async (
+  files: File[],
+  studentId: string,
+  firstName: string,
+  fileNames: string[],
+  imageType: string,
+  endpoint: string = '/students/uploadToGoogleDrive'
+): Promise<ApiResponse<any>> => { // ใช้ any ถ้าข้อมูลที่ส่งคืนไม่แน่นอน
+  const formData = new FormData();
+  files.forEach(file => {
+    formData.append('files', file);
+  });
+  formData.append('studentId', studentId);
+  formData.append('firstName', firstName);
+  fileNames.forEach(name => {
+    formData.append('imageName[]', name);
+  });
+  formData.append('imageType', imageType);
+
+  try {
+    const response = await axiosApi.post<ApiResponse<any>>(endpoint, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    return {
+      success: true,
+      message: 'Files uploaded successfully',
+      data: response.data.data,
+    };
+  } catch (err: any) {
+    return { success: false, message: err.response?.data?.message || err.message || 'Network error' };
+  }
+};

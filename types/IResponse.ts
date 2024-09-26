@@ -46,13 +46,9 @@ export interface User {
 
 
 export interface FormValues {
-  uploadSpecialwork?: FileList | File[];
   uploadVolunteer?: FileList | File[];
-  Graduet?: string;
   prefix?: string;
   studentId?: string;
-  studentId1?: string; // Additional field used for the form
-  title?: string;
   firstName?: string;
   nickname?: string;
   graduate?: string;
@@ -62,39 +58,31 @@ export interface FormValues {
   organizationPhone?: string;
   activityDescription?: string;
   activityDate?: string;
-  hours?: string;
-  createDate?: string;
-  loanStatus?: string;
-  yearLevel?: string; 
-  formdata?: string; // Optional
-  student_id?: string;
-  
-  activity_name?: string;
-  organization_name?: string;
-  organization_phone?: string;
-  activity_description?: string;
-  activity_date?: string;
-  formValues?:string;
-  activity_image?: File;
-  //work.
+  hours?: number ;
+
+
  
 }
 
 export interface FormValuesWork {
   studentId?: string;               // Student ID
-  firstName?: string;               // Full name of the student
   prefix?: string;                  // Prefix (Mr., Ms., Dr., etc.)
+  firstName?: string;               // Full name of the student
   nickname?: string;                // Nickname of the student
   graduate?: string;                // Graduation year or status
   branch?: string;                  // Branch of study
   workName?: string;                // Activity/Work Name
   organizationName?: string;        // Organization Name
-  organization_phone?: string;      // Organization Phone Number
-  activity_description?: string;    // Description of the activity
-  activity_date?: string;           // Date of the activity
-  hours?: number;                   // Number of hours spent on activity
-  uploadSpecialwork?: FileList | File[]; // File(s) for special work upload
+  organizationPhone?: string;      // Organization Phone Number
   workDescription?: string; 
+  activityDate?: string; 
+  hours?: number;                   // Number of hours spent on activity
+  workType?: string; 
+  compensation?: number; 
+  workDates?: string; 
+  workTime?: string; 
+  
+  uploadSpecialwork?: FileList | File[]; // File(s) for special work upload
 }
 
 // Response structure when fetching volunteer hours
