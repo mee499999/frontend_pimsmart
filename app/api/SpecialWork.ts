@@ -23,7 +23,7 @@ export const uploadFilesWorkApi = async (
   firstName: string,
   fileNames: string[],
   imageType: string,
-  endpoint: string = '/students/uploadToGoogleDrive'
+  endpoint: string = '/special-work/uploadToGoogleDrive'
 ): Promise<ApiResponse<any>> => { // ใช้ any ถ้าข้อมูลที่ส่งคืนไม่แน่นอน
   const formData = new FormData();
   files.forEach(file => {
