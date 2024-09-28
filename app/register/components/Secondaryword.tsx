@@ -3,6 +3,7 @@ import { TextField, Button, Typography, Box, InputAdornment, Grid } from '@mui/m
 import { Controller, UseFormReturn } from 'react-hook-form';
 import LockIcon from '@mui/icons-material/Lock';
 import { Student } from "@/types/Register";
+import { sendRequestDataApi } from '@/app/api/Register';
 
 interface RegisterFormProps {
   formMethods: UseFormReturn<Student>;
@@ -16,10 +17,27 @@ const Secondaryword: React.FC<RegisterFormProps> = ({ formMethods }) => {
     formState: { errors },
   } = formMethods;
 
-  const onSubmit = (data: Student) => {
-    console.log("Form Data Submitted: ", data);
-    // Additional form submission logic here
+
+  const onSubmit = async (data: Student) => {
+    // Destructure only the required fields
+    const { studentId, firstName, specialRequest } = data;
+    
+    // Log or submit only the necessary data
+    console.log("Form Data Submitted: ", { studentId, firstName, specialRequest });
+  
+    try {
+      // Send the data to the API
+      await sendRequestDataApi(data );
+      
+      // Handle success (optional)
+      console.log("Data successfully sent to API.");
+    } catch (error) {
+      // Handle any errors (optional)
+      console.error("Error sending data to API:", error);
+    }
   };
+  
+  
 
   return (
     <Box
@@ -92,9 +110,9 @@ const Secondaryword: React.FC<RegisterFormProps> = ({ formMethods }) => {
             label="สงคำรอง"
             multiline
             rows={4}
-            {...register("request")}
-            error={!!errors.request}
-            helperText={errors.request?.message}
+            {...register("specialRequest")}
+            error={!!errors.specialRequest}
+            helperText={errors.specialRequest?.message}
           />
         </Grid>
       </Grid>

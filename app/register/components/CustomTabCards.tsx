@@ -113,24 +113,29 @@ const CustomTabCards: React.FC<RegisterFormProps> = ({ formMethods }) => {
           Next
         </Button>
       </Box>
-      <TabCards
-        tabs={[
-          { label: 'Step 1', component: <RegisterForm formMethods={formMethods} /> },
-          { label: 'Step 2', component: <Addresses formMethods={formMethods} /> },
-          { label: 'Step 3', component: <Scholarships formMethods={formMethods} /> },
-          { label: 'Step 4', component: <Studentpersonalinformation formMethods={formMethods} /> },
-          { label: 'Step 5', component: <StepFive formMethods={formMethods} /> },
-          { label: 'Step 6', component: <StepSix formMethods={formMethods} /> },
-          { label: 'Step 7', component: <StepSeven formMethods={formMethods} /> },
-          { label: 'Step 8', component: <StepEight formMethods={formMethods} /> },
-          { label: 'Step 9', component: <StepNine formMethods={formMethods} /> },
-          { label: 'Step 10', component: <StepTen formMethods={formMethods} /> },
-          { label: 'Step 11', component: <StepEleven formMethods={formMethods} /> },
-          { label: 'Step 12', component: <StepTwelve formMethods={formMethods} /> },
-        ]}
-        currentStep={currentStep}
-        onTabChange={setCurrentStep} // Pass the function to change the step
-      />
+      <Box
+        display="flex"
+        justifyContent="center" // Horizontally centers the content
+      >
+        <TabCards
+          tabs={[
+            { label: 'Step 1', component: <RegisterForm formMethods={formMethods} /> },
+            { label: 'Step 2', component: <Addresses formMethods={formMethods} /> },
+            { label: 'Step 3', component: <Scholarships formMethods={formMethods} /> },
+            { label: 'Step 4', component: <Studentpersonalinformation formMethods={formMethods} /> },
+            { label: 'Step 5', component: <StepFive formMethods={formMethods} /> },
+            { label: 'Step 6', component: <StepSix formMethods={formMethods} /> },
+            { label: 'Step 7', component: <StepSeven formMethods={formMethods} /> },
+            { label: 'Step 8', component: <StepEight formMethods={formMethods} /> },
+            { label: 'Step 9', component: <StepNine formMethods={formMethods} /> },
+            { label: 'Step 10', component: <StepTen formMethods={formMethods} /> },
+            { label: 'Step 11', component: <StepEleven formMethods={formMethods} /> },
+            { label: 'Step 12', component: <StepTwelve formMethods={formMethods} /> },
+          ]}
+          currentStep={currentStep}
+          onTabChange={setCurrentStep} // Pass the function to change the step
+        />
+      </Box>
     </Box>
   );
 };

@@ -120,18 +120,16 @@ export interface Student {
 
     
 
-
-
-
-
-
-
-
-
     // ข้อคำร้อง
-    request?: string;  // คำร้องขอพิเศษ
+    specialRequest?: string;  // คำร้องขอพิเศษ
     
   }
+  
+
+
+
+
+
   
   // Location interface for geographic data
   export interface Location {
