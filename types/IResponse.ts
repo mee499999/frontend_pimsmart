@@ -43,49 +43,109 @@ export interface User {
 
 
 
-
-
+// Volunteer form values structure
 export interface FormValues {
-  uploadVolunteer?: FileList | File[];
-  prefix?: string;
-  studentId?: string;
-  firstName?: string;
-  nickname?: string;
-  graduate?: string;
-  branch?: string;
-  activityName?: string;
-  organizationName?: string;
-  organizationPhone?: string;
-  activityDescription?: string;
-  activityDate?: string;
-  hours?: number ;
-
-
- 
+  uploadVolunteer?: FileList | File[];  // Files for volunteer work uploads
+  prefix?: string;                      // Prefix (Mr., Ms., Dr., etc.)
+  studentId?: string;                   // Student ID
+  firstName?: string;                   // Full name of the student
+  nickname?: string;                    // Nickname of the student
+  graduate?: string;                    // Graduation year or status
+  branch?: string;                      // Branch of study
+  activityName?: string;                // Volunteer activity name
+  organizationName?: string;            // Organization name
+  organizationPhone?: string;           // Organization phone number
+  activityDescription?: string;         // Description of the volunteer activity
+  activityDate?: string;                // Date of the activity
+  hours?: number;                       // Number of hours volunteered
 }
 
+// Special work form values structure
 export interface FormValuesWork {
-  studentId?: string;               // Student ID
-  prefix?: string;                  // Prefix (Mr., Ms., Dr., etc.)
-  firstName?: string;               // Full name of the student
-  nickname?: string;                // Nickname of the student
-  graduate?: string;                // Graduation year or status
-  branch?: string;                  // Branch of study
-  workName?: string;                // Activity/Work Name
-  organizationName?: string;        // Organization Name
-  organizationPhone?: string;      // Organization Phone Number
-  workDescription?: string; 
-  activityDate?: string; 
-  hours?: number;                   // Number of hours spent on activity
-  workType?: string; 
-  compensation?: number; 
-  workDates?: string; 
-  workTime?: string; 
-  
+  studentId?: string;                   // Student ID
+  prefix?: string;                      // Prefix (Mr., Ms., Dr., etc.)
+  firstName?: string;                   // Full name of the student
+  nickname?: string;                    // Nickname of the student
+  graduate?: string;                    // Graduation year or status
+  branch?: string;                      // Branch of study
+  workName?: string;                    // Special work name
+  organizationName?: string;            // Organization name
+  organizationPhone?: string;           // Organization phone number
+  workDescription?: string;             // Description of the special work
+  activityDate?: string;                // Date of the activity
+  hours?: number;                       // Number of hours worked
+  workType?: string;                    // Type of work (e.g., paid, volunteer)
+  compensation?: number;                // Compensation received, if any
+  workDates?: string;                   // Work dates
+  workTime?: string;                    // Work time
   uploadSpecialwork?: FileList | File[]; // File(s) for special work upload
 }
 
 // Response structure when fetching volunteer hours
+export interface VolunteerHoursResponse {
+  id: string;                           // Unique ID for the volunteer activity
+  studentId: string;                    // Student ID
+  firstName: string;                    // Full name of the student
+  activityName: string;                 // Volunteer activity name
+  organizationName: string;             // Organization name
+  organizationPhone: string;            // Organization phone number
+  activityDescription: string;          // Description of the volunteer activity
+  activityDate: string;                 // Date of the activity
+  hours: number;                        // Number of hours volunteered
+}
+
+// Props for the VolunteerForm component
+export interface VolunteerFormProps {
+  onSubmit: (formValues: FormValues) => Promise<void>;  // Submit handler for the form
+  formValues: FormValues;                              // Current form values
+  setFormValues: React.Dispatch<React.SetStateAction<FormValues>>;  // Setter for form values
+  success: string | null;                              // Success message
+  error: string | null;                                // Error message
+  loading: boolean;                                    // Loading state
+  setError: (error: string | null) => void;            // Function to set error message
+  setLoading: (loading: boolean) => void;              // Function to set loading state
+  setSuccessMessage: (message: string | null) => void; // Function to set success message
+}
+
+// Props for the SpecialWorkForm component
+export interface SpecialWorkFormProps {
+  onSubmit: (formValues: SpecialWorkFormData) => Promise<void>;  // Submit handler for the form
+  formValues: SpecialWorkFormData;                               // Current form values
+  setFormValues: React.Dispatch<React.SetStateAction<SpecialWorkFormData>>;  // Setter for form values
+  success: string | null;                                        // Success message
+  error: string | null;                                          // Error message
+  loading: boolean;                                              // Loading state
+}
+
+// Data structure for special work form submissions
+export interface SpecialWorkFormData {
+  studentId: string;                    // Student ID
+  title: string;                        // Title (Mr., Ms., etc.)
+  firstName: string;                    // Full name of the student
+  nickname: string;                     // Nickname of the student
+  graduate: string;                     // Graduation year or status
+  branch: string;                       // Branch of study
+  activityName: string;                 // Special work activity name
+  organizationName: string;             // Organization name
+  organizationPhone: string;            // Organization phone number
+  activityDescription: string;          // Description of the activity
+  activityDate: string;                 // Date of the activity
+  hours: string;                        // Hours worked
+  createDate: string;                   // Creation date of the record
+  yearLevel: string;                    // Year level of the student
+  loanStatus: string;                   // Loan status of the student
+}
+
+// State management interface
+export interface State {
+  selectedForm: string;                 // Currently selected form type
+  formValues: FormValues;               // Current values of the form
+  success: string | null;               // Success message
+  error: string | null;                 // Error message
+  loading: boolean;                     // Loading state
+  volunteerHours: number | null;        // Total volunteer hours
+}
+// Interface for volunteer hours response
 export interface VolunteerHoursResponse {
   id: string;
   studentId: string;
@@ -96,56 +156,41 @@ export interface VolunteerHoursResponse {
   activityDescription: string;
   activityDate: string;
   hours: number;
-  
 }
 
-// Props for the VolunteerForm component
-export interface VolunteerFormProps {
-  onSubmit: (formValues: FormValues) => Promise<void>;
-  formValues: FormValues;
-  setFormValues: React.Dispatch<React.SetStateAction<FormValues>>;
-  success: string | null;
-  error: string | null;
-  loading: boolean;
-  setError: (error: string | null) => void; // Function to set error message
-  setLoading: (loading: boolean) => void;   // Function to set loading state
-  setSuccessMessage: (message: string | null) => void; // Function to set success message
-}
-
-// Props for the SpecialWorkForm component
-export interface SpecialWorkFormProps {
-  onSubmit: (formValues: SpecialWorkFormData) => void;
-  formValues: SpecialWorkFormData;
-  setFormValues: React.Dispatch<React.SetStateAction<SpecialWorkFormData>>;
-  success: string | null;
-  error: string | null;
-  loading: boolean;
-}
-
-// Data structure for special work form submissions
-export interface SpecialWorkFormData {
+// Interface for special work response
+export interface SpecialWorkResponse {
   studentId: string;
-  title: string;
   firstName: string;
-  nickname: string;
-  graduate: string;
-  branch: string;
   activityName: string;
   organizationName: string;
   organizationPhone: string;
   activityDescription: string;
   activityDate: string;
-  hours: string;
-  createDate: string;
-  yearLevel: string;
-  loanStatus: string;
+  hours: number;
 }
 
-export interface State {
-  selectedForm: string;
-  formValues: FormValues;
-  success: string | null;
-  error: string | null;
-  loading: boolean;
-  volunteerHours: number | null;
+export interface SpecialWorkResponse {
+  studentId: string;
+  firstName: string;
+  workName: string;
+  organizationName: string;
+  organizationPhone: string;
+  workDescription: string;
+  workDate: string;
+  hours: number;
+  createDate: string;
 }
+export interface VolunteerHoursResponse {
+  studentId: string;
+  firstName: string;
+  activityName: string;
+  organizationName: string;
+  organizationPhone: string;
+  activityDescription: string;
+  activityDate: string;
+  hours: number;
+  createDate: string;
+}
+
+// If you have other exports, include them as well
