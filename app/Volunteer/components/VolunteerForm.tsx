@@ -52,7 +52,7 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
   };
 
   const onSubmit = useCallback(async (data: FormValues) => {
-    console.log("Form Data Submitted: ", data);
+    console.log("ข้อมูลที่ส่งในฟอร์ม: ", data);
     
     if (!data.uploadVolunteer || data.uploadVolunteer.length === 0) {
       setFileError("โปรดตรวจสอบให้แน่ใจว่าได้อัปโหลดไฟล์ที่จำเป็นทั้งหมดแล้ว");
@@ -61,7 +61,7 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
 
     const { studentId, firstName } = data;
     if (!studentId || !firstName) {
-      setFileError("ไม่พบข้อมูล studentId หรือ firstName");
+      setFileError("ไม่พบข้อมูลรหัสนักศึกษาหรือชื่อเต็ม");
       return;
     }
 
@@ -84,21 +84,21 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
       sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 800, mx: 'auto', my: 4 }}
     >
       <Typography color="secondary" align="center" sx={{ mt: 2 }}>
-        Submit Volunteer Activity
+        ส่งข้อมูลกิจกรรมจิตอาสา
       </Typography>
       <Grid container spacing={2}>
 
-        {/* Student ID Field */}
+        {/* ฟิลด์รหัสนักศึกษา */}
         <Grid item xs={12} md={6}>
           <Controller
             name="studentId"
             control={control}
             defaultValue=""
-            rules={{ required: 'Student ID is required' }}
+            rules={{ required: 'รหัสนักศึกษาจำเป็นต้องกรอก' }}
             render={({ field }) => (
               <TextField
                 fullWidth
-                label="Student ID"
+                label="รหัสนักศึกษา"
                 {...field}
                 variant="outlined"
                 error={!!errors.studentId}
@@ -109,19 +109,18 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
           />
         </Grid>
 
-        {/* Prefix (Mr./Ms.) Field */}
-
+        {/* ฟิลด์คำนำหน้า */}
         <Grid item xs={12} md={6}>
           <Controller
             name="prefix"
             control={control}
             defaultValue=""
-            rules={{ required: 'Please select your prefix' }}
+            rules={{ required: 'โปรดเลือกคำนำหน้า' }}
             render={({ field }) => (
               <TextField
                 select
                 fullWidth
-                label="Prefix"
+                label="คำนำหน้า"
                 {...field}
                 variant="outlined"
                 error={!!errors.prefix}
@@ -134,18 +133,17 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
           />
         </Grid>
 
-
-        {/* Full Name Field */}
+        {/* ฟิลด์ชื่อเต็ม */}
         <Grid item xs={12} md={6}>
           <Controller
             name="firstName"
             control={control}
             defaultValue=""
-            rules={{ required: 'Full Name is required' }}
+            rules={{ required: 'จำเป็นต้องกรอกชื่อเต็ม' }}
             render={({ field }) => (
               <TextField
                 fullWidth
-                label="Full Name"
+                label="ชื่อเต็ม"
                 {...field}
                 variant="outlined"
                 error={!!errors.firstName}
@@ -155,16 +153,17 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
           />
         </Grid>
 
+        {/* ฟิลด์ชื่อเล่น */}
         <Grid item xs={12} md={6}>
           <Controller
             name="nickname"
             control={control}
             defaultValue=""
-            rules={{ required: 'Full Name is required' }}
+            rules={{ required: 'จำเป็นต้องกรอกชื่อเล่น' }}
             render={({ field }) => (
               <TextField
                 fullWidth
-                label="nickname"
+                label="ชื่อ - นามสกุล"
                 {...field}
                 variant="outlined"
                 error={!!errors.nickname}
@@ -174,21 +173,18 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
           />
         </Grid>
 
-
-
-
-
+        {/* ฟิลด์ชั้นปีที่จบ */}
         <Grid item xs={12} md={6}>
           <Controller
             name="graduate"
             control={control}
             defaultValue=""
-            rules={{ required: 'Please select your graduation year' }}
+            rules={{ required: 'โปรดเลือกชั้นปีที่จบ' }}
             render={({ field }) => (
               <TextField
                 select
                 fullWidth
-                label="Graduation Year"
+                label="ชั้นปี"
                 {...field}
                 variant="outlined"
                 error={!!errors.graduate}
@@ -204,13 +200,13 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
           />
         </Grid>
 
-        {/* Graduation Year Field */}
+        {/* ฟิลด์สาขา */}
         <Grid item xs={12} md={6}>
           <Controller
             name="branch"
             control={control}
             defaultValue=""
-            rules={{ required: 'Please select your field of study' }}
+            rules={{ required: 'โปรดเลือกสาขา' }}
             render={({ field }) => (
               <TextField
                 select
@@ -221,7 +217,6 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
                 error={!!errors.branch}
                 helperText={errors.branch?.message}
               >
-                {/* Add each MenuItem from the image list */}
                 <MenuItem value="MTM">MTM</MenuItem>
                 <MenuItem value="IMTM">IMTM</MenuItem>
                 <MenuItem value="FBM">FBM</MenuItem>
@@ -248,23 +243,23 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
                 <MenuItem value="ELT">ELT</MenuItem>
                 <MenuItem value="NS">NS</MenuItem>
                 <MenuItem value="NS">HIT</MenuItem>
+                {/* เพิ่มสาขาตามต้องการ */}
               </TextField>
             )}
           />
         </Grid>
 
-
-        {/* Activity Name Field */}
+        {/* ฟิลด์ชื่อกิจกรรม */}
         <Grid item xs={12} md={6}>
           <Controller
             name="activityName"
             control={control}
             defaultValue=""
-            rules={{ required: 'Activity Name is required' }}
+            rules={{ required: 'จำเป็นต้องกรอกชื่อกิจกรรม' }}
             render={({ field }) => (
               <TextField
                 fullWidth
-                label="Activity Name"
+                label="ชื่อกิจกรรม"
                 {...field}
                 variant="outlined"
                 error={!!errors.activityName}
@@ -274,7 +269,7 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
           />
         </Grid>
 
-        {/* Organization Name Field */}
+        {/* ฟิลด์ชื่อองค์กร */}
         <Grid item xs={12} md={6}>
           <Controller
             name="organizationName"
@@ -283,7 +278,7 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
             render={({ field }) => (
               <TextField
                 fullWidth
-                label="Organization Name"
+                label="ชื่อองค์กร"
                 {...field}
                 variant="outlined"
               />
@@ -291,7 +286,7 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
           />
         </Grid>
 
-        {/* Organization Phone Field */}
+        {/* ฟิลด์เบอร์โทรศัพท์องค์กร */}
         <Grid item xs={12} md={6}>
           <Controller
             name="organizationPhone"
@@ -300,7 +295,7 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
             render={({ field }) => (
               <TextField
                 fullWidth
-                label="Organization Phone"
+                label="เบอร์โทรศัพท์องค์กร"
                 {...field}
                 variant="outlined"
                 error={!!errors.organizationPhone}
@@ -310,9 +305,7 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
           />
         </Grid>
 
-
-
-        {/* Activity Date Field */}
+        {/* ฟิลด์วันที่ทำกิจกรรม */}
         <Grid item xs={12} md={6}>
           <Controller
             name="activityDate"
@@ -321,7 +314,7 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
             render={({ field }) => (
               <TextField
                 fullWidth
-                label="Activity Date"
+                label="วันที่ทำกิจกรรม"
                 type="date"
                 {...field}
                 InputLabelProps={{ shrink: true }}
@@ -331,7 +324,7 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
           />
         </Grid>
 
-        {/* Hours Field */}
+        {/* ฟิลด์จำนวนชั่วโมง */}
         <Grid item xs={12} md={6}>
           <Controller
             name="hours"
@@ -340,7 +333,7 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
             render={({ field }) => (
               <TextField
                 fullWidth
-                label="Number of Hours"
+                label="จำนวนชั่วโมง"
                 type="number"
                 {...field}
                 variant="outlined"
@@ -348,7 +341,8 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
             )}
           />
         </Grid>
-        {/* Activity Description Field */}
+
+        {/* ฟิลด์รายละเอียดกิจกรรม */}
         <Grid item xs={12}>
           <Controller
             name="activityDescription"
@@ -357,7 +351,7 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
             render={({ field }) => (
               <TextField
                 fullWidth
-                label="Activity Description"
+                label="รายละเอียดกิจกรรม"
                 {...field}
                 variant="outlined"
                 multiline
@@ -367,7 +361,7 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
           />
         </Grid>
 
-        {/* Activity Image Field */}
+        {/* ฟิลด์อัปโหลดรูปภาพกิจกรรม */}
         <Grid item xs={12}>
           <Typography variant="body1" sx={{ mb: 1 }}>
             อัพโหลดอย่างน้อย 2 รูป ภาพรวมนอกบ้าน ภาพรวมในบ้าน
@@ -386,7 +380,7 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
 
       </Grid>
 
-
+      {/* ปุ่มส่งข้อมูล */}
       <Button
         type="submit"
         variant="contained"
