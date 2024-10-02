@@ -13,8 +13,11 @@ export interface ApiResponse<T> {
   message: string;
   data?: T | null; // ใช้ประเภทเจนเนอริกที่นี่
   error?: string;
+  token?: string; // Add token to the ApiResponse type
 
 }
+
+
 
 
 
