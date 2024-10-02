@@ -42,7 +42,7 @@ const LayoutAdmin: React.FC<LayoutProps> = ({ children, sidebarItems, contentTit
       <FontLinks />
       <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
         <Navbar />
-        <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'flex-start', paddingTop: '10px' }}>
+        <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
           <Grid container sx={{ flexGrow: 1, maxWidth: '100%' }}>
             {sidebarItems && sidebarItems.length > 0 && (
               <Grid item xs={2}>

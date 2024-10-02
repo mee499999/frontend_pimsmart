@@ -5,7 +5,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useTheme, useMediaQuery, Box } from "@mui/material";
+import { useTheme, useMediaQuery, Box, Typography } from "@mui/material";
 
 interface SidebarProps {
   items: { text: string; hook: () => void }[];
@@ -37,28 +37,44 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
                 open={drawerOpen}
                 onClose={toggleDrawer(false)}
             >
-                <List>
-                    {items.map((item, index) => (
-                        <ListItem button key={index} onClick={item.hook}>
-                            <ListItemText primary={item.text} />
-                        </ListItem>
-                    ))}
-                </List>
+                <Box sx={{ backgroundColor: '#2b485f', height: '100%' }}>
+                    <List>
+                        {items.map((item, index) => (
+                            <ListItem button key={index} onClick={item.hook}>
+                                <ListItemText 
+                                    primary={
+                                        <Typography sx={{ fontSize: '18px', color: 'white' }}> {/* Set font size and color */}
+                                            {item.text}
+                                        </Typography>
+                                    } 
+                                />
+                            </ListItem>
+                        ))}
+                    </List>
+                </Box>
             </Drawer>
 
             {/* Sidebar for Desktop */}
             {!isMobile && (
                 <Box
                     sx={{
-                        width: 250,
+                        // width: 250,
                         display: 'flex',
                         flexDirection: 'column',
+                        backgroundColor: '#2b485f',
+                        height: '100vh',
                     }}
                 >
                     <List>
                         {items.map((item, index) => (
                             <ListItem button key={index} onClick={item.hook}>
-                                <ListItemText primary={item.text} />
+                                <ListItemText 
+                                    primary={
+                                        <Typography sx={{ fontSize: '18px', color: 'white' }}> {/* Set font size and color */}
+                                            {item.text}
+                                        </Typography>
+                                    } 
+                                />
                             </ListItem>
                         ))}
                     </List>

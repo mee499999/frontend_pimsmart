@@ -18,9 +18,10 @@ import { useRouter } from 'next/navigation';
 
 const NavbarContainer = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main, // Use primary color from the theme
-  padding: theme.spacing(2),
+  padding: '5px', // Set padding to 10px
   display: 'flex',
   justifyContent: 'space-between',
+
   alignItems: 'center',
   [theme.breakpoints.down('sm')]: {
     flexDirection: 'column',
@@ -49,12 +50,12 @@ const Navbar: React.FC = () => {
     router.push("/pim/login"); // Redirect to login page after logout
   };
 
-  const navItems = [
-    { href: '/register', text: 'สมัคร' },
-    { href: '/Volunteer', text: 'จิตอาสา' },
-    { href: '/ccc', text: 'ต่อทุน' },
-    { href: '/vv', text: 'ข่าวสาร' }
-  ];
+  // const navItems = [
+  //   { href: '/register', text: 'สมัคร' },
+  //   { href: '/Volunteer', text: 'จิตอาสา' },
+  //   { href: '/ccc', text: 'ต่อทุน' },
+  //   { href: '/vv', text: 'ข่าวสาร' }
+  // ];
 
   return (
     <NavbarContainer>
@@ -69,7 +70,7 @@ const Navbar: React.FC = () => {
         >
           <Link href="/" passHref>
             <Box className="flex items-center text-white">
-              <Image src={logoImage} alt="Logo" height={100} width={100} />
+              <Image src={logoImage} alt="Logo" height={90} width={90} />
             </Box>
           </Link>
           <Typography
@@ -88,59 +89,33 @@ const Navbar: React.FC = () => {
           </Typography>
         </Box>
       </LogoContainer>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',  // Center horizontally
+          alignItems: 'center',      // Center vertically
+          height: '50px',
+          marginTop: '10px' // Adjust marginTop as needed
+        }}
+      >
+        <Typography sx={{ color: 'white', fontSize: 'clamp(24px, 5vw, 50px)' }}>
+          ADMIN
+        </Typography>
+      </Box>
 
-      {isMobile ? (
-        <>
-          <IconButton edge="start" color="inherit" onClick={toggleDrawer(true)} aria-label="menu" sx={{ marginTop: '20px' }}>
-            <MenuIcon />
-          </IconButton>
-          <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
-            <Box
-              sx={{ width: 250 }}
-              role="presentation"
-              onClick={toggleDrawer(false)}
-              onKeyDown={toggleDrawer(false)}
-            >
-              <List>
-                {navItems.map(({ href, text }, index) => (
-                  <ListItem button component={Link} href={href} key={index}>
-                    <ListItemText primary={text} />
-                  </ListItem>
-                ))}
-                <ListItem button onClick={handleLogout}>
-                  <ListItemText primary="Logout" /> {/* Logout button in mobile drawer */}
-                </ListItem>
-              </List>
-            </Box>
-          </Drawer>
-        </>
-      ) : (
-        <Box display="flex" gap={2} alignItems="center">
-          {navItems.map(({ href, text }, index) => (
-            <Typography
-              key={index}
-              variant="h6"
-              color="white"
-              component="a"
-              href={href}
-              sx={{ textDecoration: 'none', fontSize: { sm: '1rem', md: '2rem' }, marginLeft: '10px' }}
-            >
-              {text}
-            </Typography>
-          ))}
-          <LogoutIcon
-            color="inherit"
-            onClick={handleLogout}
-            sx={{
-              fontSize: { sm: '1rem', md: '2rem' },
-              cursor: 'pointer' // Change cursor to pointer when hovering
-            }}
-          >
-            Logout {/* Logout button for desktop */}
-          </LogoutIcon>
 
-        </Box>
-      )}
+      <LogoutIcon
+        color="inherit"
+        onClick={handleLogout}
+        sx={{
+          fontSize: { sm: '1rem', md: '2rem' },
+          cursor: 'pointer' // Change cursor to pointer when hovering
+        }}
+      >
+        Logout {/* Logout button for desktop */}
+      </LogoutIcon>
+
+
     </NavbarContainer>
   );
 };

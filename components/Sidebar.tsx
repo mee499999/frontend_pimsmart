@@ -50,7 +50,6 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
             {!isMobile && (
                 <Box
                     sx={{
-                        width: 250,
                         display: 'flex',
                         flexDirection: 'column',
                     }}

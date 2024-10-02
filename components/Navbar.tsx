@@ -15,7 +15,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 
 const NavbarContainer = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main, // Use primary color from the theme
-  padding: theme.spacing(2),
+  padding: '5px', // Set padding to 10px
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
@@ -59,7 +59,7 @@ const Navbar: React.FC = () => {
         >
           <Link href="/" passHref>
             <Box className="flex items-center text-white">
-              <Image src={logoImage} alt="Logo" height={100} width={100} />
+              <Image src={logoImage} alt="Logo" height={90} width={90} />
             </Box>
           </Link>
           <Typography
