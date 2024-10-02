@@ -1,3 +1,5 @@
+
+
 "use client";
 
 import React, { useCallback, useEffect, useState } from 'react';
@@ -8,12 +10,9 @@ import CustomFileUpload from '@/components/CustomFileUpload';
 import { useuploadSpecialWorkApi } from '@/hooks/SpecialWork';
 import { submitSpecialWorkForm } from '@/app/api/SpecialWork';
 
-
 interface WorkFormProps {
   formwork: UseFormReturn<FormValuesWork>;
 }
-
-
 
 const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
   const {
@@ -28,8 +27,6 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
   const [files, setFiles] = useState<File[]>([]);
   const [fileError, setFileError] = useState<string | null>(null);
   const { loading, error, response, uploadSpecialWork } = useuploadSpecialWorkApi();
-
-
 
   useEffect(() => {
     if (uploadPictureHouse instanceof FileList) {
@@ -52,8 +49,7 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
   };
 
   const onSubmit = useCallback(async (data: FormValuesWork) => {
-    console.log("Form Data Submitted: ", data);
-    // Additional form submission logic here
+    console.log("ข้อมูลที่ส่งในฟอร์ม: ", data);
 
     if (!data.uploadSpecialwork || data.uploadSpecialwork.length === 0) {
       setFileError("โปรดตรวจสอบให้แน่ใจว่าได้อัปโหลดไฟล์ที่จำเป็นทั้งหมดแล้ว");
@@ -62,24 +58,19 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
 
     const { studentId, firstName } = data;
     if (!studentId || !firstName) {
-      setFileError("ไม่พบข้อมูล studentId หรือ firstName");
+      setFileError("ไม่พบข้อมูลรหัสนักศึกษาหรือชื่อเต็ม");
       return;
     }
     const imageType: "Specialwork" = "Specialwork"; 
 
     const sendResult = await submitSpecialWorkForm(data);
     if (!sendResult) {
-      setFileError("การส่งข้อมูลจิตอาสาล้มเหลว");
+      setFileError("การส่งข้อมูลกิจกรรมงานพิเศษล้มเหลว");
       return;
     }
 
     await uploadSpecialWork(files, studentId, firstName, imageType);
   }, [submitSpecialWorkForm, uploadSpecialWork]);
-
-
-
-
-
 
   return (
     <Box
@@ -88,21 +79,21 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
       sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 800, mx: 'auto', my: 4 }}
     >
       <Typography color="secondary" align="center" sx={{ mt: 2 }}>
-        Submit Special Work Activity
+        ส่งข้อมูลกิจกรรมงานพิเศษ
       </Typography>
 
       <Grid container spacing={2}>
-        {/* Student ID Field */}
+        {/* ฟิลด์รหัสนักศึกษา */}
         <Grid item xs={12} md={6}>
           <Controller
             name="studentId"
             control={control}
             defaultValue=""
-            rules={{ required: 'Student ID is required' }}
+            rules={{ required: 'รหัสนักศึกษาจำเป็นต้องกรอก' }}
             render={({ field }) => (
               <TextField
                 fullWidth
-                label="Student ID"
+                label="รหัสนักศึกษา"
                 {...field}
                 variant="outlined"
                 error={!!errors.studentId}
@@ -112,18 +103,18 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
           />
         </Grid>
 
-        {/* Prefix (Mr./Ms.) Field */}
+        {/* ฟิลด์คำนำหน้า */}
         <Grid item xs={12} md={6}>
           <Controller
             name="prefix"
             control={control}
             defaultValue=""
-            rules={{ required: 'Please select your prefix' }}
+            rules={{ required: 'โปรดเลือกคำนำหน้า' }}
             render={({ field }) => (
               <TextField
                 select
                 fullWidth
-                label="Prefix"
+                label="คำนำหน้า"
                 {...field}
                 variant="outlined"
                 error={!!errors.prefix}
@@ -136,17 +127,17 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
           />
         </Grid>
 
-        {/* Full Name Field */}
+        {/* ฟิลด์ชื่อเต็ม */}
         <Grid item xs={12} md={6}>
           <Controller
             name="firstName"
             control={control}
             defaultValue=""
-            rules={{ required: 'Full Name is required' }}
+            rules={{ required: 'จำเป็นต้องกรอกชื่อเต็ม' }}
             render={({ field }) => (
               <TextField
                 fullWidth
-                label="Full Name"
+                label="ชื่อ - นามสกุล"
                 {...field}
                 variant="outlined"
                 error={!!errors.firstName}
@@ -156,17 +147,17 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
           />
         </Grid>
 
-        {/* Nickname Field */}
+        {/* ฟิลด์ชื่อเล่น */}
         <Grid item xs={12} md={6}>
           <Controller
             name="nickname"
             control={control}
             defaultValue=""
-            rules={{ required: 'Nickname is required' }}
+            rules={{ required: 'จำเป็นต้องกรอกชื่อเล่น' }}
             render={({ field }) => (
               <TextField
                 fullWidth
-                label="Nickname"
+                label="ชื่อเล่น"
                 {...field}
                 variant="outlined"
                 error={!!errors.nickname}
@@ -176,18 +167,18 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
           />
         </Grid>
 
-        {/* Graduation Year */}
+        {/* ฟิลด์ชั้นปีที่จบ */}
         <Grid item xs={12} md={6}>
           <Controller
             name="graduate"
             control={control}
             defaultValue=""
-            rules={{ required: 'Please select your graduation year' }}
+            rules={{ required: 'โปรดเลือกชั้นปีที่จบ' }}
             render={({ field }) => (
               <TextField
                 select
                 fullWidth
-                label="Graduation Year"
+                label="ชั้นปี"
                 {...field}
                 variant="outlined"
                 error={!!errors.graduate}
@@ -203,24 +194,24 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
           />
         </Grid>
 
-        {/* Branch Field */}
+        {/* ฟิลด์สาขา */}
         <Grid item xs={12} md={6}>
           <Controller
             name="branch"
             control={control}
             defaultValue=""
-            rules={{ required: 'Please select your branch' }}
+            rules={{ required: 'โปรดเลือกสาขา' }}
             render={({ field }) => (
               <TextField
                 select
                 fullWidth
-                label="Branch"
+                label="สาขา"
                 {...field}
                 variant="outlined"
                 error={!!errors.branch}
                 helperText={errors.branch?.message}
               >
-                <MenuItem value="MTM">MTM</MenuItem>
+                 <MenuItem value="MTM">MTM</MenuItem>
                 <MenuItem value="IMTM">IMTM</MenuItem>
                 <MenuItem value="FBM">FBM</MenuItem>
                 <MenuItem value="RBM">RBM</MenuItem>
@@ -246,22 +237,23 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
                 <MenuItem value="ELT">ELT</MenuItem>
                 <MenuItem value="NS">NS</MenuItem>
                 <MenuItem value="NS">HIT</MenuItem>
+                {/* เพิ่มสาขาเพิ่มเติม */}
               </TextField>
             )}
           />
         </Grid>
 
-        {/* Activity Name Field */}
+        {/* ฟิลด์ชื่อกิจกรรม */}
         <Grid item xs={12} md={6}>
           <Controller
             name="workName"
             control={control}
             defaultValue=""
-            rules={{ required: 'Activity Name is required' }}
+            rules={{ required: 'จำเป็นต้องกรอกชื่อกิจกรรม' }}
             render={({ field }) => (
               <TextField
                 fullWidth
-                label="Activity Name"
+                label="ชื่อกิจกรรม"
                 {...field}
                 variant="outlined"
                 error={!!errors.workName}
@@ -271,7 +263,7 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
           />
         </Grid>
 
-        {/* Organization Name Field */}
+        {/* ฟิลด์ชื่อองค์กร */}
         <Grid item xs={12} md={6}>
           <Controller
             name="organizationName"
@@ -280,7 +272,7 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
             render={({ field }) => (
               <TextField
                 fullWidth
-                label="Organization Name"
+                label="ชื่อองค์กร"
                 {...field}
                 variant="outlined"
                 error={!!errors.organizationName}
@@ -290,7 +282,7 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
           />
         </Grid>
 
-        {/* Organization Phone Field */}
+        {/* ฟิลด์เบอร์โทรศัพท์องค์กร */}
         <Grid item xs={12} md={6}>
           <Controller
             name="organizationPhone"
@@ -299,7 +291,7 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
             render={({ field }) => (
               <TextField
                 fullWidth
-                label="Organization Phone"
+                label="เบอร์โทรศัพท์องค์กร"
                 {...field}
                 variant="outlined"
                 error={!!errors.organizationPhone}
@@ -309,7 +301,7 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
           />
         </Grid>
 
-        {/* Activity Description Field */}
+        {/* ฟิลด์รายละเอียดกิจกรรม */}
         <Grid item xs={12}>
           <Controller
             name="workDescription"
@@ -318,7 +310,7 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
             render={({ field }) => (
               <TextField
                 fullWidth
-                label="Activity Description"
+                label="รายละเอียดกิจกรรม"
                 {...field}
                 variant="outlined"
                 error={!!errors.workDescription}
@@ -328,7 +320,7 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
           />
         </Grid>
 
-        {/* Activity Date Field */}
+        {/* ฟิลด์วันที่ทำกิจกรรม */}
         <Grid item xs={12} md={6}>
           <Controller
             name="activityDate"
@@ -337,7 +329,7 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
             render={({ field }) => (
               <TextField
                 fullWidth
-                label="Activity Date"
+                label="วันที่ทำกิจกรรม"
                 type="date"
                 {...field}
                 InputLabelProps={{ shrink: true }}
@@ -347,7 +339,7 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
           />
         </Grid>
 
-        {/* Hours Field */}
+        {/* ฟิลด์จำนวนชั่วโมง */}
         <Grid item xs={12} md={6}>
           <Controller
             name="hours"
@@ -356,7 +348,7 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
             render={({ field }) => (
               <TextField
                 fullWidth
-                label="Number of Hours"
+                label="จำนวนชั่วโมง"
                 type="number"
                 {...field}
                 variant="outlined"
@@ -365,7 +357,7 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
           />
         </Grid>
 
-        {/* Work Type Field */}
+        {/* ฟิลด์ประเภทงาน */}
         <Grid item xs={12} md={6}>
           <Controller
             name="workType"
@@ -375,20 +367,19 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
               <TextField
                 select
                 fullWidth
-                label="Work Type"
+                label="ประเภทงาน"
                 {...field}
                 variant="outlined"
               >
-                <MenuItem value="Full-Time">Full-Time</MenuItem>
-                <MenuItem value="Part-Time">Part-Time</MenuItem>
-                <MenuItem value="Internship">Internship</MenuItem>
-                {/* Add more options as needed */}
+                <MenuItem value="Full-Time">งานเต็มเวลา</MenuItem>
+                <MenuItem value="Part-Time">งานพาร์ทไทม์</MenuItem>
+                <MenuItem value="Internship">ฝึกงาน</MenuItem>
               </TextField>
             )}
           />
         </Grid>
 
-        {/* Compensation Field */}
+        {/* ฟิลด์ค่าตอบแทน */}
         <Grid item xs={12} md={6}>
           <Controller
             name="compensation"
@@ -397,7 +388,7 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
             render={({ field }) => (
               <TextField
                 fullWidth
-                label="Compensation"
+                label="ค่าตอบแทน"
                 type="number"
                 {...field}
                 variant="outlined"
@@ -406,48 +397,10 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
           />
         </Grid>
 
-        {/* Work Dates Field */}
-        <Grid item xs={12} md={6}>
-          <Controller
-            name="workDates"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <TextField
-                fullWidth
-                label="Work Dates"
-                {...field}
-                variant="outlined"
-                error={!!errors.workDates}
-                helperText={errors.workDates?.message}
-              />
-            )}
-          />
-        </Grid>
-
-        {/* Work Time Field */}
-        <Grid item xs={12} md={6}>
-          <Controller
-            name="workTime"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <TextField
-                fullWidth
-                label="Work Time"
-                {...field}
-                variant="outlined"
-                error={!!errors.workTime}
-                helperText={errors.workTime?.message}
-              />
-            )}
-          />
-        </Grid>
-
-        {/* Activity Image Field */}
+        {/* ฟิลด์อัปโหลดรูปภาพกิจกรรม */}
         <Grid item xs={12}>
           <Typography variant="body1" sx={{ mb: 1 }}>
-            อัพโหลดอย่างน้อย 2 รูป ภาพรวมนอกบ้าน ภาพรวมในบ้าน
+            *อัพโหลดรูปภาพกิจกรรมที่ทำ ให้เห็นหน้า
           </Typography>
           <CustomFileUpload
             value={files}
@@ -462,14 +415,14 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
         </Grid>
       </Grid>
 
-      {/* Submit Button */}
+      {/* ปุ่มส่งข้อมูล */}
       <Button
         type="submit"
         variant="contained"
         color="primary"
         sx={{ mt: 2 }}
       >
-        Submit
+        ส่งข้อมูล
       </Button>
     </Box>
   );

@@ -7,7 +7,7 @@ import axiosApi from '@/utils/Api'; // Ensure axiosApi is properly configured
 export const submitSpecialWorkForm = async (formData: any) => {
   try {
     console.log('Submitting form with data:', formData);
-    const response = await axiosApi.post("/special-work", formData);
+    const response = await axiosApi.post("/special-work/create", formData);
     return response.data;
   } catch (error: any) {
     console.error('Error details:', error.response ? error.response.data : error.message);
@@ -23,7 +23,7 @@ export const uploadFilesWorkApi = async (
   firstName: string,
   fileNames: string[],
   imageType: string,
-  endpoint: string = '/students/uploadToGoogleDrive'
+  endpoint: string = '/special-work/uploadToGoogleDrive'
 ): Promise<ApiResponse<any>> => { // ใช้ any ถ้าข้อมูลที่ส่งคืนไม่แน่นอน
   const formData = new FormData();
   files.forEach(file => {

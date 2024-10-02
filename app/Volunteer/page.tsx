@@ -27,15 +27,15 @@ const Page: React.FC = () => {
     <Layout
       sidebarItems={[
         {
-          text: "ส่งชั่วโมงจิตอาสา",
+          text: "บันทึกชั่วโมงจิตอาสา",
           hook: () => handleSidebarClick("volunteerForm"), // Show volunteer form on click
         },
         {
-          text: "ส่งชั่วโมงงานพิเศษ",
+          text: "บันทึกชั่วโมงงานพิเศษ",
           hook: () => handleSidebarClick("SpecialWorkForm"), // Show special work form on click
         },
         {
-          text: "เช็คชั่วโมงจิตอาสา",
+          text: "ตรวจสอบชั่วโมงจิตอาสา",
           hook: () => handleSidebarClick("CheckHoursForm"), // Show check hours form on click
         },
       ]}

@@ -22,7 +22,7 @@ export const uploadVolunteerFilesApi = async (
   firstName: string,
   fileNames: string[],
   imageType: string,
-  endpoint: string = '/students/uploadToGoogleDrive'
+  endpoint: string = '/volunteer-activities/uploadToGoogleDrive'
 ): Promise<ApiResponse<any>> => { // ใช้ any ถ้าข้อมูลที่ส่งคืนไม่แน่นอน
   const formData = new FormData();
   files.forEach(file => {
