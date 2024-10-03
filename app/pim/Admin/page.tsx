@@ -3,7 +3,8 @@
 
 import React, { useState } from 'react';
 import LayoutAdmin from '../components/LayoutAdmin';
-import Dashboard from './components/Dashboard';
+import Dashboard from './Dashboard/Dashboard';
+import Studenthistory from './Studenthistory/Studenthistory';
 
 const Page: React.FC = () => {
   const [selectedForm, setSelectedForm] = useState<string>('dashboard'); // Manage the selected form
@@ -27,8 +28,9 @@ const Page: React.FC = () => {
       ]}
     >
       <main>
-        {selectedForm === 'dashboard' && <Dashboard />} {/* Render the Dashboard */}
-        {/* Add conditional rendering for other components here */}
+        {selectedForm === 'dashboard' && <Dashboard />} 
+        {selectedForm === 'Studenthistory' && <Studenthistory />} 
+
       </main>
       
     </LayoutAdmin>

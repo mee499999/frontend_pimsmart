@@ -9,7 +9,9 @@ const StyledContent = styled('div')(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   height: '100%', // ใช้ความสูงที่ต้องการ
-  width:'100%'
+  width:'100%',
+  marginLeft: '20px',  // Add margin-left
+  marginRight: '20px', // Add margin-right
 }));
 
 const StyledTitle = styled('h1')(({ theme }) => ({

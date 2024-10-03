@@ -24,7 +24,7 @@ const data = [
 
 const Dashboard: React.FC = () => {
   return (
-    <main style={{ marginLeft: '20px', marginRight: '20px' }}>
+    <main >
       <h1>Dashboard</h1>
       <p>Welcome to the Admin Dashboard!</p>
       <ResponsiveContainer width="100%" height={300}>
