@@ -43,43 +43,46 @@ const Page: React.FC = () => {
 
       {/* Text Section */}
       <h1 className="text-center text-xl font-bold mt-8">“พีไอเอ็ม สมาร์ท” กองทุนเพื่อชีวิตฯ ที่ให้มากกว่าทุนการศึกษา</h1>
-      <p>
+      <p className="text-center px-4 lg:px-0">
         หนึ่งสิ่งสำคัญในการสร้าง “ความสำเร็จทางการศึกษา” คือ “การมอบโอกาส” เพื่อต่อยอดความฝันให้เยาวชนทุกกลุ่มได้เข้าถึงการศึกษาอย่างเท่าเทียม สิ่งเหล่านี้ถือเป็นมิติสำคัญเพื่อเพิ่มขีดความสามารถทางการแข่งขันให้เยาวชน ได้คำนึงถึงคุณค่าของตัวเองในฐานะบุคลากรของชาติ...
-        <a href="https://www.cpall.co.th/news/blog-by-cp-all/">เพิ่มเติม</a>
+        <a href="https://www.cpall.co.th/news/blog-by-cp-all/" className="text-blue-500 hover:underline">เพิ่มเติม</a>
       </p>
 
       {/* Slider Section */}
-      <div className="relative w-full">
+      <div className="relative w-full max-w-screen-lg mx-auto mt-10 shadow-lg">
         <Slider {...settings}>
           <div className="flex items-center justify-center">
-            <div className="flex flex-col items-center">
-              <Image src={image1} alt="Slide 1" className="block h-auto object-cover" />
+            <div className="flex flex-col items-center bg-white bg-opacity-90 p-4 rounded-lg shadow-lg">
+              <Image src={image1} alt="Slide 1" className="block h-auto object-cover rounded-md transition transform hover:scale-105 duration-300" />
               <div className="text-center p-4">
                 <h5 className="text-xl font-bold">First Slide Title</h5>
-                <p>Some representative placeholder content for the first slide. This is a brief description providing more details about the content of this slide.</p>
+                <p className="text-gray-600">Some representative placeholder content for the first slide. This is a brief description providing more details about the content of this slide.</p>
               </div>
             </div>
           </div>
           <div className="flex items-center justify-center">
-            <div className="flex flex-col items-center">
-              <Image src={image2} alt="Slide 2" className="block h-auto object-cover" />
+            <div className="flex flex-col items-center bg-white bg-opacity-90 p-4 rounded-lg shadow-lg">
+              <Image src={image2} alt="Slide 2" className="block h-auto object-cover rounded-md transition transform hover:scale-105 duration-300" />
               <div className="text-center p-4">
                 <h5 className="text-xl font-bold">Second Slide Title</h5>
-                <p>Some representative placeholder content for the second slide. This is a brief description providing more details about the content of this slide.</p>
+                <p className="text-gray-600">Some representative placeholder content for the second slide. This is a brief description providing more details about the content of this slide.</p>
               </div>
             </div>
           </div>
           <div className="flex items-center justify-center">
-            <div className="flex flex-col items-center">
-              <Image src={image3} alt="Slide 3" className="block h-auto object-cover" />
+            <div className="flex flex-col items-center bg-white bg-opacity-90 p-4 rounded-lg shadow-lg">
+              <Image src={image3} alt="Slide 3" className="block h-auto object-cover rounded-md transition transform hover:scale-105 duration-300" />
               <div className="text-center p-4">
                 <h5 className="text-xl font-bold">Third Slide Title</h5>
-                <p>“โบ๊ท นนทวัฒน์ วุฒิคำ” หนึ่งในนักศึกษาที่ได้รับทุนจากกองทุน PIM SMART ศิษย์เก่าจากสาขาวิศวกรรมคอมพิวเตอร์และปัญญาประดิษฐ์ คณะวิศวกรรมศาสตร์และเทคโนโลยี สถาบันการจัดการปัญญาภิวัฒน์ (พีไอเอ็ม) เล่าด้วยความอิ่มเอมใจว่า “นอกจากทุนการศึกษาที่ได้รับจนจบการศึกษาแล้ว ผมยังได้รับทุนสำหรับใช้เป็นค่าใช้จ่ายในชีวิตประจำวันรวมถึงค่าที่พักด้วย เพราะนอกเหนือจากทุนการศึกษาแล้ว ค่าใช้จ่ายส่วนนี้ทำให้ผมได้มีที่อยู่และมีแรงที่จะศึกษาต่อไปครับ”</p>
+                <p className="text-gray-600">“โบ๊ท นนทวัฒน์ วุฒิคำ” หนึ่งในนักศึกษาที่ได้รับทุนจากกองทุน PIM SMART ศิษย์เก่าจากสาขาวิศวกรรมคอมพิวเตอร์และปัญญาประดิษฐ์ คณะวิศวกรรมศาสตร์และเทคโนโลยี สถาบันการจัดการปัญญาภิวัฒน์ (พีไอเอ็ม)...</p>
               </div>
             </div>
           </div>
         </Slider>
       </div>
+
+      {/* CTA Section */}
+     
     </Layout>
   );
 };
