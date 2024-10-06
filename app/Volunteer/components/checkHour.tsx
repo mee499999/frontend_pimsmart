@@ -10,6 +10,7 @@ import { fetchRankinActivity, RankinResponse } from '@/app/api/Rankin';
 import DataTable from '@/components/Table';
 import { GridColDef } from '@mui/x-data-grid';
 import { VolunteerHoursResponse, SpecialWorkResponse } from '@/types/IResponse';
+import { log } from 'console';
 
 const CheckHoursWork: React.FC = () => {
   const [studentId, setStudentId] = useState<string>(''); 
@@ -34,59 +35,63 @@ const CheckHoursWork: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!studentId) {
-        setError('Student ID is required.');
-        return;
+      setError('Student ID is required.');
+      return;
     }
-
+  
     setLoading(true);
     setError(null);
-
+  
     try {
-        // Try fetching volunteer hours
+      // Fetch volunteer hours
+      let volunteerResponse: VolunteerHoursResponse[] = [];
+      try {
+        volunteerResponse = await fetchVolunteerHours(studentId);
+        setVolunteerData(volunteerResponse);
+      } catch (error) {
+        console.error('Error fetching volunteer hours:', error);
+        setVolunteerData([]); // Set to empty array if error occurs
+      }
+  
+      // Fetch special work hours
+      let specialWorkResponse: SpecialWorkResponse[] = [];
+      try {
+        specialWorkResponse = await fetchSpecialWorkHours(studentId);
+        setSpecialWorkData(specialWorkResponse);
+      } catch (error) {
+        console.error('Error fetching special work hours:', error);
+        setSpecialWorkData([]); // Set to empty array if error occurs
+      }
+  
+      // Determine which student ID to use for rankin lookup
+      const rankinStudentId = volunteerResponse.length > 0
+        ? volunteerResponse[0].studentId
+        : specialWorkResponse.length > 0
+          ? specialWorkResponse[0].studentId
+          : null;
+  
+      if (rankinStudentId) {
         try {
-            const volunteerResponse = await fetchVolunteerHours(studentId);
-            setVolunteerData(volunteerResponse);
+          const rankinResponse = await fetchRankinActivity(rankinStudentId);
+          setRankinData(rankinResponse);
+          console.log(rankinResponse);
         } catch (error) {
-            console.error('Error fetching volunteer hours:', error);
-            setVolunteerData([]); // Set to empty array if error occurs
+          console.error('Error fetching rankin activity:', error);
+          setRankinData(null); // Set to null if error occurs
         }
-
-        // Try fetching special work hours
-        try {
-            const specialWorkResponse = await fetchSpecialWorkHours(studentId);
-            setSpecialWorkData(specialWorkResponse);
-        } catch (error) {
-            console.error('Error fetching special work hours:', error);
-            setSpecialWorkData([]); // Set to empty array if error occurs
-        }
-
-        // After fetching volunteer or special work hours, retrieve rankin from the database
-        const rankinStudentId = volunteerData.length > 0 
-            ? volunteerData[0].studentId 
-            : specialWorkData.length > 0 
-                ? specialWorkData[0].studentId 
-                : null;
-
-        if (rankinStudentId) {
-            try {
-                const rankinResponse = await fetchRankinActivity(rankinStudentId);
-                setRankinData(rankinResponse);
-            } catch (error) {
-                console.error('Error fetching rankin activity:', error);
-                setRankinData(null); // Set to null if error occurs
-            }
-        } else {
-            console.warn('No student ID available for rankin lookup.');
-            setRankinData(null);
-        }
-
+      } else {
+        console.warn('No student ID available for rankin lookup.');
+        setRankinData(null);
+      }
+  
     } catch (error) {
-        console.error('Error fetching data:', error);
-        setError('Failed to fetch volunteer, special work, or ranking data.');
+      console.error('Error fetching data:', error);
+      setError('Failed to fetch volunteer, special work, or ranking data.');
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-};
+  };
+  
 
 
 
@@ -137,7 +142,10 @@ const CheckHoursWork: React.FC = () => {
     { field: 'workDate', headerName: 'วันที่จัดกิจกรรม', width: 150 },
     { field: 'hours', headerName: 'จำนวนชั่วโมง', width: 100 },
   ];
-
+  console.log(rankinData,'eeee33');
+  console.log(volunteerData,'eeeeeee4');
+  
+  
   return (
     <main>
       <Typography variant="h5" gutterBottom>
@@ -178,28 +186,49 @@ const CheckHoursWork: React.FC = () => {
         {specialWorkData.length > 0 && (
           <Typography variant="h6">Total Special Work Hours: {totalSpecialWorkHours}</Typography>
         )}
-        {rankinData && rankinData.length > 0 && (
-          <Typography variant="h6">Rankin: {rankinData[0]?.rank}</Typography>
-        )}
+
+{rankinData && rankinData.length > 0 && (
+        rankinData.map((data, index) => (
+          data.studentId === volunteerData[0]?.studentId && (
+            <Typography key={index} variant="h6">
+              Rankin: {data.rank}
+            </Typography>
+          )
+        ))
+      )}
       </Box>
 
       <Box sx={{ mt: 3, display: 'flex', gap: 3, justifyContent: 'space-between' }}>
-        {/* Show Volunteer Hours table if there is data */}
-        {volunteerData.length > 0 && (
-          <Box sx={{ width: '50%' }}>
-            <Typography variant="h6">Volunteer Hours</Typography>
-            <DataTable rows={filteredVolunteerRows} columns={volunteerColumns} />
-          </Box>
-        )}
+  {/* Show Volunteer Hours table if there is data */}
+  {volunteerData.length > 0 && specialWorkData.length === 0 && (
+    <Box sx={{ width: '100%' }}> {/* Set to full width when there's only volunteerData */}
+      <Typography variant="h6">Volunteer Hours</Typography>
+      <DataTable rows={filteredVolunteerRows} initialColumns={volunteerColumns} />
+    </Box>
+  )}
 
-        {/* Show Special Work Hours table if there is data */}
-        {specialWorkData.length > 0 && (
-          <Box sx={{ width: '50%' }}>
-            <Typography variant="h6">Special Work Hours</Typography>
-            <DataTable rows={filteredSpecialWorkRows} columns={specialWorkColumns} />
-          </Box>
-        )}
+  {/* Show Special Work Hours table if there is data */}
+  {specialWorkData.length > 0 && volunteerData.length === 0 && (
+    <Box sx={{ width: '100%' }}> {/* Set to full width when there's only specialWorkData */}
+      <Typography variant="h6">Special Work Hours</Typography>
+      <DataTable rows={filteredSpecialWorkRows} initialColumns={specialWorkColumns} />
+    </Box>
+  )}
+
+  {/* Show both Volunteer and Special Work Hours if both exist */}
+  {volunteerData.length > 0 && specialWorkData.length > 0 && (
+    <>
+      <Box sx={{ width: '50%' }}>
+        <Typography variant="h6">Volunteer Hours</Typography>
+        <DataTable rows={filteredVolunteerRows} initialColumns={volunteerColumns} />
       </Box>
+      <Box sx={{ width: '50%' }}>
+        <Typography variant="h6">Special Work Hours</Typography>
+        <DataTable rows={filteredSpecialWorkRows} initialColumns={specialWorkColumns} />
+      </Box>
+    </>
+  )}
+</Box>
 
       {error && <Alert severity="error">{error}</Alert>}
     </main>
