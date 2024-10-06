@@ -9,9 +9,10 @@ import Sidebar from './Sidebar';
 
 interface LayoutProps {
   children: React.ReactNode;
-  sidebarItems?: { text: string; hook: () => void }[];
+  sidebarItems?: { text: string; hook: () => void; id: string }[]; // Added id here
   contentTitle?: string;
 }
+
 
 const LayoutAdmin: React.FC<LayoutProps> = ({ children, sidebarItems, contentTitle }) => {
   const router = useRouter();
@@ -47,7 +48,7 @@ const LayoutAdmin: React.FC<LayoutProps> = ({ children, sidebarItems, contentTit
             {sidebarItems && sidebarItems.length > 0 && (
               <Grid item xs={2}>
                 <Sidebar items={sidebarItems} />
-              </Grid>
+                </Grid>
             )}
             <Grid
               item

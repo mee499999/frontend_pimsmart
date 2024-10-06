@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import { DataGrid, GridColDef, GridToolbarContainer } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-import CustomColumnDialog from './CustomColumnDialog'; // Adjust the import path as necessary
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
+import CustomColumnDialog from '@/components/CustomColumnDialog';
 
 interface DataTableProps {
   rows: any[]; // Define a more specific type if possible
   initialColumns: GridColDef[];
 }
 
-const DataTable: React.FC<DataTableProps> = ({ rows, initialColumns }) => {
+const DataAdminTable: React.FC<DataTableProps> = ({ rows, initialColumns }) => {
   const [columns, setColumns] = useState<GridColDef[]>(initialColumns);
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -60,4 +60,4 @@ const DataTable: React.FC<DataTableProps> = ({ rows, initialColumns }) => {
   );
 };
 
-export default DataTable;
+export default DataAdminTable;
