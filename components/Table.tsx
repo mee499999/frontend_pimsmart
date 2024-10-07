@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { DataGrid, GridColDef, GridToolbarContainer } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridToolbarContainer, GridPaginationModel } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-import CustomColumnDialog from './CustomColumnDialog'; // Adjust the import path as necessary
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
+import CustomColumnDialog from '@/components/CustomColumnDialog';
 
 interface DataTableProps {
   rows: any[]; // Define a more specific type if possible
@@ -13,6 +13,7 @@ interface DataTableProps {
 const DataTable: React.FC<DataTableProps> = ({ rows, initialColumns }) => {
   const [columns, setColumns] = useState<GridColDef[]>(initialColumns);
   const [openDialog, setOpenDialog] = useState(false);
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ page: 0, pageSize: 5 }); // Default pagination model
 
   const handleOpenDialog = () => setOpenDialog(true);
   const handleCloseDialog = () => setOpenDialog(false);
@@ -22,10 +23,7 @@ const DataTable: React.FC<DataTableProps> = ({ rows, initialColumns }) => {
     handleCloseDialog();
   };
 
-  // Pagination settings
-  const paginationModel = { page: 0, pageSize: 5 };
-
-  // Custom toolbar with the button
+  // Custom toolbar component
   const CustomToolbar = () => (
     <GridToolbarContainer>
       <Button
@@ -44,10 +42,11 @@ const DataTable: React.FC<DataTableProps> = ({ rows, initialColumns }) => {
       <DataGrid
         rows={rows}
         columns={columns}
-        initialState={{ pagination: { paginationModel } }}
-        pageSizeOptions={[5, 10]}
-        checkboxSelection
-        components={{ Toolbar: CustomToolbar }} // Use the custom toolbar
+        paginationModel={paginationModel} // Use paginationModel
+        onPaginationModelChange={(newModel: GridPaginationModel) => setPaginationModel(newModel)} // Handle pagination changes
+        pageSizeOptions={[5, 10]} // Correct prop name here
+        pagination
+        slots={{ toolbar: CustomToolbar }}
         sx={{ border: 0 }}
       />
       <CustomColumnDialog

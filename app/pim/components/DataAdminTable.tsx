@@ -5,12 +5,20 @@ import Button from '@mui/material/Button';
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import CustomColumnDialog from '@/components/CustomColumnDialog';
 
+// Define the type for pagination model
+interface PaginationModel {
+  page: number;
+  pageSize: number;
+}
+
 interface DataTableProps {
   rows: any[]; // Define a more specific type if possible
   initialColumns: GridColDef[];
+  paginationModel: PaginationModel; // Add this line
+  onPaginationModelChange: (model: PaginationModel) => void; // Add this line
 }
 
-const DataAdminTable: React.FC<DataTableProps> = ({ rows, initialColumns }) => {
+const DataAdminTable: React.FC<DataTableProps> = ({ rows, initialColumns, paginationModel, onPaginationModelChange }) => {
   const [columns, setColumns] = useState<GridColDef[]>(initialColumns);
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -22,8 +30,10 @@ const DataAdminTable: React.FC<DataTableProps> = ({ rows, initialColumns }) => {
     handleCloseDialog();
   };
 
-  // Pagination settings
-  const paginationModel = { page: 0, pageSize: 5 };
+  // Handle page size change
+  const handlePageSizeChange = (newPageSize: number) => {
+    onPaginationModelChange({ page: 0, pageSize: newPageSize }); // Reset to page 0 when page size changes
+  };
 
   // Custom toolbar with the button
   const CustomToolbar = () => (
@@ -40,14 +50,15 @@ const DataAdminTable: React.FC<DataTableProps> = ({ rows, initialColumns }) => {
   );
 
   return (
-    <Paper sx={{ height: 400, width: '100%' }}>
+    <Paper sx={{ height: 'auto', width: '100%' }}>
       <DataGrid
         rows={rows}
         columns={columns}
-        initialState={{ pagination: { paginationModel } }}
-        pageSizeOptions={[5, 10]}
+        paginationModel={paginationModel} // Use paginationModel here
+        pageSizeOptions={[5, 10]} // Add pageSizeOptions here
+        onPaginationModelChange={onPaginationModelChange} // Pass the pagination model change handler
         checkboxSelection
-        components={{ Toolbar: CustomToolbar }} // Use the custom toolbar
+        slots={{ toolbar: CustomToolbar }}
         sx={{ border: 0 }}
       />
       <CustomColumnDialog

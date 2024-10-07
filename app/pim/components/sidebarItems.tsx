@@ -80,7 +80,7 @@ export const useSidebarNavigation = (
     Register: '/pim/Admin/Register',
     conditionsNotMet: '/pim/Admin/Register/conditionsNotMet',
     CheckStatusPassed: '/pim/Admin/Register/CheckStatusPassed',
-    Volunteer: '/pim/Admin/Volunteer',
+    Volunteer: '/pim/Admin/StudentVolunteer',
     contract: '/pim/Admin/contract',
   };
 
