@@ -10,8 +10,8 @@ const StyledContent = styled('div')(({ theme }) => ({
   alignItems: 'center',
   height: '100%', // ใช้ความสูงที่ต้องการ
   width:'100%',
-  marginLeft: '20px',  // Add margin-left
-  marginRight: '20px', // Add margin-right
+  // marginLeft: '20px',  // Add margin-left
+  marginRight: '50px', // Add margin-right
 }));
 
 const StyledTitle = styled('h1')(({ theme }) => ({
