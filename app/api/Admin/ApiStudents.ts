@@ -14,6 +14,7 @@ export const apiStudents = {
         success: false,
         message: 'Error fetching students.',
         data: null,
+        totalCount: 0, 
         error: error instanceof Error ? error.message : 'An unknown error occurred.', // Improved error handling
       };
     }

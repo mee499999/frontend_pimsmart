@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from 'react';
 import LayoutAdmin from '../../components/LayoutAdmin';
 import { FormName, useSidebarNavigation } from '../../components/sidebarItems';
@@ -19,17 +20,20 @@ const initialColumns = [
   { field: 'email', headerName: 'Email', width: 250 },
   { field: 'faculty', headerName: 'Faculty', width: 150 },
   { field: 'status', headerName: 'Status', width: 100 },
-  // Add more columns as needed
 ];
+
+interface PaginationModel {
+  page: number;
+  pageSize: number;
+}
 
 const Register: React.FC = () => {
   const [selectedForm, setSelectedForm] = useState<FormName>('Register');
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const pathname = usePathname();
   const { handleSidebarClick, renderSidebarItems } = useSidebarNavigation(setSelectedForm, setExpandedItems);
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 5 });
-  const { students, loading, error, fetchStudents } = useStudents(setPaginationModel);
-
+  const [paginationModel, setPaginationModel] = useState<PaginationModel>({ page: 1, pageSize: 5 });
+  const { students, loading, error, totalCount, fetchStudents } = useStudents(setPaginationModel);
   const formAdmin = useForm<Student>();
   const [open, setOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -43,17 +47,20 @@ const Register: React.FC = () => {
     formAdmin.reset();
   };
 
-  const handlePaginationModelChange = (model: { page: number; pageSize: number }) => {
-    setPaginationModel(model);
+  const handlePaginationModelChange = (newModel: PaginationModel) => {
+    console.log('Pagination changed:', newModel);
+    setPaginationModel(newModel);
   };
 
   useEffect(() => {
-    fetchStudents(paginationModel.page, paginationModel.pageSize); // Fetch students on mount and when pagination changes
+    console.log('Fetching students:', paginationModel);
+    fetchStudents(paginationModel.page, paginationModel.pageSize);
   }, [paginationModel.page, paginationModel.pageSize]);
 
   useEffect(() => {
-    console.log('Fetched students:', students); // Log students after fetching
-  }, [students]);
+    console.log('Students data:', students);
+    console.log('Total count:', totalCount);
+  }, [students, totalCount]);
 
   useEffect(() => {
     if (error) {
@@ -83,8 +90,9 @@ const Register: React.FC = () => {
           <DataAdminTable
             rows={students}
             initialColumns={initialColumns}
+            rowCount={totalCount}
             paginationModel={paginationModel}
-            onPaginationModelChange={handlePaginationModelChange} // Pass the function
+            onPaginationModelChange={handlePaginationModelChange}
           />
         )}
 
@@ -95,19 +103,6 @@ const Register: React.FC = () => {
               <AdminTabCards formAdmin={formAdmin} />
             </FormProvider>
           </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Cancel
-            </Button>
-            <Button
-              onClick={() => {
-                // Implement form submission logic here
-              }}
-              color="primary"
-            >
-              Submit
-            </Button>
-          </DialogActions>
         </Dialog>
 
         <Snackbar

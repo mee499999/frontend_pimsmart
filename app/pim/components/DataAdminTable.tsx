@@ -13,12 +13,13 @@ interface PaginationModel {
 
 interface DataTableProps {
   rows: any[]; // Define a more specific type if possible
+  rowCount: number; 
   initialColumns: GridColDef[];
   paginationModel: PaginationModel; // Add this line
   onPaginationModelChange: (model: PaginationModel) => void; // Add this line
 }
 
-const DataAdminTable: React.FC<DataTableProps> = ({ rows, initialColumns, paginationModel, onPaginationModelChange }) => {
+const DataAdminTable: React.FC<DataTableProps> = ({ rows, initialColumns,rowCount, paginationModel, onPaginationModelChange }) => {
   const [columns, setColumns] = useState<GridColDef[]>(initialColumns);
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -55,9 +56,11 @@ const DataAdminTable: React.FC<DataTableProps> = ({ rows, initialColumns, pagina
         rows={rows}
         columns={columns}
         paginationModel={paginationModel} // Use paginationModel here
+        rowCount={rowCount} // Use the rowCount prop here
         pageSizeOptions={[5, 10]} // Add pageSizeOptions here
         onPaginationModelChange={onPaginationModelChange} // Pass the pagination model change handler
         checkboxSelection
+        pagination
         slots={{ toolbar: CustomToolbar }}
         sx={{ border: 0 }}
       />
