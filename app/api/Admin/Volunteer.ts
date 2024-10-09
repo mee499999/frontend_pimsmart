@@ -1,12 +1,12 @@
 
-import { ApiResponse } from '@/types/IResponse';
+import { ApiResponseS } from '@/types/IResponse';
 import { FormValues } from '@/types/Volunteer';
 import axiosAdmin from '@/utils/axiosAdmin';
 
 export const ApiAllVolunteer = {
-    fetchAllVolunteer: async (offset: number, limit: number): Promise<ApiResponse<FormValues[]>> => {
+    fetchAllVolunteer: async (offset: number, limit: number): Promise<ApiResponseS<FormValues[]>> => {
     try {
-      const response = await axiosAdmin.get<ApiResponse<FormValues[]>>(`/volunteerAdminActivities/All`, {
+      const response = await axiosAdmin.get<ApiResponseS<FormValues[]>>(`/volunteerAdminActivities/All`, {
         params: { offset, limit }, // Use the parameters directly here
       });
       return response.data;

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ApiResponse } from '@/types/IResponse';
+import { ApiResponseS } from '@/types/IResponse';
 import { ApiAllVolunteer } from '@/app/api/Admin/Volunteer';
 import { FormValues } from '@/types/Volunteer';
 
@@ -15,7 +15,7 @@ export const volunteer = (setPaginationModel: unknown) => {
         setLoading(true);
         setError(null);
         try {
-            const response: ApiResponse<FormValues[]> = await ApiAllVolunteer.fetchAllVolunteer(offset, limit);
+            const response: ApiResponseS<FormValues[]> = await ApiAllVolunteer.fetchAllVolunteer(offset, limit);
             if (response.success) {
                 const retrievedStudents = response.data || []; // Access the students array
                 console.log('Fetched students:', retrievedStudents);
