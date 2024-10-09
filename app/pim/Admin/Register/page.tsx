@@ -7,20 +7,12 @@ import { usePathname } from 'next/navigation';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import DataAdminTable from '../../components/DataAdminTable';
-import { Dialog, DialogActions, DialogContent, DialogTitle, CircularProgress, Snackbar } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, CircularProgress, Snackbar, IconButton } from '@mui/material';
 import AdminTabCards from './RegisterComponents/CustomTabCards';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Student } from '@/types/Register';
 import { useStudents } from '@/hooks/Admin/useStudents';
-
-const initialColumns = [
-  { field: 'studentId', headerName: 'Student ID', width: 150 },
-  { field: 'firstName', headerName: 'First Name', width: 200 },
-  { field: 'lastName', headerName: 'Last Name', width: 200 },
-  { field: 'email', headerName: 'Email', width: 250 },
-  { field: 'faculty', headerName: 'Faculty', width: 150 },
-  { field: 'status', headerName: 'Status', width: 100 },
-];
+import EditIcon from '@mui/icons-material/Edit';
 
 interface PaginationModel {
   page: number;
@@ -35,21 +27,66 @@ const Register: React.FC = () => {
   const [paginationModel, setPaginationModel] = useState<PaginationModel>({ page: 0, pageSize: 5 });
   const { students, loading, error, totalCount, fetchStudents } = useStudents(setPaginationModel);
   const formAdmin = useForm<Student>();
+  const { setValue, getValues } = formAdmin; // Importing setValue and getValues
   const [open, setOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null); // State for the selected student
+
+  const initialColumns = [
+    {
+      field: 'actions',
+      headerName: '',
+      width: 60,
+      sortable: false,
+      filterable: false,
+      disableColumnMenu: true,
+      renderCell: (params: { row: any; }) => (
+        <IconButton onClick={() => handleEdit(params.row)}>
+          <EditIcon />
+        </IconButton>
+      ),
+    },
+    { field: 'studentId', headerName: 'Student ID', width: 150 },
+    { field: 'firstName', headerName: 'First Name', width: 200 },
+    { field: 'lastName', headerName: 'Last Name', width: 200 },
+    { field: 'email', headerName: 'Email', width: 250 },
+    { field: 'faculty', headerName: 'Faculty', width: 150 },
+    { field: 'status', headerName: 'Status', width: 100 },
+  ];
 
   const handleCreateStudent = () => {
     setOpen(true);
+    formAdmin.reset(); // Reset the form for creating a new student
+  };
+
+  const handleEdit = (rowData: Student) => {
+    console.log('Edit action for row:', rowData);
+    
+    // Set selected student data
+    setSelectedStudent(rowData);
+
+    // Set form values using a loop
+    Object.keys(rowData).forEach((key) => {
+      setValue(key as keyof Student, rowData[key as keyof Student]); // Use key as keyof Student
+    });
+
+    setOpen(true); // Open the dialog
   };
 
   const handleClose = () => {
     setOpen(false);
-    formAdmin.reset();
+    formAdmin.reset(); // Reset the form when closing
   };
 
   const handlePaginationModelChange = (newModel: PaginationModel) => {
     console.log('Pagination changed:', newModel);
     setPaginationModel(newModel);
+  };
+
+  const handleSubmit = () => {
+    const values = getValues(); // Get current form values
+    console.log('Form Values:', values); // Log or use the values as needed
+    // Add your submit logic here
   };
 
   useEffect(() => {
@@ -97,10 +134,11 @@ const Register: React.FC = () => {
         )}
 
         <Dialog open={open} onClose={handleClose} maxWidth="lg" fullWidth>
-          <DialogTitle>Create New Student</DialogTitle>
+          <DialogTitle>{selectedStudent ? 'Edit Student' : 'Create New Student'}</DialogTitle>
           <DialogContent>
             <FormProvider {...formAdmin}>
               <AdminTabCards formAdmin={formAdmin} />
+              
             </FormProvider>
           </DialogContent>
         </Dialog>

@@ -111,7 +111,7 @@ const Addresses: React.FC<RegisterFormProps> = ({ formMethods }) => {
           <TextField
             fullWidth
             label="ที่อยู่ปัจจุบัน ชื่อที่พัก หอพักขณะเรียน"
-            {...register('current_address')}
+            {...register('currentAddress')}
             variant="outlined"
 
           />
@@ -120,14 +120,14 @@ const Addresses: React.FC<RegisterFormProps> = ({ formMethods }) => {
           <FormControl fullWidth variant="outlined">
             <InputLabel>นักศึกษาพักอยู่</InputLabel>
             <Controller
-              name="student_resident"
+              name="studentResident"
               control={control}
               defaultValue=""
               render={({ field }) => (
                 <Select
                   label="นักศึกษาพักอยู่"
                   {...field}
-                  error={!!errors.student_resident}
+                  error={!!errors.studentResident}
                 >
                   <MenuItem value="บ้านตนเอง">บ้านตนเอง</MenuItem>
                   <MenuItem value="บ้านญาติ">บ้านญาติ</MenuItem>
@@ -142,7 +142,7 @@ const Addresses: React.FC<RegisterFormProps> = ({ formMethods }) => {
           <TextField
             fullWidth
             label="จำนวนผู้พักอาศัย (หอพัก)"
-            {...register('number_of_residents')}
+            {...register('numberOfResidents')}
             variant="outlined"
 
           />
@@ -152,7 +152,7 @@ const Addresses: React.FC<RegisterFormProps> = ({ formMethods }) => {
           <TextField
             fullWidth
             label="ที่อยู่ตามทะเบียนบ้าน"
-            {...register('address_according_to_house_registration')}
+            {...register('addressAccordingToHouseRegistration')}
             variant="outlined"
 
           />
@@ -161,7 +161,7 @@ const Addresses: React.FC<RegisterFormProps> = ({ formMethods }) => {
           <TextField
             fullWidth
             label="รหัสไปรษณีย์"
-            {...register('postal_code', {
+            {...register('postalCode', {
               onChange: handleInputChange
             })}
             variant="outlined"

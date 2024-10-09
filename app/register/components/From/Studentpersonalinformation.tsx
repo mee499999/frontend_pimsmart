@@ -50,10 +50,10 @@ const Studentpersonalinformation: React.FC<RegisterFormProps> = ({ formMethods }
                 <Grid item xs={12} md={6}>
                     <TextField
                         label="Line ID"
-                        {...register("lineID")}
+                        {...register("lineId")}
                         fullWidth
-                        error={!!errors.lineID}
-                        helperText={errors.lineID ? "This field is required" : ""}
+                        error={!!errors.lineId}
+                        helperText={errors.lineId ? "This field is required" : ""}
                     />
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -386,10 +386,10 @@ const Studentpersonalinformation: React.FC<RegisterFormProps> = ({ formMethods }
                 <Grid item xs={12} md={6}>
                     <TextField
                         label="กรณีไม่ได้อยู่กับพ่อแม่กรอกข้อมูลผู้ปกครอง"
-                        {...register("ParentInformation")}
+                        {...register("parentInformation")}
                         fullWidth
-                        error={!!errors.ParentInformation}
-                        helperText={errors.ParentInformation ? "This field is required" : ""}
+                        error={!!errors.parentInformation}
+                        helperText={errors.parentInformation ? "This field is required" : ""}
                     />
                 </Grid>
 

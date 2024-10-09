@@ -26,23 +26,23 @@ export interface Student {
   
     
     // ที่อยู่ปัจจุบัน
-    current_address: string;  // ที่อยู่ปัจจุบัน
-    student_resident: string;  // ที่พักนักศึกษา
-    number_of_residents: string;  // จำนวนผู้อยู่อาศัย
-    current_province: string;  // จังหวัดปัจจุบัน
-    current_district: string;  // อำเภอปัจจุบัน
-    current_subdistrict: string;  // ตำบลปัจจุบัน
-    current_postal_code: string;  // รหัสไปรษณีย์ปัจจุบัน
-    address_according_to_house_registration: string;  // ที่อยู่ตามทะเบียนบ้าน
+    currentAddress: string;  // ที่อยู่ปัจจุบัน
+    studentResident: string;  // ที่พักนักศึกษา
+    numberOfResidents: string;  // จำนวนผู้อยู่อาศัย
+    currentProvince: string;  // จังหวัดปัจจุบัน
+    currentDistrict: string;  // อำเภอปัจจุบัน
+    currentSubdistrict: string;  // ตำบลปัจจุบัน
+    currentPostalCode: string;  // รหัสไปรษณีย์ปัจจุบัน
+    addressAccordingToHouseRegistration: string;  // ที่อยู่ตามทะเบียนบ้าน
     province: string;  // จังหวัด
     district: string;  // อำเภอ
     subdistrict: string;  // ตำบล
-    postal_code: string;  // รหัสไปรษณีย์
+    postalCode: string;  // รหัสไปรษณีย์
     
     // ทุนการศึกษา   Scholarships
     advisorNameSurname?: string; // อาจารย์ที่ปรึกษา ชื่อ - นามสกุล
     advisorPhoneNumber?: string; // เบอร์โทรอาจารย์ที่ปรึกษา
-    knowThePIMSMARTFundfrom?: string; // รู้จักกองทุน PIM SMART จาก
+    knowThePimSmartFundFrom?: string; // รู้จักกองทุน PIM SMART จาก
     additionalDetails?: string; // Add this field
     scholarshipReceived?: string;  // ทุนการศึกษาที่ได้รับ
     otherScholarships?: string; // ทุนการศึกษาอื่น ๆ
@@ -52,7 +52,7 @@ export interface Student {
     
     //Student personal information
     
-    lineID?: string;
+    lineId?: string;
     facebook?: string;
     fatherNameSurname?: string;
     motherNameSurname?: string;
@@ -90,13 +90,13 @@ export interface Student {
     
     
     //StepSeven
-    BeautyEnhancement? :string; //เสริมความงาม
-    BeautyEnhancementDetails? :string; //เสริมความงาม
+    beautyEnhancement? :string; //เสริมความงาม
+    beautyEnhancementDetails? :string; //เสริมความงาม
     man? : string, //เป็นชาย
     personWho? : string, //นักศึกษาเป็นลูกคนที่
-    ParentInformation? : string, //นักศึกษาเป็นลูกคนที่
+    parentInformation? : string, //นักศึกษาเป็นลูกคนที่
     talent? : string, //ความสามารถพิเศษของนักศึกษา
-    primary? : string, //ประถม
+    primaryEducation? : string, //ประถม
     middleSchool? : string, //มัธยมต้น
     highSchool? : string, //มัธยมปลาย
     current? : string, //ปัจจุบัน

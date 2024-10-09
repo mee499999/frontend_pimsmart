@@ -78,10 +78,10 @@ const Scholarships: React.FC<RegisterFormProps> = ({ formMethods }) => {
                     />
                 </Grid>
                 <Grid item xs={12} md={6}>
-    <FormControl fullWidth variant="outlined" error={!!errors.knowThePIMSMARTFundfrom}>
+    <FormControl fullWidth variant="outlined" error={!!errors.knowThePimSmartFundFrom}>
         <InputLabel>รู้จักกองทุน PIM SMART จาก</InputLabel>
         <Controller
-            name="knowThePIMSMARTFundfrom"
+            name="knowThePimSmartFundFrom"
             control={control}
             defaultValue=""
             render={({ field }) => (
@@ -103,12 +103,12 @@ const Scholarships: React.FC<RegisterFormProps> = ({ formMethods }) => {
                 </Select>
             )}
         />
-        {errors.knowThePIMSMARTFundfrom && <FormHelperText>{errors.knowThePIMSMARTFundfrom.message}</FormHelperText>}
+        {errors.knowThePimSmartFundFrom && <FormHelperText>{errors.knowThePimSmartFundFrom.message}</FormHelperText>}
     </FormControl>
 </Grid>
 
 {/* Conditional TextField rendering */}
-{(watch('knowThePIMSMARTFundfrom') === 'อื่นๆ' || watch('knowThePIMSMARTFundfrom') === 'เพื่อนในกองทุน PIM SMART') && (
+{(watch('knowThePimSmartFundFrom') === 'อื่นๆ' || watch('knowThePimSmartFundFrom') === 'เพื่อนในกองทุน PIM SMART') && (
     <Grid item xs={12} md={6}>
         <Controller
             name="additionalDetails"
@@ -117,7 +117,7 @@ const Scholarships: React.FC<RegisterFormProps> = ({ formMethods }) => {
             render={({ field }) => (
                 <TextField
                     fullWidth
-                    label={watch('knowThePIMSMARTFundfrom') === 'อื่นๆ' ? 'โปรดระบุรายละเอียดอื่นๆ' : 'โปรดระบุชื่อเพื่อน'}
+                    label={watch('knowThePimSmartFundFrom') === 'อื่นๆ' ? 'โปรดระบุรายละเอียดอื่นๆ' : 'โปรดระบุชื่อเพื่อน'}
                     variant="outlined"
                     {...field} // Ensures the field is correctly controlled
                     error={!!errors.additionalDetails}

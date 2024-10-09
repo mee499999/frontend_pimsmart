@@ -52,19 +52,19 @@ const StepSeven: React.FC<RegisterFormProps> = ({ formMethods }) => {
                     <FormControl fullWidth variant="outlined">
                         <InputLabel>นักศึกษาได้ทำการเสริมความงามระหว่างการศึกษาได้หรือไม่?</InputLabel>
                         <Controller
-                            name="BeautyEnhancement"
+                            name="beautyEnhancement"
                             control={control}
                             defaultValue=""
                             render={({ field }) => (
                                 <Select
                                     label="นักศึกษาสามารถทำการเสริมความงามระหว่างการศึกษาได้หรือไม่?"
                                     {...field}
-                                    error={!!errors.BeautyEnhancement}
+                                    error={!!errors.beautyEnhancement}
                                     onChange={(e) => {
                                         const value = e.target.value;
                                         field.onChange(e);
                                         if (value !== 'ทำเสริมความงาม') {
-                                            setValue('BeautyEnhancementDetails', '');
+                                            setValue('beautyEnhancementDetails', '');
                                         }
                                     }}
                                 >
@@ -75,10 +75,10 @@ const StepSeven: React.FC<RegisterFormProps> = ({ formMethods }) => {
                         />
                     </FormControl>
                 </Grid>
-                {watch('BeautyEnhancement') === 'ทำเสริมความงาม' && (
+                {watch('beautyEnhancement') === 'ทำเสริมความงาม' && (
                     <Grid item xs={12} md={6}>
                         <Controller
-                            name="BeautyEnhancementDetails"
+                            name="beautyEnhancementDetails"
                             control={control}
                             defaultValue=""
                             render={({ field }) => (
@@ -87,8 +87,8 @@ const StepSeven: React.FC<RegisterFormProps> = ({ formMethods }) => {
                                     label="โปรดระบุเหตุผล"
                                     {...field}
                                     variant="outlined"
-                                    error={!!errors.BeautyEnhancementDetails}
-                                    helperText={errors.BeautyEnhancementDetails?.message}
+                                    error={!!errors.beautyEnhancementDetails}
+                                    helperText={errors.beautyEnhancementDetails?.message}
                                 />
                             )}
                         />
@@ -123,9 +123,9 @@ const StepSeven: React.FC<RegisterFormProps> = ({ formMethods }) => {
                         fullWidth
                         label="ประถม"
                         multiline
-                        {...register("primary")}
-                        error={!!errors.primary}
-                        helperText={errors.primary?.message}
+                        {...register("primaryEducation")}
+                        error={!!errors.primaryEducation}
+                        helperText={errors.primaryEducation?.message}
                     />
                 </Grid>
                 <Grid item xs={12} md={6}>
