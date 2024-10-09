@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import LayoutAdmin from '../components/LayoutAdmin';
 import Dashboard from './Dashboard/Dashboard';
-import Register from './Register/RegisterComponents/Register';
 import { FormName, sidebarItems, SidebarItemWithChildren, useSidebarNavigation } from '../components/sidebarItems';
 
 

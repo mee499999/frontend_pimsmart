@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Student } from '@/types/Register';
-import { ApiResponse } from '@/types/IResponse';
+import { ApiResponseS } from '@/types/IResponse';
 import { apiStudents } from '@/app/api/Admin/ApiStudents';
 
 export const useStudents = (setPaginationModel: unknown) => {
@@ -13,7 +13,7 @@ export const useStudents = (setPaginationModel: unknown) => {
         setLoading(true);
         setError(null);
         try {
-            const response: ApiResponse<Student[]> = await apiStudents.fetchAllStudents(offset, limit);
+            const response: ApiResponseS<Student[]> = await apiStudents.fetchAllStudents(offset, limit);
             if (response.success) {
                 const retrievedStudents = response.data || []; // Access the students array
                 console.log('Fetched students:', retrievedStudents);

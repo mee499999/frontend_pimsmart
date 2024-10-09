@@ -10,7 +10,6 @@ export interface IResponse<T> {
 // Define the response type for the backend
 export interface ApiResponse<T> {
   success: boolean;
-  totalCount: number; // Include totalCount here
   message: string;
   data?: T | null; // ใช้ประเภทเจนเนอริกที่นี่
   error?: string;
@@ -18,7 +17,15 @@ export interface ApiResponse<T> {
 
 }
 
+export interface ApiResponseS<T> {
+  success: boolean;
+  totalCount: number; // Include totalCount here
+  message: string;
+  data?: T | null; // ใช้ประเภทเจนเนอริกที่นี่
+  error?: string;
+  token?: string; // Add token to the ApiResponse type
 
+}
 
 
 
