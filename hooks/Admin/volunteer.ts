@@ -6,7 +6,7 @@ import { FormValues } from '@/types/Volunteer';
 
 
 export const volunteer = (setPaginationModel: unknown) => {
-    const [students, setStudents] = useState<FormValues[]>([]);
+    const [Volunteer, setStudents] = useState<FormValues[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [totalCount, setTotalCount] = useState<number>(0);
@@ -31,5 +31,5 @@ export const volunteer = (setPaginationModel: unknown) => {
         }
     };
 
-    return { students, loading, error, totalCount, fetchvolunteer };
+    return { Volunteer, loading, error, totalCount, fetchvolunteer };
 };

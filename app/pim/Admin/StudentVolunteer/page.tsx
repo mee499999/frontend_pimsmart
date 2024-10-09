@@ -13,16 +13,22 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { Student } from '@/types/Register';
 
 import { volunteer } from '@/hooks/Admin/volunteer';
-import AdminTabCards from '../Register/RegisterComponents/CustomTabCards';
+
+import VolunteerForm from '@/app/Volunteer/components/VolunteerForm';
+import { FormValues } from '@/types/IResponse';
 
 const initialColumns = [
   { field: 'studentId', headerName: 'Student ID', width: 150 },
   { field: 'firstName', headerName: 'First Name', width: 200 },
-  { field: 'lastName', headerName: 'Last Name', width: 200 },
-  { field: 'email', headerName: 'Email', width: 250 },
-  { field: 'faculty', headerName: 'Faculty', width: 150 },
-  { field: 'status', headerName: 'Status', width: 100 },
+  { field: 'activityName', headerName: 'Activity Name', width: 200 },
+  { field: 'organizationName', headerName: 'Organization Name', width: 250 },
+  { field: 'organizationPhone', headerName: 'Organization Phone', width: 150 },
+  { field: 'activityDescription', headerName: 'Activity Description', width: 300 },
+  { field: 'activityDate', headerName: 'Activity Date', width: 150 },
+  { field: 'hours', headerName: 'Hours', width: 100 },
+  { field: 'createDate', headerName: 'Create Date', width: 150 },
 ];
+
 
 interface PaginationModel {
   page: number;
@@ -30,13 +36,13 @@ interface PaginationModel {
 }
 
 const Volunteer: React.FC = () => {
-  const [selectedForm, setSelectedForm] = useState<FormName>('Register');
+  const [selectedForm, setSelectedForm] = useState<FormName>('Volunteer');
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const pathname = usePathname();
   const { handleSidebarClick, renderSidebarItems } = useSidebarNavigation(setSelectedForm, setExpandedItems);
-  const [paginationModel, setPaginationModel] = useState<PaginationModel>({ page: 1, pageSize: 5 });
-  const { students, loading, error, totalCount, fetchvolunteer } = volunteer(setPaginationModel);
-  const formAdmin = useForm<Student>();
+  const [paginationModel, setPaginationModel] = useState<PaginationModel>({ page: 0, pageSize: 5 });
+  const { Volunteer, loading, error, totalCount, fetchvolunteer } = volunteer(setPaginationModel);
+  const formValunteer = useForm<FormValues>();
   const [open, setOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
@@ -46,7 +52,7 @@ const Volunteer: React.FC = () => {
 
   const handleClose = () => {
     setOpen(false);
-    formAdmin.reset();
+    formValunteer.reset();
   };
 
   const handlePaginationModelChange = (newModel: PaginationModel) => {
@@ -60,9 +66,9 @@ const Volunteer: React.FC = () => {
   }, [paginationModel.page, paginationModel.pageSize]);
 
   useEffect(() => {
-    console.log('Students data:', students);
+    console.log('Students data:', Volunteer);
     console.log('Total count:', totalCount);
-  }, [students, totalCount]);
+  }, [Volunteer, totalCount]);
 
   useEffect(() => {
     if (error) {
@@ -72,7 +78,7 @@ const Volunteer: React.FC = () => {
 
   return (
     <LayoutAdmin
-      contentTitle="Register"
+      contentTitle="บัยทึกจิตอาสา  "
       sidebarItems={renderSidebarItems}
     >
       <main>
@@ -90,7 +96,7 @@ const Volunteer: React.FC = () => {
           <CircularProgress />
         ) : (
           <DataAdminTable
-            rows={students}
+            rows={Volunteer}
             initialColumns={initialColumns}
             rowCount={totalCount}
             paginationModel={paginationModel}
@@ -99,10 +105,10 @@ const Volunteer: React.FC = () => {
         )}
 
         <Dialog open={open} onClose={handleClose} maxWidth="lg" fullWidth>
-          <DialogTitle>Create New Student</DialogTitle>
+          <DialogTitle>เพิ่มบันทึกจิตอาสา</DialogTitle>
           <DialogContent>
-            <FormProvider {...formAdmin}>
-              <AdminTabCards formAdmin={formAdmin} />
+            <FormProvider {...formValunteer}>
+              <VolunteerForm formValunteer={formValunteer} />
             </FormProvider>
           </DialogContent>
         </Dialog>
