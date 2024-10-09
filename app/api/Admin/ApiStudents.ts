@@ -1,11 +1,11 @@
 import { Student } from '@/types/Register';
-import { ApiResponse } from '@/types/IResponse';
+import { ApiResponseS } from '@/types/IResponse';
 import axiosAdmin from '@/utils/axiosAdmin';
 
 export const apiStudents = {
-  fetchAllStudents: async (offset: number, limit: number): Promise<ApiResponse<Student[]>> => {
+  fetchAllStudents: async (offset: number, limit: number): Promise<ApiResponseS<Student[]>> => {
     try {
-      const response = await axiosAdmin.get<ApiResponse<Student[]>>(`/All`, {
+      const response = await axiosAdmin.get<ApiResponseS<Student[]>>(`/All`, {
         params: { offset, limit }, // Use the parameters directly here
       });
       return response.data;
