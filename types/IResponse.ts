@@ -61,7 +61,9 @@ export interface FormValues {
   organizationPhone?: string;           // Organization phone number
   activityDescription?: string;         // Description of the volunteer activity
   activityDate?: string;                // Date of the activity
-  hours?: number;                       // Number of hours volunteered
+  hours?: number;   
+  id:number; 
+                     // Number of hours volunteered
 }
 
 // Special work form values structure
