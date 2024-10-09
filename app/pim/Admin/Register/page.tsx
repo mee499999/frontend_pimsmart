@@ -32,7 +32,7 @@ const Register: React.FC = () => {
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const pathname = usePathname();
   const { handleSidebarClick, renderSidebarItems } = useSidebarNavigation(setSelectedForm, setExpandedItems);
-  const [paginationModel, setPaginationModel] = useState<PaginationModel>({ page: 1, pageSize: 5 });
+  const [paginationModel, setPaginationModel] = useState<PaginationModel>({ page: 0, pageSize: 5 });
   const { students, loading, error, totalCount, fetchStudents } = useStudents(setPaginationModel);
   const formAdmin = useForm<Student>();
   const [open, setOpen] = useState(false);

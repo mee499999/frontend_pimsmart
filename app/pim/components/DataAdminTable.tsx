@@ -32,9 +32,9 @@ const DataAdminTable: React.FC<DataTableProps> = ({ rows, initialColumns,rowCoun
   };
 
   // Handle page size change
-  const handlePageSizeChange = (newPageSize: number) => {
-    onPaginationModelChange({ page: 0, pageSize: newPageSize }); // Reset to page 0 when page size changes
-  };
+  // const handlePageSizeChange = (newPageSize: number) => {
+  //   onPaginationModelChange({ page: 0, pageSize: newPageSize }); // Reset to page 0 when page size changes
+  // };
 
   // Custom toolbar with the button
   const CustomToolbar = () => (
@@ -61,9 +61,12 @@ const DataAdminTable: React.FC<DataTableProps> = ({ rows, initialColumns,rowCoun
         onPaginationModelChange={onPaginationModelChange} // Pass the pagination model change handler
         checkboxSelection
         pagination
+        paginationMode="server" // ใช้ server-side pagination เพื่อดึงข้อมูลจาก API เมื่อมีการเปลี่ยนหน้า
         slots={{ toolbar: CustomToolbar }}
         sx={{ border: 0 }}
       />
+
+      
       <CustomColumnDialog
         open={openDialog}
         columns={initialColumns}
