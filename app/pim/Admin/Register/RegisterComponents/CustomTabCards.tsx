@@ -17,16 +17,18 @@ import StepTen from '@/app/register/components/From/StepTen';
 import StepTwelve from '@/app/register/components/From/StepTwelve';
 import Studentpersonalinformation from '@/app/register/components/From/Studentpersonalinformation';
 import RegisterAdmin from '@/app/register/components/From/RegisterAdmin';
+import StudentImg from '@/app/register/components/From/StudentImg';
 
 interface RegisterFormProps {
-  formAdmin: UseFormReturn<Student>;
+  formMethods: UseFormReturn<Student>;
+  
 }
 
-const AdminTabCards: React.FC<RegisterFormProps> = ({ formAdmin }) => {
+const AdminTabCards: React.FC<RegisterFormProps> = ({ formMethods }) => {
   const [currentStep, setCurrentStep] = useState(0);
 
   // Destructure formAdmin methods for easier access
-  const { control, register, handleSubmit, formState: { errors }, setValue, watch } = formAdmin;
+  const { control, register, handleSubmit, formState: { errors }, setValue, watch } = formMethods;
   const { loading, sendStudentData, uploadFiles } = useStudentApi();
 
   const onSubmit = async (data: Student) => {
@@ -103,18 +105,18 @@ const AdminTabCards: React.FC<RegisterFormProps> = ({ formAdmin }) => {
       <Box display="flex" justifyContent="center">
         <TabCards
           tabs={[
-            { label: 'Step 1', component: <RegisterAdmin formMethods={formAdmin} /> },
-            { label: 'Step 2', component: <Addresses formMethods={formAdmin} /> },
-            { label: 'Step 3', component: <Scholarships formMethods={formAdmin} /> },
-            { label: 'Step 4', component: <Studentpersonalinformation formMethods={formAdmin} /> },
-            { label: 'Step 5', component: <StepFive formMethods={formAdmin} /> },
-            { label: 'Step 6', component: <StepSix formMethods={formAdmin} /> },
-            { label: 'Step 7', component: <StepSeven formMethods={formAdmin} /> },
-            { label: 'Step 8', component: <StepEight formMethods={formAdmin} /> },
-            { label: 'Step 9', component: <StepNine formMethods={formAdmin} /> },
-            { label: 'Step 10', component: <StepTen formMethods={formAdmin} /> },
-            { label: 'Step 11', component: <StepEleven formMethods={formAdmin} /> },
-            { label: 'Step 12', component: <StepTwelve formMethods={formAdmin} /> },
+            { label: 'Step 1', component: <RegisterAdmin formMethods={formMethods} /> },
+            { label: 'Step 2', component: <Addresses formMethods={formMethods} /> },
+            { label: 'Step 3', component: <Scholarships formMethods={formMethods} /> },
+            { label: 'Step 4', component: <Studentpersonalinformation formMethods={formMethods} /> },
+            { label: 'Step 5', component: <StepFive formMethods={formMethods} /> },
+            { label: 'Step 6', component: <StepSix formMethods={formMethods} /> },
+            { label: 'Step 7', component: <StepSeven formMethods={formMethods} /> },
+            { label: 'Step 8', component: <StepEight formMethods={formMethods} /> },
+            { label: 'Step 9', component: <StepNine formMethods={formMethods} /> },
+            { label: 'Step 10', component: <StudentImg formMethods={formMethods} /> },
+            { label: 'Step 11', component: <StepEleven formMethods={formMethods} /> },
+            { label: 'Step 12', component: <StepTwelve formMethods={formMethods} /> },
           ]}
           currentStep={currentStep}
           onTabChange={setCurrentStep}
