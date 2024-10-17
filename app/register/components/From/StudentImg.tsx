@@ -29,14 +29,28 @@ const StudentImg: React.FC<RegisterFormProps> = ({ formMethods }) => {
     const Count = useRef(0);
     const [isFetching, setIsFetching] = useState(false);
 
-    useEffect(() => {
-        if (studentId && (!studentPicture || studentPicture.length === 0) && !isFetching) {
+    const fetchImages = async () => {
+        if (studentId && (!files.length) && !isFetching && (!studentPicture || studentPicture.length === 0)) {
             setIsFetching(true);
-            fetchStudentImages(studentId, imageType).finally(() => setIsFetching(false));
-            fetchCount.current += 1;
-            console.log("เรียกใช้ครั้งที่ ", fetchCount.current);
+            try {
+                await fetchStudentImages(studentId, imageType);
+                fetchCount.current += 1;
+                console.log("เรียกใช้ครั้งที่ ", fetchCount.current);
+            } catch (error) {
+                console.error("Error fetching images:", error);
+            } finally {
+                setIsFetching(false);
+            }
+        } else if (studentPicture && studentPicture.length > 0) {
+            console.log("มีข้อมูลใน studentPicture แล้ว ไม่ต้องโหลดซ้ำ");
         }
-    }, [studentId, fetchStudentImages, isFetching]);
+    };
+    
+    // Automatically call fetchImages whenever studentId changes
+    useEffect(() => {
+        fetchImages();
+    }, [studentId, studentPicture]); // เพิ่ม studentPicture ใน dependency array
+    
 
     useEffect(() => {
         if (images && images.length > 0) {
@@ -138,7 +152,7 @@ const StudentImg: React.FC<RegisterFormProps> = ({ formMethods }) => {
                                             boxShadow: 1,
                                         }}
                                     />
-                                    <Typography variant="caption" align="center">{file.name}</Typography>
+                                    {/* <Typography variant="caption" align="center">{file.name}</Typography> */}
                                 </Grid>
                             ))
                         ) : (
