@@ -24,7 +24,7 @@ export interface Student {
     block?: string;  // บล็อคที่เรียน
     currentGpa?: string;  // เกรดเฉลี่ยปัจจุบัน (ในรูปแบบสตริงหากใช้ BigDecimal)
     createDate?: string;  // วันที่สร้างข้อมูล (รูปแบบวันที่-เวลา ISO 8601)
-    PlaceofStudy?: string;  // สถานที่ศึกษา
+    placeOfStudy?: string;  // สถานที่ศึกษา
     otherPlace?: string;  // สถานที่ศึกษาอื่นๆ
   
     

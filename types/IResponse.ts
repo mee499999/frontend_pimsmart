@@ -36,7 +36,10 @@ export interface ApiResponseI<T> {
 
 
 
-
+export interface FileWithMetadata {
+  file: File;
+  imageData: string;
+}
 
 export interface ErrorResponse {
   message?: string;

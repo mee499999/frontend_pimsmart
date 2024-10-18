@@ -1,89 +1,118 @@
 import { Student } from "@/types/Register";
-import { Box, Grid, Typography, FormHelperText, CircularProgress } from "@mui/material";
-import { UseFormReturn } from "react-hook-form";
-import { useEffect, useRef, useState } from "react";
+import { Box, Grid, Typography, Button, FormHelperText, TextField, CircularProgress } from "@mui/material";
+import { UseFormReturn, Controller, useFieldArray } from "react-hook-form";
+import { useState, useEffect } from "react";
 import CustomFileUpload from "@/components/CustomFileUpload";
 import { useStudentImages } from "@/hooks/Admin/useStudentImages";
+import { useDeleteStudentImage } from "@/hooks/Admin/useDeleteStudentImage";
+import { FileWithMetadata } from "@/types/IResponse";
+import { base64ToFile } from "@/components/base64ToFile";
 
 interface RegisterFormProps {
     formMethods: UseFormReturn<Student>;
 }
 
-const base64ToFile = (base64String: string, fileName: string): File => {
-    const byteCharacters = atob(base64String);
-    const byteNumbers = Array.from({ length: byteCharacters.length }, (_, i) => byteCharacters.charCodeAt(i));
-    const byteArray = new Uint8Array(byteNumbers);
-    return new File([byteArray], fileName, { type: 'image/jpeg' }); // Adjust the type if necessary
-};
 
-const StudentImg: React.FC<RegisterFormProps> = ({ formMethods }) => {
-    const { control, handleSubmit, setValue, watch } = formMethods;
 
-    const studentPicture = watch("studentPicture");
+
+const StudentTwelveImg: React.FC<RegisterFormProps> = ({ formMethods }) => {
+    const {
+        control,
+        handleSubmit,
+        formState: { errors },
+        setValue,
+        watch,
+
+    } = formMethods;
+
+    const volunteerPictures = watch("volunteerPictures");
     const [files, setFiles] = useState<File[]>([]);
     const [fileError, setFileError] = useState<string | null>(null);
     const studentId = watch("studentId");
-    const imageType = "studentPicture";
-    const { loading: loadingImages, images, error, fetchStudentImages } = useStudentImages();
-    const fetchCount = useRef(0);
-    const Count = useRef(0);
+    const imageType = "volunteerPictures";
+    const { loading: loadingImages, images, error: fetchImagesError, fetchStudentImages } = useStudentImages();
+    const { fetchDeleteStudent, isLoading: deletingImageLoading, error: deleteImageError, successMessage } = useDeleteStudentImage();
     const [isFetching, setIsFetching] = useState(false);
+    const [filesWithMetadata, setFilesWithMetadata] = useState<FileWithMetadata[]>([]);
 
     const fetchImages = async () => {
-        if (studentId && (!files.length) && !isFetching && (!studentPicture || studentPicture.length === 0)) {
+        if (studentId && (!files.length) && !isFetching && (!volunteerPictures || volunteerPictures.length === 0)) {
             setIsFetching(true);
             try {
                 await fetchStudentImages(studentId, imageType);
-                fetchCount.current += 1;
-                console.log("เรียกใช้ครั้งที่ ", fetchCount.current);
             } catch (error) {
                 console.error("Error fetching images:", error);
             } finally {
                 setIsFetching(false);
             }
-        } else if (studentPicture && studentPicture.length > 0) {
-            console.log("มีข้อมูลใน studentPicture แล้ว ไม่ต้องโหลดซ้ำ");
+        } else if (volunteerPictures && volunteerPictures.length > 0) {
+            console.log("มีข้อมูลใน volunteerPictures แล้ว ไม่ต้องโหลดซ้ำ");
         }
     };
     
     // Automatically call fetchImages whenever studentId changes
     useEffect(() => {
         fetchImages();
-    }, [studentId, studentPicture]); // เพิ่ม studentPicture ใน dependency array
+    }, [studentId, volunteerPictures]); 
     
-
     useEffect(() => {
         if (images && images.length > 0) {
-            const imageFiles = images.map((imageObj) => base64ToFile(imageObj.image, imageObj.name));
+            const imageFilesWithMetadata = images.map((imageObj) => {
+                console.log("imageData:", imageObj.imageData); // Log imageData for each imageObj
+                const file = base64ToFile(imageObj.image, imageObj.name);
+                return { file, imageData: imageObj.imageData }; // Return an object containing both file and imageData
+            });
+    
             // Check if files are different and update state
-            if (JSON.stringify(imageFiles) !== JSON.stringify(files)) {
-                setFiles(imageFiles);
-                setValue("studentPicture", imageFiles, { shouldValidate: true });
-                Count.current += 1; // Increment the fetch count
-                console.log("ครั้งที่ ", Count.current);
+            if (JSON.stringify(imageFilesWithMetadata) !== JSON.stringify(filesWithMetadata)) {
+                setFilesWithMetadata(imageFilesWithMetadata);
+                setValue("volunteerPictures", imageFilesWithMetadata.map(item => item.file), { shouldValidate: true });
                 console.log("image ", images);
             }
         }
-    }, [images, setValue, files]);
+    }, [images, setValue, filesWithMetadata]);
+
+
 
     useEffect(() => {
-        if (studentPicture) {
-            setFiles(Array.isArray(studentPicture) ? studentPicture : Array.from(studentPicture));
+        if (volunteerPictures instanceof FileList) {
+            setFiles(Array.from(volunteerPictures));
+        } else if (Array.isArray(volunteerPictures)) {
+            setFiles(volunteerPictures);
         }
-    }, [studentPicture]);
+    }, [volunteerPictures]);
 
     const handleFileChange = (newFiles: File[]) => {
         const updatedFiles = [...files, ...newFiles];
         setFiles(updatedFiles);
-        setValue("studentPicture", updatedFiles, { shouldValidate: true });
+        setValue("volunteerPictures", updatedFiles, { shouldValidate: true });
     };
 
-    const handleFileRemove = (fileToRemove: File) => {
+    const handleFileRemove = async (fileToRemove: File) => {
+        // Find the file in the list that matches the fileToRemove
+        const matchedFile = filesWithMetadata.find(item => item.file.name === fileToRemove.name);
+    
+        if (matchedFile) {
+            console.log("Removing file with matching imageData:", matchedFile.imageData);
+            
+            // Call the fetchDeleteStudent function and await its result
+            const response = await fetchDeleteStudent(matchedFile.imageData);
+            
+            // Optionally handle the response after deletion
+            if (response.success) {
+                console.log("File deleted successfully:", matchedFile.file.name);
+            } else {
+                console.error("Failed to delete file:", response.error);
+            }
+        } else {
+            console.log("No matching imageData found for file:", fileToRemove.name);
+        }
+    
+        // Update the local file state after the deletion attempt
         const updatedFiles = files.filter(file => file !== fileToRemove);
         setFiles(updatedFiles);
-        setValue("studentPicture", updatedFiles, { shouldValidate: true });
+        setValue("volunteerPictures", updatedFiles, { shouldValidate: true });
     };
-
     const validateFiles = () => {
         if (files.length < 2) {
             setFileError("กรุณาอัพโหลดรูปอย่างน้อย 2 รูป");
@@ -97,10 +126,12 @@ const StudentImg: React.FC<RegisterFormProps> = ({ formMethods }) => {
         if (!validateFiles()) return;
 
         console.log("Form Data: ", data);
-        console.log("Uploaded Files: ", data.studentPicture);
+        console.log("Uploaded Files: ", data.volunteerPictures);
+
 
         // Proceed with form submission logic
     };
+
 
     return (
         <Box
@@ -116,10 +147,11 @@ const StudentImg: React.FC<RegisterFormProps> = ({ formMethods }) => {
             }}
         >
             <Typography color="secondary" align="center" sx={{ mt: 2 }}>
-                อัพโหลดรูปนักศึกษา 1 รูป เป็นรูปหน้าตรง เห็นหน้าชัดเจน ไม่สวมแว่นกันแดดหรือแมสปิดใบหน้า
+                ภาพทำจิตอาสา 1-5 รูป เป็นจิอาสาที่ทำย้อนหลังไม่เกิน 1 ปี
             </Typography>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
+
                     <CustomFileUpload
                         value={files}
                         multiple
@@ -127,8 +159,11 @@ const StudentImg: React.FC<RegisterFormProps> = ({ formMethods }) => {
                         onRemove={handleFileRemove}
                         accept="image/*"
                     />
-                    {fileError && <FormHelperText error>{fileError}</FormHelperText>}
+                    {errors && (
+                        <FormHelperText error>{fileError}</FormHelperText>
+                    )}
                 </Grid>
+
             </Grid>
             <Box sx={{ mt: 2 }}>
                 <Typography variant="h6" color="primary" align="center">
@@ -165,4 +200,4 @@ const StudentImg: React.FC<RegisterFormProps> = ({ formMethods }) => {
     );
 };
 
-export default StudentImg;
+export default StudentTwelveImg;

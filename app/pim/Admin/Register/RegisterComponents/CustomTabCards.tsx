@@ -13,11 +13,12 @@ import StepFive from '@/app/register/components/From/StepFive';
 import StepNine from '@/app/register/components/From/StepNine';
 import StepSeven from '@/app/register/components/From/StepSeven';
 import StepSix from '@/app/register/components/From/StepSix';
-import StepTen from '@/app/register/components/From/StepTen';
-import StepTwelve from '@/app/register/components/From/StepTwelve';
 import Studentpersonalinformation from '@/app/register/components/From/Studentpersonalinformation';
 import RegisterAdmin from '@/app/register/components/From/RegisterAdmin';
-import StudentImg from '@/app/register/components/From/StudentImg';
+import StudentTenImg from '@/app/register/components/From/StudentTenImg';
+import StepTwelve from '@/app/register/components/From/StepTwelve';
+import StudentTwelveImg from '@/app/register/components/From/StudentTwelveImg';
+import StepElevenImg from '@/app/register/components/From/StepElevenImg';
 
 interface RegisterFormProps {
   formMethods: UseFormReturn<Student>;
@@ -114,9 +115,9 @@ const AdminTabCards: React.FC<RegisterFormProps> = ({ formMethods }) => {
             { label: 'Step 7', component: <StepSeven formMethods={formMethods} /> },
             { label: 'Step 8', component: <StepEight formMethods={formMethods} /> },
             { label: 'Step 9', component: <StepNine formMethods={formMethods} /> },
-            { label: 'Step 10', component: <StudentImg formMethods={formMethods} /> },
-            { label: 'Step 11', component: <StepEleven formMethods={formMethods} /> },
-            { label: 'Step 12', component: <StepTwelve formMethods={formMethods} /> },
+            { label: 'Step 10', component: <StudentTenImg formMethods={formMethods} /> },
+            { label: 'Step 11', component: <StepElevenImg formMethods={formMethods} /> },
+            { label: 'Step 12', component: <StudentTwelveImg formMethods={formMethods} /> },
           ]}
           currentStep={currentStep}
           onTabChange={setCurrentStep}
