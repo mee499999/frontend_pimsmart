@@ -26,34 +26,31 @@ const StudentTenImg: React.FC<RegisterFormProps> = ({ formMethods }) => {
     const { loading: loadingImages, images, error: fetchImagesError, fetchStudentImages } = useStudentImages();
     const { fetchDeleteStudent, isLoading: deletingImageLoading, error: deleteImageError, successMessage } = useDeleteStudentImage();
     
-    const fetchCount = useRef(0);
     const Count = useRef(0);
     const [isFetching, setIsFetching] = useState(false);
     const [filesWithMetadata, setFilesWithMetadata] = useState<FileWithMetadata[]>([]);
 
-    const fetchImages = async () => {
-        if (studentId && (!files.length) && !isFetching && (!studentPicture || studentPicture.length === 0)) {
-            setIsFetching(true);
-            try {
-                await fetchStudentImages(studentId, imageType);
-                fetchCount.current += 1;
-                console.log("เรียกใช้ครั้งที่ ", fetchCount.current);
-            } catch (error) {
-                console.error("Error fetching images:", error);
-            } finally {
-                setIsFetching(false);
-            }
-        } else if (studentPicture && studentPicture.length > 0) {
-            console.log("มีข้อมูลใน studentPicture แล้ว ไม่ต้องโหลดซ้ำ");
-        }
-    };
-    
-    // Automatically call fetchImages whenever studentId changes
     useEffect(() => {
-        fetchImages();
-    }, [studentId, studentPicture]); // เพิ่ม studentPicture ใน dependency array
+        const fetchImages = async () => {
+            if (studentId && !isFetching && (!studentPicture || studentPicture.length === 0)) {
+                setIsFetching(true);
+                try {
+                    await fetchStudentImages(studentId, imageType);
+                } catch (error) {
+                    console.error("Error fetching images:", error);
+                    setFileError("Failed to fetch images. Please try again.");
+                } finally {
+                    setIsFetching(false);
+                }
+            } else if (studentPicture && studentPicture.length > 0) {
+                console.log("Images already loaded, no need to fetch again.");
+            }
+        };
     
-
+        fetchImages(); // Call the function here
+    
+    }, [studentId, studentPicture, fetchStudentImages, isFetching]); // Add missing dependencies
+    
     
     useEffect(() => {
         if (images && images.length > 0) {
