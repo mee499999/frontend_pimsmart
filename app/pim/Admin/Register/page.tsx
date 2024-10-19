@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import DataAdminTable from '../../components/DataAdminTable';
 import { Dialog, DialogContent, DialogTitle, CircularProgress, Snackbar, IconButton } from '@mui/material';
-import AdminTabCards from './RegisterComponents/CustomTabCards';
+import AdminTabCards from './RegisterComponents/AdminTabCards';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Student } from '@/types/Register';
 import { useStudents } from '@/hooks/Admin/useStudents';

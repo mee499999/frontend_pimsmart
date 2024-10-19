@@ -35,27 +35,25 @@ const StudentTwelveImg: React.FC<RegisterFormProps> = ({ formMethods }) => {
     const [isFetching, setIsFetching] = useState(false);
     const [filesWithMetadata, setFilesWithMetadata] = useState<FileWithMetadata[]>([]);
 
-    useEffect(() => {
-        const fetchImages = async () => {
-            if (studentId && !isFetching && (!volunteerPictures || volunteerPictures.length === 0)) {
-                setIsFetching(true);
-                try {
-                    await fetchStudentImages(studentId, imageType);
-                } catch (error) {
-                    console.error("Error fetching images:", error);
-                    setFileError("Failed to fetch images. Please try again.");
-                } finally {
-                    setIsFetching(false);
-                }
-            } else if (volunteerPictures && volunteerPictures.length > 0) {
-                console.log("Images already loaded, no need to fetch again.");
+    const fetchImages = async () => {
+        if (studentId && (!files.length) && !isFetching && (!volunteerPictures || volunteerPictures.length === 0)) {
+            setIsFetching(true);
+            try {
+                await fetchStudentImages(studentId, imageType);
+            } catch (error) {
+                console.error("Error fetching images:", error);
+            } finally {
+                setIsFetching(false);
             }
-        };
+        } else if (volunteerPictures && volunteerPictures.length > 0) {
+            console.log("มีข้อมูลใน volunteerPictures แล้ว ไม่ต้องโหลดซ้ำ");
+        }
+    };
     
-        fetchImages(); // Call the function here
-    
-    }, [studentId, volunteerPictures, fetchStudentImages, isFetching]); // Add missing dependencies
-    
+    // Automatically call fetchImages whenever studentId changes
+    useEffect(() => {
+        fetchImages();
+    }, [studentId, volunteerPictures]); 
     
     useEffect(() => {
         if (images && images.length > 0) {

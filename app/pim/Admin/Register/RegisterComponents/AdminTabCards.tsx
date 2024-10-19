@@ -19,6 +19,7 @@ import StudentTenImg from '@/app/register/components/From/StudentTenImg';
 import StepTwelve from '@/app/register/components/From/StepTwelve';
 import StudentTwelveImg from '@/app/register/components/From/StudentTwelveImg';
 import StepElevenImg from '@/app/register/components/From/StepElevenImg';
+import { useStudentAdminApi } from '@/hooks/Admin/RegisterAdmin';
 
 interface RegisterFormProps {
   formMethods: UseFormReturn<Student>;
@@ -30,7 +31,7 @@ const AdminTabCards: React.FC<RegisterFormProps> = ({ formMethods }) => {
 
   // Destructure formAdmin methods for easier access
   const { control, register, handleSubmit, formState: { errors }, setValue, watch } = formMethods;
-  const { loading, sendStudentData, uploadFiles } = useStudentApi();
+  const { loading, sendStudentData, uploadFiles } = useStudentAdminApi();
 
   const onSubmit = async (data: Student) => {
     const { uploadPictureHouse, volunteerPictures, studentPicture } = data;
