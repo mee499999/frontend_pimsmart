@@ -8,6 +8,7 @@ export type FormName =
   | 'conditionsNotMet'
   | 'CheckStatusPassed'
   | 'Volunteer'
+  | 'SpecialWork'
   | 'contract';
 
 export interface SimpleSidebarItem {
@@ -58,14 +59,21 @@ export const sidebarItems: SidebarItemWithChildren[] = [
   },
   {
     id: 'Volunteer',
-    text: 'จิตอาสา',
+    text: 'ชั่วโมงจิคอาสา',
     hook: (handleSidebarClick) => () => handleSidebarClick('Volunteer'),
+  },
+  {
+    id: 'SpecialWork',
+    text: 'ชั่วโมงงานพิเศษ',
+    hook: (handleSidebarClick) => () => handleSidebarClick('SpecialWork'),
   },
   {
     id: 'contract',
     text: 'ต่อทุน',
     hook: (handleSidebarClick) => () => handleSidebarClick('contract'),
   },
+ 
+
 ];
 
 export const useSidebarNavigation = (
@@ -81,6 +89,7 @@ export const useSidebarNavigation = (
     conditionsNotMet: '/pim/Admin/Register/conditionsNotMet',
     CheckStatusPassed: '/pim/Admin/Register/CheckStatusPassed',
     Volunteer: '/pim/Admin/StudentVolunteer',
+    SpecialWork: '/pim/Admin/SpecialWork',
     contract: '/pim/Admin/contract',
   };
 

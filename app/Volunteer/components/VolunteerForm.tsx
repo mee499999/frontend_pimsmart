@@ -126,8 +126,8 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
                 error={!!errors.prefix}
                 helperText={errors.prefix?.message}
               >
-                <MenuItem value="male">ชาย</MenuItem>
-                <MenuItem value="female">หญิง</MenuItem>
+                <MenuItem value="ชาย">ชาย</MenuItem>
+                <MenuItem value="หญิง">หญิง</MenuItem>
               </TextField>
             )}
           />

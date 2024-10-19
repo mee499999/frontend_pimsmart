@@ -10,37 +10,30 @@ import DataAdminTable from '../../components/DataAdminTable';
 import { Dialog, DialogActions, DialogContent, DialogTitle, CircularProgress, Snackbar, IconButton } from '@mui/material';
 
 import { FormProvider, useForm } from 'react-hook-form';
-
-
-import { volunteer } from '@/hooks/Admin/volunteer';
-
-import VolunteerForm from '@/app/Volunteer/components/VolunteerForm';
-import { FormValues } from '@/types/IResponse';
+import { specialWork } from '@/hooks/Admin/specialWork';
+import SpecialWorkForm from '@/app/Volunteer/components/SpecialWorkForm';
+import { FormValues, FormValuesWork } from '@/types/IResponse';
 
 import EditIcon from '@mui/icons-material/Edit';
-
-
-
-
 
 interface PaginationModel {
   page: number;
   pageSize: number;
+  
 }
 
-const Volunteer: React.FC = () => {
-  const [selectedForm, setSelectedForm] = useState<FormName>('Volunteer');
+const SpecialWork: React.FC = () => {
+  const [selectedForm, setSelectedForm] = useState<FormName>('SpecialWork');
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const pathname = usePathname();
   const { handleSidebarClick, renderSidebarItems } = useSidebarNavigation(setSelectedForm, setExpandedItems);
   const [paginationModel, setPaginationModel] = useState<PaginationModel>({ page: 0, pageSize: 5 });
-  const { Volunteer, loading, error, totalCount, fetchvolunteer } = volunteer(setPaginationModel);
-  const formValunteer = useForm<FormValues>();
+  const { SpecialWork, loading, error, totalCount, fetchSpecialWork } = specialWork(setPaginationModel);
+  const formwork = useForm<FormValuesWork>(); // Renamed to avoid conflict with component name
   const [open, setOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [selectedVolunteer, setSelectedVolunteer] = useState<FormValues | null>(null);
-  const { setValue, getValues } = formValunteer; 
-
+  const [selectedSpecialWork, setSelectedSpecialWork] = useState<FormValuesWork | null>(null); // Corrected useState
+  const { setValue, getValues } = formwork;
 
   const initialColumns = [
     {
@@ -52,33 +45,28 @@ const Volunteer: React.FC = () => {
       disableColumnMenu: true,
       renderCell: (params: { row: any; }) => (
         <IconButton onClick={() => handleEdit(params.row)}>
-          <EditIcon />
+          <EditIcon />ห
         </IconButton>
       ),
     },
-    { field: 'studentId', headerName: 'รหัสรักศึกษา', width: 150 },
-    { field: 'prefix', headerName: 'คำนำหน้า', width: 150 },
-    { field: 'firstName', headerName: 'ชื่อ - นามสกุล', width: 200 },
-    { field: 'nickname', headerName: 'ชื่อเล่น', width: 200 },
-    { field: 'branch', headerName: 'สาขา', width: 200 },
-    { field: 'graduate', headerName: 'ชั้นปี', width: 200 },
-    { field: 'activityName', headerName: 'ชื่อกิจกรรมจิตอาสา', width: 200 },
-    { field: 'organizationName', headerName: 'ชื่อองค์กร', width: 250 },
-    { field: 'organizationPhone', headerName: 'เบอร์โทร', width: 150 },
-    { field: 'activityDescription', headerName: 'รายละเอียดจิตอาสา', width: 300 },
-    { field: 'activityDate', headerName: 'วันที่ทำกิจกรรม', width: 150 },
-    { field: 'hours', headerName: 'จำนวนชั่วโมง', width: 100 },
-    { field: 'createDate', headerName: 'วันที่ส่ง จิตอาสา', width: 150 }, 
+    { field: 'studentId', headerName: 'Student ID', width: 150 },
+    { field: 'firstName', headerName: 'First Name', width: 200 },
+    { field: 'activityName', headerName: 'Activity Name', width: 200 },
+    { field: 'organizationName', headerName: 'Organization Name', width: 250 },
+    { field: 'organizationPhone', headerName: 'Organization Phone', width: 150 },
+    { field: 'activityDescription', headerName: 'Activity Description', width: 300 },
+    { field: 'activityDate', headerName: 'Activity Date', width: 150 },
+    { field: 'hours', headerName: 'Hours', width: 100 },
+    { field: 'createDate', headerName: 'Create Date', width: 150 },
   ];
 
-
-  const handleCreateVolunteer= () => {
+  const handleCreateSpecialWork = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
-    formValunteer.reset();
+    formwork.reset(); // Reset form values
   };
 
   const handlePaginationModelChange = (newModel: PaginationModel) => {
@@ -86,31 +74,29 @@ const Volunteer: React.FC = () => {
     setPaginationModel(newModel);
   };
 
-  const handleEdit = (rowData: FormValues) => {
+  const handleEdit = (rowData: FormValuesWork) => {
     console.log('Edit action for row:', rowData);
-    
-    // Set selected student data
-    setSelectedVolunteer(rowData);
+
+    // Set selected special work data
+    setSelectedSpecialWork(rowData);
 
     // Set form values using a loop
     Object.keys(rowData).forEach((key) => {
-      setValue(key as keyof FormValues, rowData[key as keyof FormValues]); // Use key as keyof Student
+      setValue(key as keyof FormValuesWork, rowData[key as keyof FormValuesWork]);
     });
 
     setOpen(true); // Open the dialog
   };
 
-
-
   useEffect(() => {
-    console.log('Fetching students:', paginationModel);
-    fetchvolunteer(paginationModel.page, paginationModel.pageSize);
+    console.log('Fetching data:', paginationModel);
+    fetchSpecialWork(paginationModel.page, paginationModel.pageSize);
   }, [paginationModel.page, paginationModel.pageSize]);
 
   useEffect(() => {
-    console.log('Students data:', Volunteer);
+    console.log('Data:', SpecialWork);
     console.log('Total count:', totalCount);
-  }, [Volunteer, totalCount]);
+  }, [SpecialWork, totalCount]);
 
   useEffect(() => {
     if (error) {
@@ -119,17 +105,10 @@ const Volunteer: React.FC = () => {
   }, [error]);
 
   return (
-    <LayoutAdmin
-      contentTitle="บัยทึกจิตอาสา  "
-      sidebarItems={renderSidebarItems}
-    >
+    <LayoutAdmin contentTitle="บัยทึกการทำงานพิเศษ" sidebarItems={renderSidebarItems}>
       <main>
         <Box display="flex" justifyContent="flex-end" mb={2}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleCreateVolunteer}
-          >
+          <Button variant="contained" color="primary" onClick={handleCreateSpecialWork}>
             Create
           </Button>
         </Box>
@@ -138,7 +117,7 @@ const Volunteer: React.FC = () => {
           <CircularProgress />
         ) : (
           <DataAdminTable
-            rows={Volunteer}
+            rows={SpecialWork}
             initialColumns={initialColumns}
             rowCount={totalCount}
             paginationModel={paginationModel}
@@ -147,11 +126,11 @@ const Volunteer: React.FC = () => {
         )}
 
         <Dialog open={open} onClose={handleClose} maxWidth="lg" fullWidth>
-        <DialogTitle>{selectedVolunteer ? 'แก้ไข' : 'เพิ่มบันทึกจิตอาสา'}</DialogTitle>
-         
+          <DialogTitle>{selectedSpecialWork ? 'แก้ไข' : 'เพิ่มบันทึก'}</DialogTitle>
+
           <DialogContent>
-            <FormProvider {...formValunteer}>
-              <VolunteerForm formValunteer={formValunteer} />
+            <FormProvider {...formwork}>
+              <SpecialWorkForm formwork={formwork} />
             </FormProvider>
           </DialogContent>
         </Dialog>
@@ -159,7 +138,7 @@ const Volunteer: React.FC = () => {
         <Snackbar
           open={snackbarOpen}
           onClose={() => setSnackbarOpen(false)}
-          message={error || "An error occurred!"}
+          message={error || 'An error occurred!'}
           autoHideDuration={6000}
         />
       </main>
@@ -167,4 +146,4 @@ const Volunteer: React.FC = () => {
   );
 };
 
-export default Volunteer;
+export default SpecialWork;
