@@ -1,6 +1,9 @@
 
 
 export interface Student {
+
+  studentPicture? : FileList | File[]; //อัพโหลดรูปนักศึกษา
+
     // ข้อมูลส่วนบุคคล
     id?: number;  // รหัสนักเรียน
     studentId?: string;  // รหัสประจำตัวนักเรียน
@@ -21,7 +24,7 @@ export interface Student {
     block?: string;  // บล็อคที่เรียน
     currentGpa?: string;  // เกรดเฉลี่ยปัจจุบัน (ในรูปแบบสตริงหากใช้ BigDecimal)
     createDate?: string;  // วันที่สร้างข้อมูล (รูปแบบวันที่-เวลา ISO 8601)
-    PlaceofStudy?: string;  // สถานที่ศึกษา
+    placeOfStudy?: string;  // สถานที่ศึกษา
     otherPlace?: string;  // สถานที่ศึกษาอื่นๆ
   
     
@@ -116,7 +119,6 @@ export interface Student {
   
     uploadPictureHouse?: FileList | File[]; //อัพโหลดอย่างน้อย 2 รูป ภาพรวมนอกบ้าน ภาพรวมในบ้าน
     volunteerPictures?: FileList | File[]; //ภาพทำจิตอาสา 1-5 รูป เป็นจิอาสาที่ทำย้อนหลังไม่เกิน 1 ปี
-    studentPicture? : FileList | File[]; //อัพโหลดรูปนักศึกษา
 
     
 
@@ -125,10 +127,17 @@ export interface Student {
     
   }
   
+  export interface StudentPicture {
+    imageType: string; // ข้อมูลไฟล์
+    name: string; // ชื่อไฟล์
+    image: string; // Base64 encoded string or URL of the image
+}
 
 
-
-
+  export interface UploadedFile {
+    file: File;  // ข้อมูลไฟล์
+    name: string; // ชื่อไฟล์
+}
 
   
   // Location interface for geographic data

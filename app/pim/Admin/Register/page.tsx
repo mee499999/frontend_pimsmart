@@ -12,6 +12,7 @@ import AdminTabCards from './RegisterComponents/CustomTabCards';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Student } from '@/types/Register';
 import { useStudents } from '@/hooks/Admin/useStudents';
+import { useStudentImages } from '@/hooks/Admin/useStudentImages';
 import EditIcon from '@mui/icons-material/Edit';
 
 interface PaginationModel {
@@ -25,12 +26,13 @@ const Register: React.FC = () => {
   const pathname = usePathname();
   const { handleSidebarClick, renderSidebarItems } = useSidebarNavigation(setSelectedForm, setExpandedItems);
   const [paginationModel, setPaginationModel] = useState<PaginationModel>({ page: 0, pageSize: 5 });
-  const { students, loading, error, totalCount, fetchStudents } = useStudents(setPaginationModel);
-  const formAdmin = useForm<Student>();
-  const { setValue, getValues } = formAdmin; // Importing setValue and getValues
+  const { students, loading: loadingStudents, error: studentError, totalCount, fetchStudents } = useStudents(setPaginationModel);
+  const { loading: loadingImages, fetchStudentImages } = useStudentImages();
+  const formMethods = useForm<Student>();
+  const { setValue } = formMethods;
   const [open, setOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null); // State for the selected student
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
 
   const initialColumns = [
     {
@@ -40,7 +42,7 @@ const Register: React.FC = () => {
       sortable: false,
       filterable: false,
       disableColumnMenu: true,
-      renderCell: (params: { row: any; }) => (
+      renderCell: (params: { row: any }) => (
         <IconButton onClick={() => handleEdit(params.row)}>
           <EditIcon />
         </IconButton>
@@ -56,37 +58,44 @@ const Register: React.FC = () => {
 
   const handleCreateStudent = () => {
     setOpen(true);
-    formAdmin.reset(); // Reset the form for creating a new student
+    formMethods.reset();
   };
 
   const handleEdit = (rowData: Student) => {
     console.log('Edit action for row:', rowData);
     
+    // Extract studentId from the selected row
+    // const studentId = rowData.studentId;
+    // const imageType = "studentPicture";
+
+    // // Check if studentId is defined
+    // if (studentId) {
+    //   // Fetch student images based on studentId
+    //   fetchStudentImages(studentId,imageType );
+    // } else {
+    //   console.error('Student ID is undefined');
+    // }
+  
     // Set selected student data
     setSelectedStudent(rowData);
-
+  
     // Set form values using a loop
     Object.keys(rowData).forEach((key) => {
-      setValue(key as keyof Student, rowData[key as keyof Student]); // Use key as keyof Student
+      setValue(key as keyof Student, rowData[key as keyof Student]);
     });
-
+  
     setOpen(true); // Open the dialog
   };
+  
+  
 
   const handleClose = () => {
     setOpen(false);
-    formAdmin.reset(); // Reset the form when closing
+    formMethods.reset();
   };
 
   const handlePaginationModelChange = (newModel: PaginationModel) => {
-    console.log('Pagination changed:', newModel);
     setPaginationModel(newModel);
-  };
-
-  const handleSubmit = () => {
-    const values = getValues(); // Get current form values
-    console.log('Form Values:', values); // Log or use the values as needed
-    // Add your submit logic here
   };
 
   useEffect(() => {
@@ -95,33 +104,21 @@ const Register: React.FC = () => {
   }, [paginationModel.page, paginationModel.pageSize]);
 
   useEffect(() => {
-    console.log('Students data:', students);
-    console.log('Total count:', totalCount);
-  }, [students, totalCount]);
-
-  useEffect(() => {
-    if (error) {
+    if (studentError) {
       setSnackbarOpen(true);
     }
-  }, [error]);
+  }, [studentError]);
 
   return (
-    <LayoutAdmin
-      contentTitle="Register"
-      sidebarItems={renderSidebarItems}
-    >
+    <LayoutAdmin contentTitle="Register" sidebarItems={renderSidebarItems}>
       <main>
         <Box display="flex" justifyContent="flex-end" mb={2}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleCreateStudent}
-          >
+          <Button variant="contained" color="primary" onClick={handleCreateStudent}>
             Create
           </Button>
         </Box>
 
-        {loading ? (
+        {loadingStudents ? (
           <CircularProgress />
         ) : (
           <DataAdminTable
@@ -136,9 +133,8 @@ const Register: React.FC = () => {
         <Dialog open={open} onClose={handleClose} maxWidth="lg" fullWidth>
           <DialogTitle>{selectedStudent ? 'Edit Student' : 'Create New Student'}</DialogTitle>
           <DialogContent>
-            <FormProvider {...formAdmin}>
-              <AdminTabCards formAdmin={formAdmin} />
-              
+            <FormProvider {...formMethods}>
+              <AdminTabCards formMethods={formMethods} />
             </FormProvider>
           </DialogContent>
         </Dialog>
@@ -146,7 +142,7 @@ const Register: React.FC = () => {
         <Snackbar
           open={snackbarOpen}
           onClose={() => setSnackbarOpen(false)}
-          message={error || "An error occurred!"}
+          message={studentError || "An error occurred!"}
           autoHideDuration={6000}
         />
       </main>

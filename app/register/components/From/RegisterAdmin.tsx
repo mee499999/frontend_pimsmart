@@ -17,7 +17,7 @@ const RegisterAdmin: React.FC<RegisterFormProps> = ({ formMethods }) => {
   const [selectedFaculty, setSelectedFaculty] = useState<Faculty | ''>('');
   const [otherPlace, setOtherPlace] = useState('');
 
-  const PlaceofStudy = watch('PlaceofStudy');
+  const placeOfStudy = watch('placeOfStudy');
 
 
   useEffect(() => {
@@ -246,14 +246,14 @@ const RegisterAdmin: React.FC<RegisterFormProps> = ({ formMethods }) => {
           <FormControl fullWidth variant="outlined">
             <InputLabel>สถานที่เรียน</InputLabel>
             <Controller
-              name="PlaceofStudy"
+              name="placeOfStudy"
               control={control}
               defaultValue=""
               render={({ field }) => (
                 <Select
                   label="สถานที่เรียน"
                   {...field}
-                  error={!!errors.PlaceofStudy}
+                  error={!!errors.placeOfStudy}
                   onChange={(e) => {
                     const value = e.target.value;
                     field.onChange(e);
@@ -271,7 +271,7 @@ const RegisterAdmin: React.FC<RegisterFormProps> = ({ formMethods }) => {
           </FormControl>
         </Grid>
 
-        {PlaceofStudy === 'อื่นๆโปรดระบุ' && (
+        {placeOfStudy === 'อื่นๆโปรดระบุ' && (
           <Grid item xs={12} md={6}>
             <Controller
               name="otherPlace"

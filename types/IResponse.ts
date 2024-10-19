@@ -27,10 +27,19 @@ export interface ApiResponseS<T> {
 
 }
 
+export interface ApiResponseI<T> {
+  success: boolean; // Indicates if the API request was successful
+  message: string; // Contains a message, usually for success or error details
+  data?: T | null; // Holds the data returned from the API (generic type), which can also be null
+  error?: string; // Error message in case the request fails
+}
 
 
 
-
+export interface FileWithMetadata {
+  file: File;
+  imageData: string;
+}
 
 export interface ErrorResponse {
   message?: string;
