@@ -37,6 +37,8 @@ export interface ApiResponseI<T> {
 
 
 export interface FileWithMetadata {
+  name: any;
+  imageType: string;
   file: File;
   imageData: string;
 }

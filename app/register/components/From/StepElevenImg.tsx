@@ -10,10 +10,11 @@ import { base64ToFile } from "@/components/base64ToFile";
 
 interface RegisterFormProps {
     formMethods: UseFormReturn<Student>;
+    onImagesUpdate: (images: any[]) => void;
 }
 
 
-const StepElevenImg: React.FC<RegisterFormProps> = ({ formMethods }) => {
+const StepElevenImg: React.FC<RegisterFormProps> = ({ formMethods ,onImagesUpdate  }) => {
     const {
         control,
         handleSubmit,
@@ -60,19 +61,20 @@ const StepElevenImg: React.FC<RegisterFormProps> = ({ formMethods }) => {
     useEffect(() => {
         if (images && images.length > 0) {
             const imageFilesWithMetadata = images.map((imageObj) => {
-                console.log("imageData:", imageObj.imageData); // Log imageData for each imageObj
+                // console.log("imageData:", imageObj.imageData); // Log imageData for each imageObj
                 const file = base64ToFile(imageObj.image, imageObj.name);
-                return { file, imageData: imageObj.imageData }; // Return an object containing both file and imageData
+                return {name: imageObj.name, file, imageData: imageObj.imageData, imageType: "uploadPictureHouse" }; // Assuming a fixed imageType
             });
     
             // Check if files are different and update state
             if (JSON.stringify(imageFilesWithMetadata) !== JSON.stringify(filesWithMetadata)) {
                 setFilesWithMetadata(imageFilesWithMetadata);
                 setValue("uploadPictureHouse", imageFilesWithMetadata.map(item => item.file), { shouldValidate: true });
-                console.log("image ", images);
+                console.log("imageuploadPictureHouse ", images);
+                onImagesUpdate(images);
             }
         }
-    }, [images, setValue, filesWithMetadata]);
+    }, [images, setValue, filesWithMetadata,onImagesUpdate]);
 
 
     useEffect(() => {
@@ -86,6 +88,7 @@ const StepElevenImg: React.FC<RegisterFormProps> = ({ formMethods }) => {
     const handleFileChange = (newFiles: File[]) => {
         const updatedFiles = [...files, ...newFiles];
         setFiles(updatedFiles);
+        console.log("uploadPictureHouse",updatedFiles)
         setValue("uploadPictureHouse", updatedFiles, { shouldValidate: true });
     };
 

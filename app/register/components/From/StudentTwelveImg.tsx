@@ -10,12 +10,14 @@ import { base64ToFile } from "@/components/base64ToFile";
 
 interface RegisterFormProps {
     formMethods: UseFormReturn<Student>;
+    onImagesUpdate: (images: any[]) => void;
+
 }
 
 
 
 
-const StudentTwelveImg: React.FC<RegisterFormProps> = ({ formMethods }) => {
+const StudentTwelveImg: React.FC<RegisterFormProps> = ({ formMethods ,onImagesUpdate }) => {
     const {
         control,
         handleSubmit,
@@ -58,19 +60,21 @@ const StudentTwelveImg: React.FC<RegisterFormProps> = ({ formMethods }) => {
     useEffect(() => {
         if (images && images.length > 0) {
             const imageFilesWithMetadata = images.map((imageObj) => {
-                console.log("imageData:", imageObj.imageData); // Log imageData for each imageObj
+                // console.log("imageData:", imageObj.imageData); // Log imageData for each imageObj
                 const file = base64ToFile(imageObj.image, imageObj.name);
-                return { file, imageData: imageObj.imageData }; // Return an object containing both file and imageData
+                return { name: imageObj.name,file, imageData: imageObj.imageData, imageType: "volunteerPictures" }; // Assuming a fixed imageType
             });
     
             // Check if files are different and update state
             if (JSON.stringify(imageFilesWithMetadata) !== JSON.stringify(filesWithMetadata)) {
                 setFilesWithMetadata(imageFilesWithMetadata);
                 setValue("volunteerPictures", imageFilesWithMetadata.map(item => item.file), { shouldValidate: true });
-                console.log("image ", images);
+                console.log("imagevolunteerPictures ", images);
+                onImagesUpdate(images);
+
             }
         }
-    }, [images, setValue, filesWithMetadata]);
+    }, [images, setValue, filesWithMetadata,onImagesUpdate]);
 
 
 

@@ -10,10 +10,12 @@ import { base64ToFile } from "@/components/base64ToFile";
 
 interface RegisterFormProps {
     formMethods: UseFormReturn<Student>;
+    onImagesUpdate: (images: any[]) => void; // Add the onImagesUpdate prop
+
     
 }
 
-const StudentTenImg: React.FC<RegisterFormProps> = ({ formMethods }) => {
+const StudentTenImg: React.FC<RegisterFormProps> = ({ formMethods ,onImagesUpdate  }) => {
     const { control, handleSubmit, setValue, watch } = formMethods;
 
     const studentPicture = watch("studentPicture");
@@ -50,9 +52,9 @@ const StudentTenImg: React.FC<RegisterFormProps> = ({ formMethods }) => {
     useEffect(() => {
         if (images && images.length > 0) {
             const imageFilesWithMetadata = images.map((imageObj) => {
-                console.log("imageData:", imageObj.imageData);
+                // console.log("imageData:", imageObj.imageData);
                 const file = base64ToFile(imageObj.image, imageObj.name);
-                return { file, imageData: imageObj.imageData };
+                return { name: imageObj.name,file, imageData: imageObj.imageData, imageType: "studentPicture" }; // Assuming a fixed imageType
             });
 
             if (JSON.stringify(imageFilesWithMetadata) !== JSON.stringify(filesWithMetadata)) {
@@ -60,10 +62,12 @@ const StudentTenImg: React.FC<RegisterFormProps> = ({ formMethods }) => {
                 setValue("studentPicture", imageFilesWithMetadata.map(item => item.file), { shouldValidate: true });
                 Count.current += 1; 
                 console.log("ครั้งที่ ", Count.current);
-                console.log("image ", images);
+                console.log("imagestudentPicture ", images);
+                onImagesUpdate(images); // Call the callback to pass images back
+
             }
         }
-    }, [images, setValue, filesWithMetadata]);
+    }, [images, setValue, filesWithMetadata ,onImagesUpdate]);
     
     useEffect(() => {
         if (studentPicture) {
@@ -76,6 +80,8 @@ const StudentTenImg: React.FC<RegisterFormProps> = ({ formMethods }) => {
     const handleFileChange = (newFiles: File[]) => {
         const updatedFiles = [...files, ...newFiles];
         setFiles(updatedFiles);
+        console.log("studentPictureFileChange",updatedFiles)
+
         setValue("studentPicture", updatedFiles, { shouldValidate: true });
     };
 
@@ -99,14 +105,7 @@ const StudentTenImg: React.FC<RegisterFormProps> = ({ formMethods }) => {
         setValue("studentPicture", updatedFiles, { shouldValidate: true });
     };
     
-    const validateFiles = () => {
-        if (files.length < 2) {
-            setFileError("กรุณาอัพโหลดรูปอย่างน้อย 2 รูป");
-            return false;
-        }
-        setFileError(null);
-        return true;
-    };
+
 
 
     return (
