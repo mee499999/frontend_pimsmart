@@ -7,14 +7,16 @@ import { usePathname } from 'next/navigation';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import DataAdminTable from '../../components/DataAdminTable';
-import { Dialog, DialogActions, DialogContent, DialogTitle, CircularProgress, Snackbar, IconButton } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, CircularProgress, Snackbar, IconButton } from '@mui/material';
 
 import { FormProvider, useForm } from 'react-hook-form';
 import { specialWork } from '@/hooks/Admin/specialWork';
-import SpecialWorkForm from '@/app/Volunteer/components/SpecialWorkForm';
-import { FormValues, FormValuesWork } from '@/types/IResponse';
+
+
+import { FormValuesWork } from '@/types/IResponse';
 
 import EditIcon from '@mui/icons-material/Edit';
+import EditeSpecialWork from '@/app/Volunteer/admin/editeSpecialwaork';
 
 interface PaginationModel {
   page: number;
@@ -45,19 +47,23 @@ const SpecialWork: React.FC = () => {
       disableColumnMenu: true,
       renderCell: (params: { row: any; }) => (
         <IconButton onClick={() => handleEdit(params.row)}>
-          <EditIcon />ห
+          <EditIcon />
         </IconButton>
       ),
     },
-    { field: 'studentId', headerName: 'Student ID', width: 150 },
-    { field: 'firstName', headerName: 'First Name', width: 200 },
-    { field: 'activityName', headerName: 'Activity Name', width: 200 },
-    { field: 'organizationName', headerName: 'Organization Name', width: 250 },
-    { field: 'organizationPhone', headerName: 'Organization Phone', width: 150 },
-    { field: 'activityDescription', headerName: 'Activity Description', width: 300 },
-    { field: 'activityDate', headerName: 'Activity Date', width: 150 },
-    { field: 'hours', headerName: 'Hours', width: 100 },
-    { field: 'createDate', headerName: 'Create Date', width: 150 },
+    { field: 'studentId', headerName: 'รหัสรักศึกษา', width: 150 },
+    { field: 'prefix', headerName: 'คำนำหน้า', width: 150 },
+    { field: 'firstName', headerName: 'ชื่อ - นามสกุล', width: 200 },
+    { field: 'nickname', headerName: 'ชื่อเล่น', width: 200 },
+    { field: 'branch', headerName: 'สาขา', width: 200 },
+    { field: 'graduate', headerName: 'ชั้นปี', width: 200 },
+    { field: 'workName', headerName: 'ตำแหน่งงาน', width: 200 },
+    { field: 'organizationName', headerName: 'ชื่อองค์กร', width: 250 },
+    { field: 'organizationPhone', headerName: 'เบอร์โทร', width: 150 },
+    { field: 'workDescription', headerName: 'รายละเอียดงานพิเศษ', width: 300 },
+    { field: 'activityDate', headerName: 'วันที่ทำกิจกรรม', width: 150 },
+    { field: 'hours', headerName: 'จำนวนชั่วโมง', width: 100 },
+    { field: 'createDate', headerName: 'วันที่ส่ง จิตอาสา', width: 150 }, 
   ];
 
   const handleCreateSpecialWork = () => {
@@ -130,7 +136,7 @@ const SpecialWork: React.FC = () => {
 
           <DialogContent>
             <FormProvider {...formwork}>
-              <SpecialWorkForm formwork={formwork} />
+              <EditeSpecialWork formwork={formwork} />
             </FormProvider>
           </DialogContent>
         </Dialog>

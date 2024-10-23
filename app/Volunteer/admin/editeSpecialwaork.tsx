@@ -13,64 +13,66 @@ import { submitSpecialWorkForm } from '@/app/api/SpecialWork';
 interface WorkFormProps {
   formwork: UseFormReturn<FormValuesWork>;
 }
+const EditeSpecialWork: React.FC<WorkFormProps> = ({ formwork }) => {
+    const {
+      control,
+      handleSubmit,
+      formState: { errors },
+      setValue,
+      watch,
+    } = formwork;
+  
+    const uploadPictureHouse = watch("uploadSpecialwork");
+    const [files, setFiles] = useState<File[]>([]);
+    const [fileError, setFileError] = useState<string | null>(null);
+    const { loading, error, response, uploadSpecialWork } = useuploadSpecialWorkApi();
 
-const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    setValue,
-    watch,
-  } = formwork;
-
-  const uploadPictureHouse = watch("uploadSpecialwork");
-  const [files, setFiles] = useState<File[]>([]);
-  const [fileError, setFileError] = useState<string | null>(null);
-  const { loading, error, response, uploadSpecialWork } = useuploadSpecialWorkApi();
-
-  useEffect(() => {
-    if (uploadPictureHouse instanceof FileList) {
-      setFiles(Array.from(uploadPictureHouse));
-    } else if (Array.isArray(uploadPictureHouse)) {
-      setFiles(uploadPictureHouse);
-    }
-  }, [uploadPictureHouse]);
-
-  const handleFileChange = (newFiles: File[]) => {
-    const updatedFiles = [...files, ...newFiles];
-    setFiles(updatedFiles);
-    setValue("uploadSpecialwork", updatedFiles, { shouldValidate: true });
-  };
-
-  const handleFileRemove = (fileToRemove: File) => {
-    const updatedFiles = files.filter((file) => file !== fileToRemove);
-    setFiles(updatedFiles);
-    setValue("uploadSpecialwork", updatedFiles, { shouldValidate: true });
-  };
-
-  const onSubmit = useCallback(async (data: FormValuesWork) => {
-    console.log("ข้อมูลที่ส่งในฟอร์ม: ", data);
-
-    if (!data.uploadSpecialwork || data.uploadSpecialwork.length === 0) {
-      setFileError("โปรดตรวจสอบให้แน่ใจว่าได้อัปโหลดไฟล์ที่จำเป็นทั้งหมดแล้ว");
-      return;
-    }
-
-    const { studentId, firstName } = data;
-    if (!studentId || !firstName) {
-      setFileError("ไม่พบข้อมูลรหัสนักศึกษาหรือชื่อเต็ม");
-      return;
-    }
-    const imageType: "Specialwork" = "Specialwork"; 
-
-    const sendResult = await submitSpecialWorkForm(data);
-    if (!sendResult) {
-      setFileError("การส่งข้อมูลกิจกรรมงานพิเศษล้มเหลว");
-      return;
-    }
-
-    await uploadSpecialWork(files, studentId, firstName, imageType);
-  }, [submitSpecialWorkForm, uploadSpecialWork]);
+    
+  
+    useEffect(() => {
+      if (uploadPictureHouse instanceof FileList) {
+        setFiles(Array.from(uploadPictureHouse));
+      } else if (Array.isArray(uploadPictureHouse)) {
+        setFiles(uploadPictureHouse);
+      }
+    }, [uploadPictureHouse]);
+  
+    const handleFileChange = (newFiles: File[]) => {
+      const updatedFiles = [...files, ...newFiles];
+      setFiles(updatedFiles);
+      setValue("uploadSpecialwork", updatedFiles, { shouldValidate: true });
+    };
+  
+    const handleFileRemove = (fileToRemove: File) => {
+      const updatedFiles = files.filter((file) => file !== fileToRemove);
+      setFiles(updatedFiles);
+      setValue("uploadSpecialwork", updatedFiles, { shouldValidate: true });
+    };
+  
+    const onSubmit = useCallback(async (data: FormValuesWork) => {
+      console.log("ข้อมูลที่ส่งในฟอร์ม: ", data);
+  
+      // ตรวจสอบว่าได้อัปโหลดไฟล์แล้วหรือไม่
+      
+      const { studentId, firstName } = data;
+      if (!studentId || !firstName) {
+        setFileError("ไม่พบข้อมูลรหัสนักศึกษาหรือชื่อเต็ม");
+        return;
+      }
+  
+      const imageType: "Specialwork" = "Specialwork";
+  
+      // ส่งข้อมูลฟอร์ม
+      const sendResult = await submitSpecialWorkForm(data);
+      if (!sendResult) {
+        setFileError("การส่งข้อมูลกิจกรรมงานพิเศษล้มเหลว");
+        return;
+      }
+  
+      // อัปโหลดไฟล์
+      await uploadSpecialWork(files, studentId, firstName, imageType);
+    }, [submitSpecialWorkForm, uploadSpecialWork]);
+  
 
   return (
     <Box
@@ -397,7 +399,6 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
           />
         </Grid>
 
-        {/* ฟิลด์อัปโหลดรูปภาพกิจกรรม */}
         <Grid item xs={12}>
           <Typography variant="body1" sx={{ mb: 1 }}>
             *อัพโหลดรูปภาพกิจกรรมที่ทำ ให้เห็นหน้า
@@ -413,6 +414,7 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
             <FormHelperText error>{fileError}</FormHelperText>
           )}
         </Grid>
+     
       </Grid>
 
       {/* ปุ่มส่งข้อมูล */}
@@ -428,4 +430,4 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
   );
 };
 
-export default SpecialWorkForm;
+export default EditeSpecialWork;

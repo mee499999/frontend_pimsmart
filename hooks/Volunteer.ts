@@ -17,17 +17,13 @@ interface ApiResponse {
 
 
   const uploadVolunteerFiles = async (
-    files: File[],
-    studentId: string,
-    firstName: string,
-    imageType: string
-  ) => {
+files: File[], studentId: string, firstName: string, imageType: string ,id:number) => {
     setLoading(true);
     setError(null);
   
     try {
       const fileNames = files.map(file => file.name);
-      const result = await uploadVolunteerFilesApi(files, studentId, firstName, fileNames, imageType);
+      const result = await uploadVolunteerFilesApi(files, studentId, firstName, fileNames, imageType,id);
   
       if (!result.success) {
         setError(result.message);

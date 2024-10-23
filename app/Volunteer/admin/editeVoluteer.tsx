@@ -1,57 +1,115 @@
-
-
 "use client";
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { useForm, Controller, UseFormReturn } from 'react-hook-form';
-import { TextField, Button, Typography, Box, Grid, MenuItem, FormHelperText } from '@mui/material';
-import { FormValuesWork } from '@/types/IResponse';
-import CustomFileUpload from '@/components/CustomFileUpload';
-import { useuploadSpecialWorkApi } from '@/hooks/SpecialWork';
-import { submitSpecialWorkForm } from '@/app/api/SpecialWork';
+import { TextField, Button, Typography, Box, Grid, InputAdornment, FormControl, FormLabel, RadioGroup, FormControlLabel, FormHelperText, Radio, MenuItem, CircularProgress } from '@mui/material';
+import LockIcon from '@mui/icons-material/Lock';
 
-interface WorkFormProps {
-  formwork: UseFormReturn<FormValuesWork>;
+import { watch } from 'fs';
+import CustomFileUpload from '@/components/CustomFileUpload';
+import { submitVolunteerForm } from '@/app/api/Volunteer';
+import { useVolunteerFilesApi } from '@/hooks/Volunteer';
+import { FormValues } from '@/types/Volunteer';
+
+
+import { FileWithMetadata } from '@/types/IResponse';
+import { useVolunteertImages } from '@/hooks/Admin/volunteerImg';
+import { base64ToFile } from '@/components/base64ToFile';
+
+
+interface VolunteerFormProps {
+  formValunteer: UseFormReturn<FormValues>;
+  
 }
 
-const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
-  const {
-    control,
+
+const EditeVolunteer: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
+  const { control,
     handleSubmit,
     formState: { errors },
     setValue,
     watch,
-  } = formwork;
+  } = formValunteer;
 
-  const uploadPictureHouse = watch("uploadSpecialwork");
+
+  const uploadPictureHouse = watch("uploadVolunteer");
   const [files, setFiles] = useState<File[]>([]);
   const [fileError, setFileError] = useState<string | null>(null);
-  const { loading, error, response, uploadSpecialWork } = useuploadSpecialWorkApi();
+  const { loading, error, response, uploadVolunteerFiles } = useVolunteerFilesApi();
+  const idVolunteer = watch("studentId");
+  const imageType = "Volunteer";
+  const { loading: loadingImages, images, error: fetchImagesError, fetchVolunteermages } = useVolunteertImages();
+  const [isFetching, setIsFetching] = useState(false);
+
+  
+  const [filesWithMetadata, setFilesWithMetadata] = useState<FileWithMetadata[]>([]);
+
+  const fetchImages = async () => {
+    if (idVolunteer && !files.length && !isFetching && (!uploadPictureHouse || uploadPictureHouse.length === 0)) {
+      setIsFetching(true);
+      try {
+        const result = await fetchVolunteermages(idVolunteer, imageType);
+        console.log("Fetched volunteer images:", result);
+      } catch (error) {
+        console.error("Error fetching images:", error);
+      } finally {
+        setIsFetching(false);
+      }
+    } else if (uploadPictureHouse && uploadPictureHouse.length > 0) {
+      console.log("มีข้อมูลใน volunteerPictures แล้ว ไม่ต้องโหลดซ้ำ");
+    }
+  };
 
   useEffect(() => {
-    if (uploadPictureHouse instanceof FileList) {
+    fetchImages();
+}, [idVolunteer, uploadPictureHouse]); 
+  
+useEffect(() => {
+  if (images && images.length > 0) {
+      const imageFilesWithMetadata = images.map((imageObj) => {
+          // console.log("imageData:", imageObj.imageData); // Log imageData for each imageObj
+          const file = base64ToFile(imageObj.image, imageObj.name);
+          return { name: imageObj.name,file, imageData: imageObj.imageData, imageType: "volunteerPictures" }; // Assuming a fixed imageType
+      });
+
+      // Check if files are different and update state
+      if (JSON.stringify(imageFilesWithMetadata) !== JSON.stringify(filesWithMetadata)) {
+          setFilesWithMetadata(imageFilesWithMetadata);
+          setValue("volunteerPictures", imageFilesWithMetadata.map(item => item.file), { shouldValidate: true });
+          console.log("imagevolunteerPictures ", images);
+          
+
+      }
+  }
+}, [images, setValue, filesWithMetadata]);
+
+
+useEffect(() => {
+  if (uploadPictureHouse instanceof FileList) {
       setFiles(Array.from(uploadPictureHouse));
-    } else if (Array.isArray(uploadPictureHouse)) {
+  } else if (Array.isArray(uploadPictureHouse)) {
       setFiles(uploadPictureHouse);
-    }
-  }, [uploadPictureHouse]);
+  }
+}, [uploadPictureHouse]);
+
+
 
   const handleFileChange = (newFiles: File[]) => {
     const updatedFiles = [...files, ...newFiles];
     setFiles(updatedFiles);
-    setValue("uploadSpecialwork", updatedFiles, { shouldValidate: true });
+    setValue("uploadVolunteer", updatedFiles, { shouldValidate: true });
   };
 
   const handleFileRemove = (fileToRemove: File) => {
-    const updatedFiles = files.filter((file) => file !== fileToRemove);
+    const updatedFiles = files.filter(file => file !== fileToRemove);
     setFiles(updatedFiles);
-    setValue("uploadSpecialwork", updatedFiles, { shouldValidate: true });
+    setValue("uploadVolunteer", updatedFiles, { shouldValidate: true });
   };
 
-  const onSubmit = useCallback(async (data: FormValuesWork) => {
+  const onSubmit = useCallback(async (data: FormValues) => {
     console.log("ข้อมูลที่ส่งในฟอร์ม: ", data);
-
-    if (!data.uploadSpecialwork || data.uploadSpecialwork.length === 0) {
+    
+    if (!data.uploadVolunteer || data.uploadVolunteer.length === 0) {
       setFileError("โปรดตรวจสอบให้แน่ใจว่าได้อัปโหลดไฟล์ที่จำเป็นทั้งหมดแล้ว");
       return;
     }
@@ -61,16 +119,23 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
       setFileError("ไม่พบข้อมูลรหัสนักศึกษาหรือชื่อเต็ม");
       return;
     }
-    const imageType: "Specialwork" = "Specialwork"; 
 
-    const sendResult = await submitSpecialWorkForm(data);
+    
+
+    const imageType: "Volunteer" = "Volunteer"; 
+
+    const sendResult = await submitVolunteerForm(data);
     if (!sendResult) {
-      setFileError("การส่งข้อมูลกิจกรรมงานพิเศษล้มเหลว");
+      setFileError("การส่งข้อมูลจิตอาสาล้มเหลว");
       return;
     }
 
-    await uploadSpecialWork(files, studentId, firstName, imageType);
-  }, [submitSpecialWorkForm, uploadSpecialWork]);
+    const id = sendResult.data?.id;
+    console.log("ID ของกิจกรรมที่สร้างขึ้น: ", id);
+
+    await uploadVolunteerFiles(files, studentId, firstName, imageType,id);
+  }, [submitVolunteerForm, uploadVolunteerFiles]);
+
 
   return (
     <Box
@@ -79,10 +144,10 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
       sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 800, mx: 'auto', my: 4 }}
     >
       <Typography color="secondary" align="center" sx={{ mt: 2 }}>
-        ส่งข้อมูลกิจกรรมงานพิเศษ
+        ส่งข้อมูลกิจกรรมจิตอาสา
       </Typography>
-
       <Grid container spacing={2}>
+
         {/* ฟิลด์รหัสนักศึกษา */}
         <Grid item xs={12} md={6}>
           <Controller
@@ -98,6 +163,7 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
                 variant="outlined"
                 error={!!errors.studentId}
                 helperText={errors.studentId?.message}
+
               />
             )}
           />
@@ -120,8 +186,8 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
                 error={!!errors.prefix}
                 helperText={errors.prefix?.message}
               >
-                <MenuItem value="male">ชาย</MenuItem>
-                <MenuItem value="female">หญิง</MenuItem>
+                <MenuItem value="ชาย">ชาย</MenuItem>
+                <MenuItem value="หญิง">หญิง</MenuItem>
               </TextField>
             )}
           />
@@ -137,7 +203,7 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
             render={({ field }) => (
               <TextField
                 fullWidth
-                label="ชื่อ - นามสกุล"
+                label="ชื่อเต็ม"
                 {...field}
                 variant="outlined"
                 error={!!errors.firstName}
@@ -157,7 +223,7 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
             render={({ field }) => (
               <TextField
                 fullWidth
-                label="ชื่อเล่น"
+                label="ชื่อ - นามสกุล"
                 {...field}
                 variant="outlined"
                 error={!!errors.nickname}
@@ -211,7 +277,7 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
                 error={!!errors.branch}
                 helperText={errors.branch?.message}
               >
-                 <MenuItem value="MTM">MTM</MenuItem>
+                <MenuItem value="MTM">MTM</MenuItem>
                 <MenuItem value="IMTM">IMTM</MenuItem>
                 <MenuItem value="FBM">FBM</MenuItem>
                 <MenuItem value="RBM">RBM</MenuItem>
@@ -237,7 +303,7 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
                 <MenuItem value="ELT">ELT</MenuItem>
                 <MenuItem value="NS">NS</MenuItem>
                 <MenuItem value="NS">HIT</MenuItem>
-                {/* เพิ่มสาขาเพิ่มเติม */}
+                {/* เพิ่มสาขาตามต้องการ */}
               </TextField>
             )}
           />
@@ -246,18 +312,18 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
         {/* ฟิลด์ชื่อกิจกรรม */}
         <Grid item xs={12} md={6}>
           <Controller
-            name="workName"
+            name="activityName"
             control={control}
             defaultValue=""
             rules={{ required: 'จำเป็นต้องกรอกชื่อกิจกรรม' }}
             render={({ field }) => (
               <TextField
                 fullWidth
-                label="ตำแหน่งงาน"
+                label="ชื่อกิจกรรม"
                 {...field}
                 variant="outlined"
-                error={!!errors.workName}
-                helperText={errors.workName?.message}
+                error={!!errors.activityName}
+                helperText={errors.activityName?.message}
               />
             )}
           />
@@ -275,8 +341,6 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
                 label="ชื่อองค์กร"
                 {...field}
                 variant="outlined"
-                error={!!errors.organizationName}
-                helperText={errors.organizationName?.message}
               />
             )}
           />
@@ -296,25 +360,6 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
                 variant="outlined"
                 error={!!errors.organizationPhone}
                 helperText={errors.organizationPhone?.message}
-              />
-            )}
-          />
-        </Grid>
-
-        {/* ฟิลด์รายละเอียดกิจกรรม */}
-        <Grid item xs={12}>
-          <Controller
-            name="workDescription"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <TextField
-                fullWidth
-                label="รายละเอียดกิจกรรม"
-                {...field}
-                variant="outlined"
-                error={!!errors.workDescription}
-                helperText={errors.workDescription?.message}
               />
             )}
           />
@@ -357,41 +402,20 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
           />
         </Grid>
 
-        {/* ฟิลด์ประเภทงาน */}
-        <Grid item xs={12} md={6}>
+        {/* ฟิลด์รายละเอียดกิจกรรม */}
+        <Grid item xs={12}>
           <Controller
-            name="workType"
+            name="activityDescription"
             control={control}
             defaultValue=""
             render={({ field }) => (
               <TextField
-                select
                 fullWidth
-                label="ประเภทงาน"
+                label="รายละเอียดกิจกรรม"
                 {...field}
                 variant="outlined"
-              >
-                <MenuItem value="Full-Time">งานเต็มเวลา</MenuItem>
-                <MenuItem value="Part-Time">งานพาร์ทไทม์</MenuItem>
-                <MenuItem value="Internship">ฝึกงาน</MenuItem>
-              </TextField>
-            )}
-          />
-        </Grid>
-
-        {/* ฟิลด์ค่าตอบแทน */}
-        <Grid item xs={12} md={6}>
-          <Controller
-            name="compensation"
-            control={control}
-            defaultValue={0}
-            render={({ field }) => (
-              <TextField
-                fullWidth
-                label="ค่าตอบแทน"
-                type="number"
-                {...field}
-                variant="outlined"
+                multiline
+                rows={4}
               />
             )}
           />
@@ -400,7 +424,7 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
         {/* ฟิลด์อัปโหลดรูปภาพกิจกรรม */}
         <Grid item xs={12}>
           <Typography variant="body1" sx={{ mb: 1 }}>
-            *อัพโหลดรูปภาพกิจกรรมที่ทำ ให้เห็นหน้า
+            อัพโหลดอย่างน้อย 2 รูป ภาพรวมนอกบ้าน ภาพรวมในบ้าน
           </Typography>
           <CustomFileUpload
             value={files}
@@ -413,6 +437,39 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
             <FormHelperText error>{fileError}</FormHelperText>
           )}
         </Grid>
+
+        <Box sx={{ mt: 2 }}>
+                <Typography variant="h6" color="primary" align="center">
+                    รูปภาพที่อัพโหลด
+                </Typography>
+                {loadingImages ? (
+                    <CircularProgress />
+                ) : (
+                    <Grid container spacing={2} sx={{ mt: 1 }}>
+                        {files.length > 0 ? (
+                            files.map((file, index) => (
+                                <Grid item xs={4} key={index}>
+                                    <Box
+                                        component="img"
+                                        src={URL.createObjectURL(file)} // Use the local URL for the file
+                                        alt={file.name}
+                                        sx={{
+                                            width: '100%',
+                                            height: 'auto',
+                                            borderRadius: 1,
+                                            boxShadow: 1,
+                                        }}
+                                    />
+                                    {/* <Typography variant="caption" align="center">{file.name}</Typography> */}
+                                </Grid>
+                            ))
+                        ) : (
+                            <Typography align="center">No images available</Typography>
+                        )}
+                    </Grid>
+                        )}
+            </Box>
+
       </Grid>
 
       {/* ปุ่มส่งข้อมูล */}
@@ -428,4 +485,4 @@ const SpecialWorkForm: React.FC<WorkFormProps> = ({ formwork }) => {
   );
 };
 
-export default SpecialWorkForm;
+export default EditeVolunteer;

@@ -1,4 +1,4 @@
-import { ApiResponse, FormValues } from '@/types/IResponse';
+import { ApiResponse } from '@/types/IResponse';
 import axiosApi from '@/utils/Api'; // Ensure axiosApi is properly configured
 
 // Function to handle volunteer form submission
@@ -22,6 +22,8 @@ export const uploadVolunteerFilesApi = async (
   firstName: string,
   fileNames: string[],
   imageType: string,
+  id:number,
+
   endpoint: string = '/volunteer-activities/uploadToGoogleDrive'
 ): Promise<ApiResponse<any>> => { // ใช้ any ถ้าข้อมูลที่ส่งคืนไม่แน่นอน
   const formData = new FormData();
@@ -34,6 +36,8 @@ export const uploadVolunteerFilesApi = async (
     formData.append('imageName[]', name);
   });
   formData.append('imageType', imageType);
+  formData.append('volunteerId', id.toString());
+
 
   try {
     const response = await axiosApi.post<ApiResponse<any>>(endpoint, formData, {

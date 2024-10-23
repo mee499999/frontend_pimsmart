@@ -11,7 +11,7 @@ export interface FormValues {
     organizationPhone?: string;
     activityDescription?: string;
     activityDate?: string;
-    hours?: string;
+    hours?: number;
     createDate?: string;
     loanStatus?: string;
     yearLevel?: string; 
@@ -25,6 +25,14 @@ export interface FormValues {
     activity_date?: string;
     
     activity_image?: File;
+    volunteerPictures?:FileList| File[];
+    uploadVolunteer?:FileList| File[];
+    prefix?:string
+    volunteerId?:string
+    id?:string
+    
+
+    
   }
   
   // Response structure when fetching volunteer hours

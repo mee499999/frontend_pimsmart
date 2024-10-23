@@ -14,10 +14,14 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import { volunteer } from '@/hooks/Admin/volunteer';
 
-import VolunteerForm from '@/app/Volunteer/components/VolunteerForm';
-import { FormValues } from '@/types/IResponse';
+
+
 
 import EditIcon from '@mui/icons-material/Edit';
+import EditeVolunteer from '@/app/Volunteer/admin/editeVoluteer';
+import { FormValues } from '@/types/Volunteer';
+
+
 
 
 
@@ -151,7 +155,7 @@ const Volunteer: React.FC = () => {
          
           <DialogContent>
             <FormProvider {...formValunteer}>
-              <VolunteerForm formValunteer={formValunteer} />
+              <EditeVolunteer formValunteer={formValunteer} />
             </FormProvider>
           </DialogContent>
         </Dialog>

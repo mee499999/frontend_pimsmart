@@ -14,6 +14,7 @@ export interface ApiResponse<T> {
   data?: T | null; // ใช้ประเภทเจนเนอริกที่นี่
   error?: string;
   token?: string; // Add token to the ApiResponse type
+  
 
 }
 
@@ -66,26 +67,27 @@ export interface User {
 
 
 // Volunteer form values structure
-export interface FormValues {
-  uploadVolunteer?: FileList | File[];  // Files for volunteer work uploads
-  prefix?: string;                      // Prefix (Mr., Ms., Dr., etc.)
-  studentId?: string;                   // Student ID
-  firstName?: string;                   // Full name of the student
-  nickname?: string;                    // Nickname of the student
-  graduate?: string;                    // Graduation year or status
-  branch?: string;                      // Branch of study
-  activityName?: string;                // Volunteer activity name
-  organizationName?: string;            // Organization name
-  organizationPhone?: string;           // Organization phone number
-  activityDescription?: string;         // Description of the volunteer activity
-  activityDate?: string;                // Date of the activity
-  hours?: number;   
-  id:number; 
+// export interface FormValues {
+//   // uploadVolunteer?: FileList | File[];  // Files for volunteer work uploads
+//   prefix?: string;                      // Prefix (Mr., Ms., Dr., etc.)
+//   studentId?: string;                   // Student ID
+//   firstName?: string;                   // Full name of the student
+//   nickname?: string;                    // Nickname of the student
+//   graduate?: string;                    // Graduation year or status
+//   branch?: string;                      // Branch of study
+//   activityName?: string;                // Volunteer activity name
+//   organizationName?: string;            // Organization name
+//   organizationPhone?: string;           // Organization phone number
+//   activityDescription?: string;         // Description of the volunteer activity
+//   activityDate?: string;                // Date of the activity
+//   hours?: number;   
+//   id:number; 
+//   volunteerPictures?: File[]; // เพิ่มฟิลด์นี้
   
  
 
-                     // Number of hours volunteered
-}
+//                      // Number of hours volunteered
+// }
 
 // Special work form values structure
 export interface FormValuesWork {

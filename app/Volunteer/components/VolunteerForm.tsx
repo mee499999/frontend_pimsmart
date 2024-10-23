@@ -4,11 +4,12 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useForm, Controller, UseFormReturn } from 'react-hook-form';
 import { TextField, Button, Typography, Box, Grid, InputAdornment, FormControl, FormLabel, RadioGroup, FormControlLabel, FormHelperText, Radio, MenuItem } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
-import { FormValues } from '@/types/IResponse';
+
 import { watch } from 'fs';
 import CustomFileUpload from '@/components/CustomFileUpload';
 import { submitVolunteerForm } from '@/app/api/Volunteer';
 import { useVolunteerFilesApi } from '@/hooks/Volunteer';
+import { FormValues } from '@/types/Volunteer';
 
 
 interface VolunteerFormProps {
@@ -65,6 +66,8 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
       return;
     }
 
+    
+
     const imageType: "Volunteer" = "Volunteer"; 
 
     const sendResult = await submitVolunteerForm(data);
@@ -73,7 +76,10 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
       return;
     }
 
-    await uploadVolunteerFiles(files, studentId, firstName, imageType);
+    const id = sendResult.data?.id;
+    console.log("ID ของกิจกรรมที่สร้างขึ้น: ", id);
+
+    await uploadVolunteerFiles(files, studentId, firstName, imageType,id);
   }, [submitVolunteerForm, uploadVolunteerFiles]);
 
 
