@@ -36,8 +36,8 @@ const EditeVolunteer: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
   const [files, setFiles] = useState<File[]>([]);
   const [fileError, setFileError] = useState<string | null>(null);
   const { loading, error, response, uploadVolunteerFiles } = useVolunteerFilesApi();
-  const idVolunteer = watch("studentId");
-  const imageType = "Volunteer";
+  const volunteerId = watch("id");
+  const imageType = "uploadVolunteer";
   const { loading: loadingImages, images, error: fetchImagesError, fetchVolunteermages } = useVolunteertImages();
   const [isFetching, setIsFetching] = useState(false);
 
@@ -45,10 +45,10 @@ const EditeVolunteer: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
   const [filesWithMetadata, setFilesWithMetadata] = useState<FileWithMetadata[]>([]);
 
   const fetchImages = async () => {
-    if (idVolunteer && !files.length && !isFetching && (!uploadPictureHouse || uploadPictureHouse.length === 0)) {
+    if (volunteerId && !files.length && !isFetching && (!uploadPictureHouse || uploadPictureHouse.length === 0)) {
       setIsFetching(true);
       try {
-        const result = await fetchVolunteermages(idVolunteer, imageType);
+        const result = await fetchVolunteermages(volunteerId, imageType);
         console.log("Fetched volunteer images:", result);
       } catch (error) {
         console.error("Error fetching images:", error);
@@ -56,26 +56,26 @@ const EditeVolunteer: React.FC<VolunteerFormProps> = ({ formValunteer }) => {
         setIsFetching(false);
       }
     } else if (uploadPictureHouse && uploadPictureHouse.length > 0) {
-      console.log("มีข้อมูลใน volunteerPictures แล้ว ไม่ต้องโหลดซ้ำ");
+      console.log("มีข้อมูลใน uploadVolunteer แล้ว ไม่ต้องโหลดซ้ำ");
     }
   };
 
   useEffect(() => {
     fetchImages();
-}, [idVolunteer, uploadPictureHouse]); 
+}, [volunteerId, uploadPictureHouse]); 
   
 useEffect(() => {
   if (images && images.length > 0) {
       const imageFilesWithMetadata = images.map((imageObj) => {
           // console.log("imageData:", imageObj.imageData); // Log imageData for each imageObj
           const file = base64ToFile(imageObj.image, imageObj.name);
-          return { name: imageObj.name,file, imageData: imageObj.imageData, imageType: "volunteerPictures" }; // Assuming a fixed imageType
+          return { name: imageObj.name,file, imageData: imageObj.imageData, imageType: "uploadVolunteer" }; // Assuming a fixed imageType
       });
 
       // Check if files are different and update state
       if (JSON.stringify(imageFilesWithMetadata) !== JSON.stringify(filesWithMetadata)) {
           setFilesWithMetadata(imageFilesWithMetadata);
-          setValue("volunteerPictures", imageFilesWithMetadata.map(item => item.file), { shouldValidate: true });
+          setValue("uploadVolunteer", imageFilesWithMetadata.map(item => item.file), { shouldValidate: true });
           console.log("imagevolunteerPictures ", images);
           
 
@@ -122,7 +122,7 @@ useEffect(() => {
 
     
 
-    const imageType: "Volunteer" = "Volunteer"; 
+    const imageType: "uploadVolunteer" = "uploadVolunteer"; 
 
     const sendResult = await submitVolunteerForm(data);
     if (!sendResult) {
@@ -424,7 +424,7 @@ useEffect(() => {
         {/* ฟิลด์อัปโหลดรูปภาพกิจกรรม */}
         <Grid item xs={12}>
           <Typography variant="body1" sx={{ mb: 1 }}>
-            อัพโหลดอย่างน้อย 2 รูป ภาพรวมนอกบ้าน ภาพรวมในบ้าน
+            
           </Typography>
           <CustomFileUpload
             value={files}

@@ -78,6 +78,7 @@ const Volunteer: React.FC = () => {
 
   const handleCreateVolunteer= () => {
     setOpen(true);
+    formValunteer.reset();
   };
 
   const handleClose = () => {
