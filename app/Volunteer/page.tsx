@@ -6,9 +6,10 @@ import VolunteerForm from "./components/VolunteerForm";
 import SpecialWorkForm from "./components/SpecialWorkForm";
 import CheckHoursWork from "./components/checkHour";
 import { useForm } from "react-hook-form";
-import { FormValues, FormValuesWork } from "@/types/IResponse"; // Import the type for form values
+import {  FormValuesWork } from "@/types/IResponse"; // Import the type for form values
 import { submitVolunteerForm } from "../api/Volunteer";
 import { submitSpecialWorkForm } from "../api/SpecialWork";
+import { FormValues } from "@/types/Volunteer";
 
 const Page: React.FC = () => {
   const [selectedForm, setSelectedForm] = useState<string>("volunteerForm"); // Set initial state to display VolunteerForm first

@@ -3,7 +3,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useForm, Controller, UseFormReturn } from 'react-hook-form';
 import { TextField, Button, Typography, Box, Grid, InputAdornment, FormControl, FormLabel, RadioGroup, FormControlLabel, FormHelperText, Radio, MenuItem } from '@mui/material';
-import LockIcon from '@mui/icons-material/Lock';
 
 import { watch } from 'fs';
 import CustomFileUpload from '@/components/CustomFileUpload';

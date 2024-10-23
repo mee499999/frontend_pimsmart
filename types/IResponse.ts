@@ -124,17 +124,17 @@ export interface VolunteerHoursResponse {
 }
 
 // Props for the VolunteerForm component
-export interface VolunteerFormProps {
-  onSubmit: (formValues: FormValues) => Promise<void>;  // Submit handler for the form
-  formValues: FormValues;                              // Current form values
-  setFormValues: React.Dispatch<React.SetStateAction<FormValues>>;  // Setter for form values
-  success: string | null;                              // Success message
-  error: string | null;                                // Error message
-  loading: boolean;                                    // Loading state
-  setError: (error: string | null) => void;            // Function to set error message
-  setLoading: (loading: boolean) => void;              // Function to set loading state
-  setSuccessMessage: (message: string | null) => void; // Function to set success message
-}
+// export interface VolunteerFormProps {
+//   onSubmit: (formValues: FormValues) => Promise<void>;  // Submit handler for the form
+//   formValues: FormValues;                              // Current form values
+//   setFormValues: React.Dispatch<React.SetStateAction<FormValues>>;  // Setter for form values
+//   success: string | null;                              // Success message
+//   error: string | null;                                // Error message
+//   loading: boolean;                                    // Loading state
+//   setError: (error: string | null) => void;            // Function to set error message
+//   setLoading: (loading: boolean) => void;              // Function to set loading state
+//   setSuccessMessage: (message: string | null) => void; // Function to set success message
+// }
 
 // Props for the SpecialWorkForm component
 export interface SpecialWorkFormProps {
@@ -168,7 +168,7 @@ export interface SpecialWorkFormData {
 // State management interface
 export interface State {
   selectedForm: string;                 // Currently selected form type
-  formValues: FormValues;               // Current values of the form
+  // formValues: FormValues;               // Current values of the form
   success: string | null;               // Success message
   error: string | null;                 // Error message
   loading: boolean;                     // Loading state
