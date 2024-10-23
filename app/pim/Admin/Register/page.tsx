@@ -14,6 +14,11 @@ import { Student } from '@/types/Register';
 import { useStudents } from '@/hooks/Admin/useStudents';
 import { useStudentImages } from '@/hooks/Admin/useStudentImages';
 import EditIcon from '@mui/icons-material/Edit';
+import IconPDF from "/public/pdf.png";
+
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import Sortable from 'sortablejs';
+import Frompdf from './RegisterComponents/Frompdf';
 
 interface PaginationModel {
   page: number;
@@ -30,7 +35,8 @@ const Register: React.FC = () => {
   const { loading: loadingImages, fetchStudentImages } = useStudentImages();
   const formMethods = useForm<Student>();
   const { setValue } = formMethods;
-  const [open, setOpen] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false); // For edit/create student
+  const [openPdfDialog, setOpenPdfDialog] = useState(false); // For PDF view
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
 
@@ -48,6 +54,19 @@ const Register: React.FC = () => {
         </IconButton>
       ),
     },
+    {
+      field: 'openPdf',
+      headerName: '',
+      width: 60,
+      sortable: false,
+      filterable: false,
+      disableColumnMenu: true,
+      renderCell: (params: { row: any }) => (
+        <IconButton onClick={() => handleOpenPdf(params.row)}>
+          <img src={IconPDF.src} alt="PDF Icon" style={{ width: 24, height: 24 }} />
+        </IconButton>
+      ),
+    },
     { field: 'studentId', headerName: 'Student ID', width: 150 },
     { field: 'firstName', headerName: 'First Name', width: 200 },
     { field: 'lastName', headerName: 'Last Name', width: 200 },
@@ -57,41 +76,35 @@ const Register: React.FC = () => {
   ];
 
   const handleCreateStudent = () => {
-    setOpen(true);
+    setOpenEditDialog(true);
     formMethods.reset();
   };
 
   const handleEdit = (rowData: Student) => {
     console.log('Edit action for row:', rowData);
-    
-    // Extract studentId from the selected row
-    // const studentId = rowData.studentId;
-    // const imageType = "studentPicture";
-
-    // // Check if studentId is defined
-    // if (studentId) {
-    //   // Fetch student images based on studentId
-    //   fetchStudentImages(studentId,imageType );
-    // } else {
-    //   console.error('Student ID is undefined');
-    // }
-  
-    // Set selected student data
     setSelectedStudent(rowData);
-  
-    // Set form values using a loop
     Object.keys(rowData).forEach((key) => {
       setValue(key as keyof Student, rowData[key as keyof Student]);
     });
-  
-    setOpen(true); // Open the dialog
+    setOpenEditDialog(true);
   };
-  
-  
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleOpenPdf = (rowData: Student) => {
+    console.log('Opening PDF for student:', rowData);
+    setSelectedStudent(rowData);
+    Object.keys(rowData).forEach((key) => {
+      setValue(key as keyof Student, rowData[key as keyof Student]);
+    });
+    setOpenPdfDialog(true);
+  };
+
+  const handleCloseEditDialog = () => {
+    setOpenEditDialog(false);
     formMethods.reset();
+  };
+
+  const handleClosePdfDialog = () => {
+    setOpenPdfDialog(false);
   };
 
   const handlePaginationModelChange = (newModel: PaginationModel) => {
@@ -99,7 +112,6 @@ const Register: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log('Fetching students:', paginationModel);
     fetchStudents(paginationModel.page, paginationModel.pageSize);
   }, [paginationModel.page, paginationModel.pageSize]);
 
@@ -130,7 +142,8 @@ const Register: React.FC = () => {
           />
         )}
 
-        <Dialog open={open} onClose={handleClose} maxWidth="lg" fullWidth>
+        {/* Edit/Create Dialog */}
+        <Dialog open={openEditDialog} onClose={handleCloseEditDialog} maxWidth="lg" fullWidth>
           <DialogTitle>{selectedStudent ? 'Edit Student' : 'Create New Student'}</DialogTitle>
           <DialogContent>
             <FormProvider {...formMethods}>
@@ -138,6 +151,31 @@ const Register: React.FC = () => {
             </FormProvider>
           </DialogContent>
         </Dialog>
+
+        {/* PDF View Dialog */}
+        <Dialog
+          open={openPdfDialog}
+          onClose={handleClosePdfDialog}
+          maxWidth={false} // Disable default maxWidth settings
+          PaperProps={{
+            style: {
+              width: '210mm', // A4 width
+              height: '297mm', // A4 height
+              maxWidth: '210mm',
+              // maxHeight: '297mm',
+              margin: 'auto',  // Center the dialog
+              top: 50,         // Provide top space
+            },
+          }}
+        >
+          <DialogTitle>PDF View</DialogTitle>
+          <DialogContent>
+            <FormProvider {...formMethods}>
+              <Frompdf formMethods={formMethods} />
+            </FormProvider>
+          </DialogContent>
+        </Dialog>
+
 
         <Snackbar
           open={snackbarOpen}
